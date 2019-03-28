@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EndlessLauncher.model;
+using System;
 
 namespace EndlessLauncher.service
 {
     public class LegacyService : FirmwareServiceBase
     {
-        protected override void SetupEndlessLaunch()
+        protected override FirmwareSetupResult SetupEndlessLaunch()
         {
             throw new NotImplementedException();
         }

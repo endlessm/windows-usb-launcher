@@ -33,21 +33,29 @@ namespace EndlessLauncher.ViewModel
         private RelayCommand launchRelayCommand;
         private RelayCommand closeRelayCommand;
         private RelayCommand rebootRelayCommand;
+        private string firmwareSetupStatus = "Status:";
 
         public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService)
         {
             this.firmwareService = firmwareService;
             this.sysInfoService = sysInfoService;
-            this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted;
+            this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted ;
 
             requirements = sysInfoService.Verify();
             CheckRequirements();
         }
 
         //TODO handle Errors
-        private void FirmwareService_SetupCompleted(object sender, System.EventArgs e)
+        private void FirmwareService_SetupCompleted(object sender, FirmwareSetupResult e)
         {
             LogHelper.Log("FirmwareService_SetupCompleted:");
+            if (e.Success)
+            {
+                FirmwareSetupStatus = "Status: Success";
+            } else
+            {
+                FirmwareSetupStatus = "Status: ErrorCode: " + (int)e.Error.Code;
+            }
             RebootEnabled = true;
         }
 
@@ -125,7 +133,6 @@ namespace EndlessLauncher.ViewModel
             {
                 Set(ref launchEnabled, value);
             }
-           
         }
 
         public bool RebootEnabled
@@ -138,7 +145,18 @@ namespace EndlessLauncher.ViewModel
             {
                 Set(ref rebootEnabled, value);
             }
+        }
 
+        public string FirmwareSetupStatus
+        {
+            get
+            {
+                return firmwareSetupStatus;
+            }
+            set
+            {
+                Set(ref firmwareSetupStatus, value);
+            }
         }
 
     }

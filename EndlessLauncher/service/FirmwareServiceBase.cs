@@ -1,4 +1,5 @@
 ﻿using EndlessLauncher.logger;
+using EndlessLauncher.model;
 using System;
 using System.Threading.Tasks;
 using static EndlessLauncher.NativeAPI;
@@ -7,17 +8,30 @@ namespace EndlessLauncher.service
 {
     public abstract class FirmwareServiceBase
     {
-        public event EventHandler SetupCompleted;
+        public event EventHandler<FirmwareSetupResult> SetupCompleted;
 
         public async void SetupEndlessLaunchAsync()
         {
             LogHelper.Log("SetupEndlessLaunchAsync:Start:");
+            FirmwareSetupResult result;
 
-            await Task.Run(() => SetupEndlessLaunch());
+            try
+            {
+                result = await Task.Run(() => SetupEndlessLaunch());
+            } catch(FirmwareSetupException ex)
+            {
+                LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: " + ex.Message);
+                result = FirmwareSetupResult.CreateFailed(ex);
+
+            } catch(Exception ex)
+            {
+                LogHelper.Log("SetupEndlessLaunchAsync:Exception: " + ex.Message);
+                result = FirmwareSetupResult.CreateFailed(new FirmwareSetupException(FirmwareSetupException.ErrorCode.GenericError, "Unknown Error"));
+            }
 
             LogHelper.Log("SetupEndlessLaunchAsync:End:");
 
-            SetupCompleted?.Invoke(this, null);
+            SetupCompleted?.Invoke(this, result);
         }
 
         public void Reboot()
@@ -31,7 +45,7 @@ namespace EndlessLauncher.service
             }
         }
 
-        protected abstract void SetupEndlessLaunch();
+        protected abstract FirmwareSetupResult SetupEndlessLaunch();
     }
 
 }

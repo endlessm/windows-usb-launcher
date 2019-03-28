@@ -1,5 +1,4 @@
 ﻿using EndlessLauncher.logger;
-using EndlessLauncher.utility;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -8,18 +7,20 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using static EndlessLauncher.utility.Utils;
 using static EndlessLauncher.NativeAPI;
+using EndlessLauncher.model;
+using static EndlessLauncher.model.FirmwareSetupException;
 
 namespace EndlessLauncher.service
 {
     //TODO Handle all errors
     public class EFIFirmwareService : FirmwareServiceBase
     {
-        private readonly int SIGNATURE_TYPE_OFFSET = 41;
-        private readonly int SIGNATURE_OFFSET = 24;
-        private readonly int PARTITION_NUMBER_OFFSET = 4;
+        private const int HARD_DRIVE_DISKPATH_SIZE = 42;
+        private const int SIGNATURE_TYPE_OFFSET = 41;
+        private const int SIGNATURE_OFFSET = 24;
+        private const int PARTITION_NUMBER_OFFSET = 4;
 
         private List<UefiGPTEntry> entries;
 
@@ -32,8 +33,7 @@ namespace EndlessLauncher.service
             public int partitionNumber;
         }
 
-        //TODO Handle errors
-        protected override void SetupEndlessLaunch()
+        protected override FirmwareSetupResult SetupEndlessLaunch()
         {
             LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch:");
 
@@ -41,34 +41,56 @@ namespace EndlessLauncher.service
             ObtainPrivileges(SE_SHUTDOWN_NAME);
 
             KeyValuePair<string, long> volumeInfo = GetESPVolume();
+
+            if (volumeInfo.Key == null)
+            {
+                throw new FirmwareSetupException(ErrorCode.EspVolumeNotFoundError, "Could not Found USB ESP volume");
+            }
+
             string volume = "\\\\.\\" + volumeInfo.Key;
 
             LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch: volume: " + volume);
-            GetBootOrder();
 
+            //We assume there is at least the Windows UEFI entry
             entries = GetGPTUefiEntries();
+            if (entries == null || entries.Count == 0)
+            {
+                throw new FirmwareSetupException(ErrorCode.NoExistingUefiEntriesError, "Found 0 UEFI entries");
+            }
 
             PrintUefiEntries();
 
+            //TODO Use configuration for Entry name and entry path
             UefiGPTEntry entry = CreateUEfiEntry(volume, "Hack OS", "\\EFI\\BOOT\\BOOTX64.EFI", volumeInfo.Value);
+
+            if (entry == null)
+            {
+                throw new FirmwareSetupException(ErrorCode.CreateNewUefiEntryError, "Create new Uefi entry failed");
+            }
+
             if (!entries.Contains(entry))
             {
                 entries.Add(entry);
             }
 
-
             PrintUefiEntries();
 
             bool inBootOrder = AddToBootOrder(entry);
-
             LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch: In Boot order: " + inBootOrder);
-            GetBootOrder();
 
-            if (inBootOrder)
+            if (!inBootOrder)
             {
-                SetBootNext(entry);
+                throw new FirmwareSetupException(ErrorCode.AddToBootOrderError, "Add new entry to BootOrder failed");
+            }
+            else
+            {
+                if (!SetBootNext(entry))
+                {
+                    throw new FirmwareSetupException(ErrorCode.SetBootNextError, "Set BootNext failed");
+                }
             }
 
+            return FirmwareSetupResult.CreateSuccess();
         }
 
         private bool SetBootNext(UefiGPTEntry entry)
@@ -77,7 +99,6 @@ namespace EndlessLauncher.service
             byte[] bootNextBytes = BitConverter.GetBytes(entry.number);
 
             bool success = SetFirmwareEnvironmentVariable("BootNext", EFI_GLOBAL_VARIABLE, bootNextBytes, (uint)bootNextBytes.Length);
-
             if (success)
             {
                 LogHelper.Log("EFIFirmwareService:SetBootNext: Success");
@@ -91,7 +112,13 @@ namespace EndlessLauncher.service
 
         private void PrintUefiEntries()
         {
-            LogHelper.Log("EFIFirmwareService:PrintUefiEntries UEFI GPT Entries: " + entries.Count);
+            if (entries == null)
+            {
+                LogHelper.Log("EFIFirmwareService:PrintUefiEntries: No UEFI entries" );
+                return;
+            }
+
+            LogHelper.Log("EFIFirmwareService:PrintUefiEntries UEFI Entries: " + entries.Count);
 
             foreach (UefiGPTEntry entry in entries)
             {
@@ -113,6 +140,7 @@ namespace EndlessLauncher.service
             LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Path: " + path);
             LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:BlockSize: " + blockSize);
 
+
             SafeFileHandle hndl = CreateFile(volume,
                                                GENERIC_READ | GENERIC_WRITE,
                                                FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -124,7 +152,7 @@ namespace EndlessLauncher.service
             {
                 LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Invalid handle: " + Marshal.GetLastWin32Error());
                 hndl.Close();
-                return null;
+                throw new FirmwareSetupException(ErrorCode.GetPartitionEspInfoError, "Get ESP partition information failed");
             }
 
             PARTITION_INFORMATION_EX partition = new PARTITION_INFORMATION_EX();
@@ -151,7 +179,7 @@ namespace EndlessLauncher.service
                 LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:DeviceIoControl: IOCTL_DISK_GET_PARTITION_INFO_EX Failed : " + Marshal.GetLastWin32Error());
                 Marshal.FreeHGlobal(outBuffer);
                 hndl.Close();
-                return null;
+                throw new FirmwareSetupException(ErrorCode.GetPartitionEspInfoError, "Get ESP partition information failed");
             }
 
             PARTITION_INFORMATION_GPT gptPartition = partition.DriveLayoutInformaiton.Gpt;
@@ -236,19 +264,20 @@ namespace EndlessLauncher.service
             int firstFreeEntry = GetFirstFreeUefiEntryNumber();
             if (firstFreeEntry == -1)
             {
-                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Could not find a free efi entry:");
+                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Could not find a free Uefi entry:");
+                Marshal.FreeHGlobal(outBuffer);
                 hndl.Close();
-                return null;
+                throw new FirmwareSetupException(ErrorCode.FindFreeUefiEntryError, "Could not find a free Uefi entry");
             }
 
             bool success = SetFirmwareEnvironmentVariable("Boot" + firstFreeEntry.ToString("X4"), UEFI_BOOT_NAMESPACE, entryBytes, (uint)entryBytes.Length);
 
-            hndl.Close();
-
+            UefiGPTEntry newEntry = null;
             if (success)
             {
                 LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Entry Created:");
-                return new UefiGPTEntry()
+
+                newEntry = new UefiGPTEntry()
                 {
                     description = description,
                     path = path,
@@ -258,16 +287,20 @@ namespace EndlessLauncher.service
                 };
             }
 
+            hndl.Close();
             Marshal.FreeHGlobal(outBuffer);
 
-            return null;
+            return newEntry;
         }
 
         private bool AddToBootOrder(UefiGPTEntry entry)
         {
             LogHelper.Log("EFIFirmwareService:AddToBootOrder: Boot" + entry.number.ToString("X4"));
-            UInt16[] order = GetBootOrder();
-            foreach (UInt16 bootNumber in order)
+            UInt16[] bootOrder = GetBootOrder();
+            LogHelper.Log("EFIFirmwareService:AddToBootOrder: Current BootOrder: ");
+            PrintBootOrder(bootOrder);
+
+            foreach (UInt16 bootNumber in bootOrder)
             {
                 if (entry.number == bootNumber)
                 {
@@ -276,52 +309,69 @@ namespace EndlessLauncher.service
                 }
             }
 
-            byte[] newOrderBytes = new byte[(order.Length + 1) * sizeof(UInt16)];
+            byte[] newBootOrderBytes = new byte[(bootOrder.Length + 1) * sizeof(UInt16)];
 
 
             //Copy existing order bytes
-            for (int i = 0; i < order.Length; i++)
+            for (int i = 0; i < bootOrder.Length; i++)
             {
-                Array.Copy(BitConverter.GetBytes(order[i]), 0, newOrderBytes, i * sizeof(UInt16), sizeof(UInt16));
+                Array.Copy(BitConverter.GetBytes(bootOrder[i]), 0, newBootOrderBytes, i * sizeof(UInt16), sizeof(UInt16));
             }
 
-            Array.Copy(BitConverter.GetBytes(entry.number), 0, newOrderBytes, order.Length * sizeof(UInt16), sizeof(UInt16));
+            Array.Copy(BitConverter.GetBytes(entry.number), 0, newBootOrderBytes, bootOrder.Length * sizeof(UInt16), sizeof(UInt16));
 
-            bool success = SetFirmwareEnvironmentVariable("BootOrder", UEFI_BOOT_NAMESPACE, newOrderBytes, (uint)newOrderBytes.Length);
+            bool success = SetFirmwareEnvironmentVariable("BootOrder", UEFI_BOOT_NAMESPACE, newBootOrderBytes, (uint)newBootOrderBytes.Length);
 
             if (!success)
             {
                 LogHelper.Log("EFIFirmwareService:AddToBootOrder: Failed: " + Marshal.GetLastWin32Error());
             }
+            LogHelper.Log("EFIFirmwareService:AddToBootOrder: New BootOrder: ");
+            PrintBootOrder(GetBootOrder());
 
             return success;
         }
 
+        private void PrintBootOrder(UInt16[] bootOrderArray)
+        {
+            if (bootOrderArray == null  || bootOrderArray.Length == 0)
+            {
+                LogHelper.Log("EFIFirmwareService:PrintBootOrder: BootOrder is null or empty");
+                return;
+            }
+
+
+            StringBuilder bootOrderSb = new StringBuilder();
+
+            for (int i = 0; i <= bootOrderArray.Length / 2; i++)
+            {
+                bootOrderSb.AppendFormat("Boot{0} ", bootOrderArray[i].ToString("X4"));
+            }
+
+            LogHelper.Log("EFIFirmwareService:PrintBootOrder: " + (bootOrderArray.Length / 2 + 1) + ": "+ bootOrderSb.ToString());
+        }
+
         private UInt16[] GetBootOrder()
         {
-            UInt16[] order;
+            UInt16[] bootOrderArray;
 
             byte[] bootOrderBytes = new byte[1000];
             uint size = GetFirmwareEnvironmentVariable("BootOrder", UEFI_BOOT_NAMESPACE, bootOrderBytes, (uint)bootOrderBytes.Length);
 
             if (size <= 0)
             {
+                LogHelper.Log("EFIFirmwareService:GetBootOrder: Could not read BootOrder variable: Win32Error:" + Marshal.GetLastWin32Error());
                 return null;
             }
 
-            order = new UInt16[size / 2];
+            bootOrderArray = new UInt16[size / 2];
 
-
-            StringBuilder orderString = new StringBuilder();
             for (int i = 0; i < size / 2; i++)
             {
-                order[i] = BitConverter.ToUInt16(bootOrderBytes, i * 2);
-                orderString.AppendFormat("Boot{0} ", order[i].ToString("X4"));
+                bootOrderArray[i] = BitConverter.ToUInt16(bootOrderBytes, i * 2);
             }
 
-            LogHelper.Log("EFIFirmwareService:GetBootOrder: BootOrder: " + orderString.ToString());
-
-            return order;
+            return bootOrderArray;
         }
 
         private int GetFirstFreeUefiEntryNumber()
@@ -364,7 +414,7 @@ namespace EndlessLauncher.service
 
 
                     //TODO Use EFI_HARD_DRIVE_PATH structure instead of parsing the entire byte array "manually"
-                    while (devPathTypeStart + 42 < (int)size)
+                    while (devPathTypeStart + HARD_DRIVE_DISKPATH_SIZE < (int)size)
                     {
                         iteration++;
                         byte devPathType = vardata[devPathTypeStart];
@@ -409,7 +459,7 @@ namespace EndlessLauncher.service
                                 break;
                         }
 
-                        devPathTypeStart = devPathTypeStart + 42;
+                        devPathTypeStart = devPathTypeStart + HARD_DRIVE_DISKPATH_SIZE;
                     }
                     entries.Add(entry);
                     countEmpty = 0;
@@ -426,19 +476,28 @@ namespace EndlessLauncher.service
         private KeyValuePair<string, long> GetESPVolume()
         {
             LogHelper.Log("EFIFirmwareService:GetESPVolume:");
+
+            //Assume it's 512 bytes
             long blockSize = 512;
+
+            //Get the drive letter for the application partition
             string currentDriveLetter = GetCurrentDriveLetter();
             LogHelper.Log("EFIFirmwareService:GetESPVolume: Current drive: " + currentDriveLetter);
 
+            //Get the physical disk for the application partition
             int physicalDriveNumber = GetDiskForMountedDrive(currentDriveLetter);
             LogHelper.Log("EFIFirmwareService:GetESPVolume: Current physical drive: " + physicalDriveNumber);
 
+            if (physicalDriveNumber == -1)
+                return new KeyValuePair<string, long>(null, blockSize);
+
+
+            //Get the blockSize of the ESP partition
             ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_DiskPartition where DiskIndex like " + physicalDriveNumber);
             ManagementObjectSearcher moSearcher = new ManagementObjectSearcher(query);
 
             foreach (ManagementObject mo in moSearcher.Get())
             {
-
                 if ((bool)mo["Bootable"])
                 {
                     blockSize = (long.Parse)(mo["BlockSize"].ToString());
@@ -446,6 +505,7 @@ namespace EndlessLauncher.service
                 }
             }
 
+            //Query for the Volume{GUID}
             query = new ObjectQuery("SELECT * FROM Win32_Volume");
             moSearcher = new ManagementObjectSearcher(query);
 
@@ -455,6 +515,8 @@ namespace EndlessLauncher.service
                 string deviceId = mo["DeviceID"].ToString().Replace("\\", "").Replace("?", "");
                 int disk = GetDiskForVolume(deviceId);
 
+                //We assume the USB stick has exactly 2 partition
+                //TODO Maybe add an extra check
                 if (disk == physicalDriveNumber &&
                     (mo["DriveLetter"] == null || !mo["DriveLetter"].ToString().Equals(currentDriveLetter)))
                 {
@@ -463,11 +525,11 @@ namespace EndlessLauncher.service
                     LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP FileSystem: " + mo["FileSystem"]);
                     LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP Label: " + (mo["Label"] == null ? "Null" : mo["Label"].ToString()));
 
-
                     return new KeyValuePair<string, long>(deviceId, blockSize);
                 }
             }
-            return new KeyValuePair<string, long>(null, -1);
+
+            return new KeyValuePair<string, long>(null, blockSize);
         }
 
         private int GetDiskForVolume(string volume)
@@ -484,29 +546,30 @@ namespace EndlessLauncher.service
                                                            IntPtr.Zero);
             if (hndl.IsInvalid)
             {
-                //TODO Handle the handle errors :) this
-                LogHelper.Log("EFIFirmwareService:GetDiskForVolume: Invalid handle");
-            }
-
-            VOLUME_DISK_EXTENTS vde = new VOLUME_DISK_EXTENTS();
-            UInt32 outBufferSize = (UInt32)Marshal.SizeOf(vde);
-            IntPtr outBuffer = Marshal.AllocHGlobal((int)outBufferSize);
-            UInt32 bytesReturned = 0;
-
-            if (DeviceIoControl(hndl,
-                                         IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS,
-                                         IntPtr.Zero,
-                                         0,
-                                         outBuffer,
-                                         outBufferSize,
-                                         out bytesReturned,
-                                         IntPtr.Zero))
+                LogHelper.Log("EFIFirmwareService:GetDiskForVolume: Invalid handle: ");
+            } else
             {
-                Marshal.PtrToStructure(outBuffer, vde);
-                disk = Convert.ToInt32(vde.Extents.DiskNumber);
+                VOLUME_DISK_EXTENTS vde = new VOLUME_DISK_EXTENTS();
+                UInt32 outBufferSize = (UInt32)Marshal.SizeOf(vde);
+                IntPtr outBuffer = Marshal.AllocHGlobal((int)outBufferSize);
+                UInt32 bytesReturned = 0;
+
+                if (DeviceIoControl(hndl,
+                                             IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS,
+                                             IntPtr.Zero,
+                                             0,
+                                             outBuffer,
+                                             outBufferSize,
+                                             out bytesReturned,
+                                             IntPtr.Zero))
+                {
+                    Marshal.PtrToStructure(outBuffer, vde);
+                    disk = Convert.ToInt32(vde.Extents.DiskNumber);
+                }
+
+                Marshal.FreeHGlobal(outBuffer);
             }
 
-            Marshal.FreeHGlobal(outBuffer);
             hndl.Close();
             return disk;
         }
@@ -535,20 +598,21 @@ namespace EndlessLauncher.service
                 foreach (var drive in drives)
                     disk = int.Parse(drive["DeviceID"].ToString().Replace("\\\\.\\PHYSICALDRIVE", ""));
             }
+
             return disk;
         }
 
-        //TODO Handle errors
         private void ObtainPrivileges(string privilege)
         {
             LogHelper.Log("EFIFirmwareService:ObtainPrivileges: " + privilege);
             IntPtr hToken = IntPtr.Zero;
-            IntPtr processhandle = GetCurrentProcess();
+            IntPtr processhandle = IntPtr.Zero;
 
+            processhandle = GetCurrentProcess();
 
             if (!OpenProcessToken(processhandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref hToken))
             {
-                throw new InvalidOperationException("ObtainPrivileges: OpenProcessToken failed!");
+                throw new FirmwareSetupException(ErrorCode.OpenProcessTokenError, "ObtainPrivileges: OpenProcessToken failed: " + privilege);
             }
 
             TokenPrivelege tp;
@@ -557,13 +621,10 @@ namespace EndlessLauncher.service
             tp.Attr = SE_PRIVILEGE_ENABLED;
 
             if (!LookupPrivilegeValue(null, privilege, ref tp.Luid))
-                throw new InvalidOperationException("LookupPrivilegeValue failed!");
+                throw new FirmwareSetupException(ErrorCode.LookupPrivilegeError, "ObtainPrivileges: LookupPrivilegeValue failed: " + privilege);
 
             if (!AdjustTokenPrivileges(hToken, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero))
-                throw new InvalidOperationException("AdjustTokenPrivileges failed!");
-
-            CloseHandle(hToken);
-            CloseHandle(processhandle);
+                throw new FirmwareSetupException(ErrorCode.AdjustTokenPrivilegeError, "ObtainPrivileges: AdjustTokenPrivileges failed:" + privilege);
         }
 
         private string GetCurrentDriveLetter()

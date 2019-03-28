@@ -17,33 +17,42 @@
             BorderBrush="Black"
             BorderThickness="1,1,1,1"
             CornerRadius="10">
-        <Grid Loaded="Grid_Loaded">
-            <TextBlock x:Name="mTextBlock" Text="Endless Launcher" Margin="20" FontSize="30" />
+        <Grid Loaded="Grid_Loaded" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="mTextBlock" Text="Endless Launcher" FontSize="30"
+                       Grid.Row="0"/>
+            <TextBlock x:Name="SetupStatusTextBlock"
+                       Grid.Row="1"
+                       Text="{Binding FirmwareSetupStatus}"
+                       FontSize="14" />
             <Button Content="Launch"
                     Width="100"
+                    Grid.Row="3"
                     Height="30"
                     IsEnabled="{Binding LaunchEnabled}"
-                    VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
-                    Command="{Binding LaunchRelayCommand}"
-                    Margin="20" />
+                    Command="{Binding LaunchRelayCommand}"/>
 
             <Button Content="Close"
                     Width="100"
                     Height="30"
-                    VerticalAlignment="Top"
                     Command="{Binding CloseRelayCommand}"
                     HorizontalAlignment="Right"
                     Margin="20" />
 
             <Button Content="Reboot"
                     Width="100"
+                    Grid.Row="3"
                     Height="30"
                     IsEnabled="{Binding RebootEnabled}"
-                    VerticalAlignment="Bottom"
                     HorizontalAlignment="Left"
-                    Command="{Binding RebootRelayCommand}"
-                    Margin="20" />
+                    Command="{Binding RebootRelayCommand}"/>
         </Grid>
     </Border>
 </Window>
