@@ -1,0 +1,49 @@
+﻿<Window x:Class="EndlessLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EndlessLauncher"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        Name="window"
+        Title="MainWindow"
+        DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
+        AllowsTransparency="True"
+        Height="450"
+        Width="800">
+    <Border Background="White"
+            BorderBrush="Black"
+            BorderThickness="1,1,1,1"
+            CornerRadius="10">
+        <Grid Loaded="Grid_Loaded">
+            <TextBlock x:Name="mTextBlock" Text="Endless Launcher" Margin="20" FontSize="30" />
+            <Button Content="Launch"
+                    Width="100"
+                    Height="30"
+                    IsEnabled="{Binding LaunchEnabled}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Command="{Binding LaunchRelayCommand}"
+                    Margin="20" />
+
+            <Button Content="Close"
+                    Width="100"
+                    Height="30"
+                    VerticalAlignment="Top"
+                    Command="{Binding CloseRelayCommand}"
+                    HorizontalAlignment="Right"
+                    Margin="20" />
+
+            <Button Content="Reboot"
+                    Width="100"
+                    Height="30"
+                    IsEnabled="{Binding RebootEnabled}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left"
+                    Command="{Binding RebootRelayCommand}"
+                    Margin="20" />
+        </Grid>
+    </Border>
+</Window>
