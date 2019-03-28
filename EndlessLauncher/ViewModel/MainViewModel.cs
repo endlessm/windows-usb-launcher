@@ -28,7 +28,7 @@ namespace EndlessLauncher.ViewModel
         private bool launchEnabled;
         private bool rebootEnabled;
 
-        private Dictionary<string, Requirement> requirements;
+        private Dictionary<string, bool> requirements;
 
         private RelayCommand launchRelayCommand;
         private RelayCommand closeRelayCommand;
@@ -41,7 +41,7 @@ namespace EndlessLauncher.ViewModel
             this.sysInfoService = sysInfoService;
             this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted ;
 
-            requirements = sysInfoService.Verify();
+            requirements = sysInfoService.VerifyRequirements();
             CheckRequirements();
         }
 
@@ -62,10 +62,15 @@ namespace EndlessLauncher.ViewModel
         private void CheckRequirements()
         {
             bool allRequirementsMet = true;
-            foreach(KeyValuePair<string, Requirement> pair in requirements)
+            foreach(KeyValuePair<string, bool> pair in requirements)
             {
                 //TODO handle individual errors
-                allRequirementsMet &= pair.Value.IsMet;
+                LogHelper.Log("MainViewModel:CheckRequirements: " + pair.Key + " " + pair.Value);
+                if (!pair.Value)
+                {
+                    FirmwareSetupStatus += pair.Key + " " + pair.Value + " ";
+                }
+                allRequirementsMet &= pair.Value;
             }
 
             LaunchEnabled = allRequirementsMet;

@@ -493,6 +493,7 @@ namespace EndlessLauncher.service
 
 
             //Get the blockSize of the ESP partition
+            //TODO query only the necessary fields
             ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_DiskPartition where DiskIndex like " + physicalDriveNumber);
             ManagementObjectSearcher moSearcher = new ManagementObjectSearcher(query);
 
@@ -506,6 +507,7 @@ namespace EndlessLauncher.service
             }
 
             //Query for the Volume{GUID}
+            //TODO query only the necessary fields
             query = new ObjectQuery("SELECT * FROM Win32_Volume");
             moSearcher = new ManagementObjectSearcher(query);
 
@@ -578,6 +580,7 @@ namespace EndlessLauncher.service
         {
             int disk = -1;
 
+            //TODO query only the necessary fields
             string query = "ASSOCIATORS OF {Win32_LogicalDisk.DeviceID='" +
                 driveLetter + "'} " +
                 "WHERE AssocClass = Win32_LogicalDiskToPartition";
@@ -591,6 +594,7 @@ namespace EndlessLauncher.service
                     partition["DeviceID"] + "'}" +
                     " WHERE AssocClass = Win32_DiskDriveToDiskPartition";
 
+                //TODO query only the necessary fields
                 queryResults = new ManagementObjectSearcher(query);
 
                 ManagementObjectCollection drives = queryResults.Get();

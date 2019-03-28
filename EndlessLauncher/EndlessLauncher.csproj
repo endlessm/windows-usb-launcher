@@ -102,7 +102,6 @@
     <Compile Include="service\EFIFirmwareService.cs" />
     <Compile Include="service\FirmwareServiceBase.cs" />
     <Compile Include="service\LegacyService.cs" />
-    <Compile Include="model\Requirement.cs" />
     <Compile Include="service\SystemVerificationService.cs" />
     <Compile Include="utility\Utils.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

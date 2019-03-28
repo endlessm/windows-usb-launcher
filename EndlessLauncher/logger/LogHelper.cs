@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace EndlessLauncher.logger
 {
+    //TODO Fix formatting using string concatenation
     public static class LogHelper
     {
         private static List<LoggerBase> loggerList = new List<LoggerBase>();
