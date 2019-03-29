@@ -3,6 +3,7 @@ using EndlessLauncher.model;
 using System;
 using System.Collections.Generic;
 using System.Security.Principal;
+using static EndlessLauncher.NativeAPI;
 
 namespace EndlessLauncher.service
 {
@@ -14,6 +15,11 @@ namespace EndlessLauncher.service
             Windows10 = 10
         }
 
+        private static readonly List<FirmwareType> supportedFirmwares = new List<FirmwareType>
+        {
+            FirmwareType.FirmwareTypeUefi
+        };
+
         private const int MINIMUM_RAM = 2 * 1024 * 1024; //KB
         private const int SUPPORTED_WINDOWS_VERSION = 10;
         private const int MINIMUM_CPU_CORES = 2;
@@ -23,6 +29,22 @@ namespace EndlessLauncher.service
         private const string REQUIREMENT_KEY_MINIMUM_RAM = "MinimumRAM";
         private const string REQUIREMENT_KEY_ARCHITECTURE = "64-BitsOperatingSystem";
         private const string REQUIREMENT_KEY_MULTI_CORE_CPU = "MultiCoreCPU";
+        private const string REQUIREMENT_KEY_SUPPORTED_FIRMWARE = "SupportedFirmware";
+
+        private static readonly FirmwareType firmwareType;
+
+        public static FirmwareType FirmwareType
+        {
+            get
+            {
+                return firmwareType;
+            }
+        }
+
+        static SystemVerificationService()
+        {
+            GetFirmwareType(ref firmwareType);
+        }
 
         private Dictionary<string, bool> requirements = new Dictionary<string, bool>()
         {
@@ -31,18 +53,28 @@ namespace EndlessLauncher.service
             { REQUIREMENT_KEY_MINIMUM_RAM, false },
             { REQUIREMENT_KEY_ARCHITECTURE, Environment.Is64BitOperatingSystem },
             { REQUIREMENT_KEY_MULTI_CORE_CPU, false },
+            { REQUIREMENT_KEY_SUPPORTED_FIRMWARE, false },
         };
 
+        //TODO Don't check for everything if one fails? i.e. Supported Firmware != UEFI
         public Dictionary<string, bool> VerifyRequirements()
         {
             LogHelper.Log("SystemVerificationService:VerifyRequirements: ");
 
+            requirements[REQUIREMENT_KEY_SUPPORTED_FIRMWARE] = IsFirwareSupported();
+            requirements[REQUIREMENT_KEY_MULTI_CORE_CPU] = CheckCPUCoresCount();
             requirements[REQUIREMENT_KEY_ADMINISTRATOR] = RunningAsAdministrator();
             requirements[REQUIREMENT_KEY_WINDOWS_VERSION] = VerifyWindowsVersion();
             requirements[REQUIREMENT_KEY_MINIMUM_RAM] = VerifyRAM();
             requirements[REQUIREMENT_KEY_MULTI_CORE_CPU] = CheckCPUCoresCount();
 
+
             return requirements;
+        }
+
+        private bool IsFirwareSupported()
+        {
+            return supportedFirmwares.Contains(FirmwareType);
         }
 
         private bool RunningAsAdministrator()

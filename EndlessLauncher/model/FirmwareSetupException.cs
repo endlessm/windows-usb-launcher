@@ -22,6 +22,7 @@ namespace EndlessLauncher.model
             CreateNewUefiEntryError,
             AddToBootOrderError,
             SetBootNextError,
+            BiosModeLegacy,
         };
 
         public FirmwareSetupException(ErrorCode errorCode, string message) : base(message)

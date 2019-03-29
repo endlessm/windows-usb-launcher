@@ -34,19 +34,27 @@ namespace EndlessLauncher.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            //Services
-            FirmwareType type = GetFirmwareType();
-            switch (type)
+            #region Services
+
+            //Register the system requirement verification service.
+            SimpleIoc.Default.Register<SystemVerificationService, SystemVerificationService>();
+
+            //Register the firmware service
+            switch (SystemVerificationService.FirmwareType)
             {
                 case FirmwareType.FirmwareTypeUefi:
                     SimpleIoc.Default.Register<FirmwareServiceBase, EFIFirmwareService>();
                     break;
+
+                case FirmwareType.FirmwareTypeBios:
+                    SimpleIoc.Default.Register<FirmwareServiceBase, LegacyFirmwareService>();
+                    break;
             }
+            #endregion
 
-            SimpleIoc.Default.Register<SystemVerificationService, SystemVerificationService>();
-
-            //View Models
+            #region ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
+            #endregion
         }
 
         public MainViewModel MainViewModel
@@ -62,15 +70,6 @@ namespace EndlessLauncher.ViewModel
             // TODO Clear the ViewModels
         }
 
-        private static FirmwareType GetFirmwareType()
-        {
-            FirmwareType type = FirmwareType.FirmwareTypeUnknown;
-            if (NativeAPI.GetFirmwareType(ref type))
-            {
-                return type;
-            }
-            return FirmwareType.FirmwareTypeUnknown;
 
-        }
     }
 }
