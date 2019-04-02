@@ -196,8 +196,8 @@ namespace EndlessLauncher.service
             }
             catch (Exception ex)
             {
-                LogHelper.Log("SystemVerificationService:VerifyRequirements: Message: " + ex.Message);
-                LogHelper.Log("SystemVerificationService:VerifyRequirements: StackTrace: " + ex.StackTrace);
+                LogHelper.Log("SystemVerificationService:VerifyRequirements: Message: {0}", ex.Message);
+                LogHelper.Log("SystemVerificationService:VerifyRequirements: StackTrace: {0}", ex.StackTrace);
 
                 VerificationFailed?.Invoke(this, SystemVerificationErrorCode.GenericError);
             }
@@ -218,7 +218,7 @@ namespace EndlessLauncher.service
 
         private bool VerifyWindowsVersion()
         {
-            LogHelper.Log("SystemVerificationService:VerifyWindowsVersion: ");
+            LogHelper.Log("SystemVerificationService:VerifyWindowsVersion:");
 
             var values = Enum.GetValues(typeof(SupportedOS));
 
@@ -237,7 +237,7 @@ namespace EndlessLauncher.service
         {
             GetPhysicallyInstalledSystemMemory(out long totalInstalledRam);
 
-            LogHelper.Log("SystemVerificationService:VerifyRAM: Installed: " + totalInstalledRam / 1024 / 1024 + " Gb");
+            LogHelper.Log("SystemVerificationService:VerifyRAM: Installed: {0} GB", totalInstalledRam / 1024 / 1024);
 
             return MINIMUM_RAM <= totalInstalledRam;
         }
@@ -251,7 +251,7 @@ namespace EndlessLauncher.service
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
             }
 
-            LogHelper.Log("CheckCPUCoresCount:NumberOfCores: " + coreCount);
+            LogHelper.Log("CheckCPUCoresCount:NumberOfCores: {0}", coreCount);
 
             return coreCount >= MINIMUM_CPU_CORES;
         }
@@ -274,7 +274,7 @@ namespace EndlessLauncher.service
             {
                 if (currentPhysicalDiskIndex == -1)
                 {
-                    LogHelper.Log("CurrentPhysicalDiskIndex: Current drive: " + CurrentDriveLetter);
+                    LogHelper.Log("CurrentPhysicalDiskIndex: Current drive: {0}", CurrentDriveLetter);
 
                     currentPhysicalDiskIndex = GetDiskForMountedDrive(CurrentDriveLetter);
                 }
@@ -331,17 +331,17 @@ namespace EndlessLauncher.service
             }
 
             pnpDeviceID = pnpDeviceID.Substring(pnpDeviceID.LastIndexOf("\\") + 1, pnpDeviceID.Length - pnpDeviceID.LastIndexOf("\\") - 3);
-            LogHelper.Log("VerifyUSB30: PNPDeviceID: " + pnpDeviceID);
+            LogHelper.Log("VerifyUSB30: PNPDeviceID: {0}", pnpDeviceID);
 
             USBDevice usbDevice = GetCurrentUSBDevice(pnpDeviceID);
 
             if (usbDevice == null)
             {
-                LogHelper.Log("VerifyUSB30: Invalid usb device: ");
+                LogHelper.Log("VerifyUSB30: Invalid usb device:");
                 throw new SystemVerificationException(SystemVerificationErrorCode.UsbDeviceNotFound, "Could not find usb device");
             }
 
-            LogHelper.Log("VerifyUSB30: Found the USB device: " + usbDevice);
+            LogHelper.Log("VerifyUSB30: Found the USB device: {0}", usbDevice);
 
             List<UsbHub> hubs = GetAvailableUSBPorts();
 
@@ -395,7 +395,7 @@ namespace EndlessLauncher.service
 
         private USBDevice GetCurrentUSBDevice(string pnpDeviceId)
         {
-            LogHelper.Log("GetCurrentUSBDevice: PNPDeviceID: " + pnpDeviceId);
+            LogHelper.Log("GetCurrentUSBDevice: PNPDeviceID: {0}", pnpDeviceId);
 
             USBDevice usbDevice = null;
 
@@ -418,14 +418,14 @@ namespace EndlessLauncher.service
 
                 //enumerate all connected usb devices
                 bool hubEnumSucces = SetupDiEnumDeviceInterfaces(deviceEnumHandle, IntPtr.Zero, ref usbHubGuid, memberIndex, ref devInterfaceData);
-                LogHelper.Log("GetCurrentUSBDevice: Found at least one usb device: " + hubEnumSucces);
+                LogHelper.Log("GetCurrentUSBDevice: Found at least one usb device: {0}", hubEnumSucces);
 
                 while (hubEnumSucces)
                 {
                     string devicePath = GetDevicePath(deviceEnumHandle, ref devInterfaceData, ref devInfodata);
                     if (devicePath.ToLower().Contains(pnpDeviceId.ToLower()))
                     {
-                        LogHelper.Log("GetCurrentUSBDevice: devicePath: " + devicePath);
+                        LogHelper.Log("GetCurrentUSBDevice: devicePath: {0}", devicePath);
                         usbDevice = new USBDevice()
                         {
                             DevicePath = devicePath,
@@ -441,7 +441,7 @@ namespace EndlessLauncher.service
             }
             else
             {
-                LogHelper.Log("GetCurrentUSBDevice:Invalid Handle: ");
+                LogHelper.Log("GetCurrentUSBDevice:Invalid Handle:");
             }
             return usbDevice;
         }
@@ -457,7 +457,7 @@ namespace EndlessLauncher.service
             }
             else
             {
-                LogHelper.Log("GetDeviceProperty: failed: " + Marshal.GetLastWin32Error());
+                LogHelper.Log("GetDeviceProperty: Failed: Error: {0}", Marshal.GetLastWin32Error());
             }
 
             return devicePropertyValue;
@@ -485,14 +485,14 @@ namespace EndlessLauncher.service
                 }
                 else
                 {
-                    LogHelper.Log("GetDevicePath: failed to get devicePath:" + Marshal.GetLastWin32Error());
+                    LogHelper.Log("GetDevicePath: Failed to get devicePath: {0}", Marshal.GetLastWin32Error());
                 }
 
                 Marshal.FreeHGlobal(devInfoDetailData);
             }
             else
             {
-                LogHelper.Log("GetDevicePath: failed to get size: " + Marshal.GetLastWin32Error());
+                LogHelper.Log("GetDevicePath: Failed to get size: {0}", Marshal.GetLastWin32Error());
             }
 
             return devicePathName;
@@ -547,7 +547,7 @@ namespace EndlessLauncher.service
             }
             else
             {
-                LogHelper.Log("GetAvailableUSBPorts: Invalid handle: " + Marshal.GetLastWin32Error());
+                LogHelper.Log("GetAvailableUSBPorts: Invalid handle: Error: {0}", Marshal.GetLastWin32Error());
             }
 
             return hubList;
@@ -575,7 +575,7 @@ namespace EndlessLauncher.service
                 if (DeviceIoControl(hndl, IOCTL_USB_GET_NODE_INFORMATION, ptrNodeInfo, usbNodeInfoSize, ptrNodeInfo, usbNodeInfoSize, out UInt32 returnedSize, IntPtr.Zero))
                 {
                     usbNodeInfo = (USB_NODE_INFORMATION)Marshal.PtrToStructure(ptrNodeInfo, typeof(USB_NODE_INFORMATION));
-                    LogHelper.Log("CheckHubPorts:Total number of ports:" + usbNodeInfo.u.HubInformation.HubDescriptor.bNumberOfPorts);
+                    LogHelper.Log("CheckHubPorts:Total number of ports: {0}", usbNodeInfo.u.HubInformation.HubDescriptor.bNumberOfPorts);
                     hub.PortCount = usbNodeInfo.u.HubInformation.HubDescriptor.bNumberOfPorts;
 
                     for (int index = 1; index <= hub.PortCount; index++)
@@ -592,7 +592,7 @@ namespace EndlessLauncher.service
                 }
                 else
                 {
-                    LogHelper.Log("CheckHubPorts: Failed to get usb hub port count: " + Marshal.GetLastWin32Error());
+                    LogHelper.Log("CheckHubPorts: Failed to get usb hub port count: {0}", Marshal.GetLastWin32Error());
                 }
                 Marshal.FreeHGlobal(ptrNodeInfo);
 
@@ -626,7 +626,7 @@ namespace EndlessLauncher.service
             }
             else
             {
-                LogHelper.Log("CheckHubPorts: IsUSB30Port: Failed: " + Marshal.GetLastWin32Error());
+                LogHelper.Log("CheckHubPorts: IsUSB30Port: Failed: Error: {0}", Marshal.GetLastWin32Error());
             }
 
             Marshal.FreeHGlobal(ptrNodeInfoExV2);

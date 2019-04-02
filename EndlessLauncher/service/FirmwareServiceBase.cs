@@ -27,12 +27,13 @@ namespace EndlessLauncher.service
                 SetupCompleted?.Invoke(this, null);
             } catch(FirmwareSetupException ex)
             {
-                LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: " + ex.Message);
+                LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: Error:{0} Message:{1}", ex.Code, ex.Message);
                 SetupFailed?.Invoke(this, ex.Code);
 
             } catch(Exception ex)
             {
-                LogHelper.Log("SetupEndlessLaunchAsync:Exception: " + ex.Message);
+                LogHelper.Log("SetupEndlessLaunchAsync:Exception: Message: {0}", ex.Message);
+                LogHelper.Log("SetupEndlessLaunchAsync:Exception: StackTrace: {0}", ex.StackTrace);
                 SetupFailed?.Invoke(this, FirmwareSetupErrorCode.GenericError);
             }
 
@@ -46,7 +47,7 @@ namespace EndlessLauncher.service
                 ShutdownReason.MinorOther |
                 ShutdownReason.FlagPlanned))
             {
-                LogHelper.Log("FirmwareServiceBase: ExitWindowsEx: Failed");
+                LogHelper.Log("FirmwareServiceBase: Reboot Failed");
             }
         }
 

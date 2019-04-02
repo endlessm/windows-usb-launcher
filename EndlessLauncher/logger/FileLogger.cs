@@ -6,7 +6,7 @@ namespace EndlessLauncher.logger
 {
     class FileLogger : LoggerBase
     {
-        private string logFilePath = "";
+        private readonly string logFilePath = "";
         public FileLogger()
         {
             try
@@ -41,7 +41,6 @@ namespace EndlessLauncher.logger
                     }
                 }
                 catch (Exception) { }
-
             }
         }
     }
