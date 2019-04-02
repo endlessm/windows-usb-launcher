@@ -39,23 +39,36 @@ namespace EndlessLauncher.ViewModel
         {
             this.firmwareService = firmwareService;
             this.sysInfoService = sysInfoService;
-            this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted ;
 
-            requirements = sysInfoService.VerifyRequirements();
-            CheckRequirements();
+            //Subscribe for firmware setup events
+            this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted;
+            this.firmwareService.SetupFailed += FirmwareService_SetupFailed;
+
+            //Subscribe for verification events
+            this.sysInfoService.VerificationFailed += SysInfoService_VerificationFailed;
+            this.sysInfoService.VerificationPassed += SysInfoService_VerificationPassed;
+
+            sysInfoService.VerifyRequirements();
         }
 
-        //TODO handle Errors
-        private void FirmwareService_SetupCompleted(object sender, FirmwareSetupResult e)
+        private void SysInfoService_VerificationPassed(object sender, System.EventArgs e)
         {
-            LogHelper.Log("FirmwareService_SetupCompleted:");
-            if (e.Success)
-            {
-                FirmwareSetupStatus = "Status: Success";
-            } else
-            {
-                FirmwareSetupStatus = "Status: ErrorCode: " + (int)e.Error.Code;
-            }
+            LaunchEnabled = true;
+            FirmwareSetupStatus = "Status: System Verification: Success";
+        }
+
+        private void SysInfoService_VerificationFailed(object sender, SystemVerificationErrorCode e)
+        {
+            FirmwareSetupStatus = "Status: ErrorCode: " + (int)e + " " + e;
+        }
+
+        private void FirmwareService_SetupFailed(object sender, FirmwareSetupErrorCode e)
+        {
+            FirmwareSetupStatus = "Status: ErrorCode: " + (int)e + " " + e;
+        }
+
+        private void FirmwareService_SetupCompleted(object sender, System.EventArgs e)
+        {
             RebootEnabled = true;
         }
 

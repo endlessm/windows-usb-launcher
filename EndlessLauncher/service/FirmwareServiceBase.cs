@@ -8,30 +8,35 @@ namespace EndlessLauncher.service
 {
     public abstract class FirmwareServiceBase
     {
-        public event EventHandler<FirmwareSetupResult> SetupCompleted;
+        public event EventHandler SetupCompleted;
+        public event EventHandler<FirmwareSetupErrorCode> SetupFailed;
+        protected SystemVerificationService systemVerificationService;
+
+        public FirmwareServiceBase(SystemVerificationService service)
+        {
+            this.systemVerificationService = service;
+        }
 
         public async void SetupEndlessLaunchAsync()
         {
             LogHelper.Log("SetupEndlessLaunchAsync:Start:");
-            FirmwareSetupResult result;
-
+            
             try
             {
-                result = await Task.Run(() => SetupEndlessLaunch());
+                await Task.Run(() => SetupEndlessLaunch());
+                SetupCompleted?.Invoke(this, null);
             } catch(FirmwareSetupException ex)
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: " + ex.Message);
-                result = FirmwareSetupResult.CreateFailed(ex);
+                SetupFailed?.Invoke(this, ex.Code);
 
             } catch(Exception ex)
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: " + ex.Message);
-                result = FirmwareSetupResult.CreateFailed(new FirmwareSetupException(FirmwareSetupException.ErrorCode.GenericError, "Unknown Error"));
+                SetupFailed?.Invoke(this, FirmwareSetupErrorCode.GenericError);
             }
 
             LogHelper.Log("SetupEndlessLaunchAsync:End:");
-
-            SetupCompleted?.Invoke(this, result);
         }
 
         public void Reboot()
@@ -41,11 +46,11 @@ namespace EndlessLauncher.service
                 ShutdownReason.MinorOther |
                 ShutdownReason.FlagPlanned))
             {
-                LogHelper.Log("FirmwareServiceBase: EWX_REBOOT: Failed");
+                LogHelper.Log("FirmwareServiceBase: ExitWindowsEx: Failed");
             }
         }
 
-        protected abstract FirmwareSetupResult SetupEndlessLaunch();
+        protected abstract void SetupEndlessLaunch();
     }
 
 }

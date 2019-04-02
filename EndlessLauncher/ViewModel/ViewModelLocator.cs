@@ -46,6 +46,8 @@ namespace EndlessLauncher.ViewModel
                     SimpleIoc.Default.Register<FirmwareServiceBase, EFIFirmwareService>();
                     break;
 
+                case FirmwareType.FirmwareTypeUnknown:
+                case FirmwareType.FirmwareTypeMax:
                 case FirmwareType.FirmwareTypeBios:
                     SimpleIoc.Default.Register<FirmwareServiceBase, LegacyFirmwareService>();
                     break;

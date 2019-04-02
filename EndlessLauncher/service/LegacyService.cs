@@ -5,9 +5,11 @@ namespace EndlessLauncher.service
 {
     public class LegacyFirmwareService : FirmwareServiceBase
     {
-        protected override FirmwareSetupResult SetupEndlessLaunch()
+        public LegacyFirmwareService(SystemVerificationService service) : base(service) { }
+
+        protected override void SetupEndlessLaunch()
         {
-            throw new FirmwareSetupException(FirmwareSetupException.ErrorCode.BiosModeLegacy, "Legacy Bios mode");
+            throw new FirmwareSetupException(FirmwareSetupErrorCode.FirmwareServiceInitializationError, "Unsupported firmware");
         }
     }
 }

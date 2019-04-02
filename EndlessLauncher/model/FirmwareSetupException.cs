@@ -6,35 +6,10 @@ using System.Threading.Tasks;
 
 namespace EndlessLauncher.model
 {
-    public class FirmwareSetupException : Exception
+    public class FirmwareSetupException : EndlessExceptionBase<FirmwareSetupErrorCode>
     {
-        public enum ErrorCode : int
+        public FirmwareSetupException(FirmwareSetupErrorCode errorCode, string message) : base(errorCode, message)
         {
-            GenericError = -1,
-            OpenProcessTokenError = 1,
-            LookupPrivilegeError,
-            AdjustTokenPrivilegeError,
-            EspVolumeNotFoundError,
-            GetBootBorderError,
-            NoExistingUefiEntriesError,
-            GetPartitionEspInfoError,
-            FindFreeUefiEntryError,
-            CreateNewUefiEntryError,
-            AddToBootOrderError,
-            SetBootNextError,
-            BiosModeLegacy,
-        };
-
-        public FirmwareSetupException(ErrorCode errorCode, string message) : base(message)
-        {
-            this.Code = errorCode;
         }
-
-        public ErrorCode Code
-        {
-            get;
-            private set;
-        }
-
     }
 }

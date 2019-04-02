@@ -96,8 +96,10 @@
     <Compile Include="logger\FileLogger.cs" />
     <Compile Include="logger\LoggerBase.cs" />
     <Compile Include="logger\LogHelper.cs" />
+    <Compile Include="model\EndlessExceptionBase.cs" />
+    <Compile Include="model\ErrorCodes.cs" />
     <Compile Include="model\FirmwareSetupException.cs" />
-    <Compile Include="model\FirmwareSetupResult.cs" />
+    <Compile Include="model\SystemVerificationException.cs" />
     <Compile Include="NativeAPI.cs" />
     <Compile Include="service\EFIFirmwareService.cs" />
     <Compile Include="service\FirmwareServiceBase.cs" />
