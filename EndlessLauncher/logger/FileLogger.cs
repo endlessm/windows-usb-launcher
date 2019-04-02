@@ -11,12 +11,11 @@ namespace EndlessLauncher.logger
         {
             try
             {
-                string tempFolder = System.IO.Path.GetTempPath();
-                logFilePath += tempFolder 
+                string logFolder = AppDomain.CurrentDomain.BaseDirectory;
+                logFilePath += logFolder 
                     + "EndlessLauncher_" 
                     + DateTime.Now.ToString("dd_MM_yyyy_hh_mm") 
                     + ".log";
-
             }
             catch (Exception e)
             {
@@ -24,12 +23,10 @@ namespace EndlessLauncher.logger
             }
 
             Debug.WriteLine(logFilePath);
-            
         }
 
         public override void Log(string message)
         {
-
             lock (lockObject)
             {
                 try
