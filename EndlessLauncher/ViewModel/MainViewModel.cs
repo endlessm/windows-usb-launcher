@@ -3,8 +3,6 @@ using EndlessLauncher.model;
 using EndlessLauncher.service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace EndlessLauncher.ViewModel
 {
@@ -28,11 +26,10 @@ namespace EndlessLauncher.ViewModel
         private bool launchEnabled;
         private bool rebootEnabled;
 
-        private Dictionary<string, bool> requirements;
-
         private RelayCommand launchRelayCommand;
         private RelayCommand closeRelayCommand;
         private RelayCommand rebootRelayCommand;
+
         private string firmwareSetupStatus = "Status:";
 
         public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService)
@@ -70,23 +67,6 @@ namespace EndlessLauncher.ViewModel
         private void FirmwareService_SetupCompleted(object sender, System.EventArgs e)
         {
             RebootEnabled = true;
-        }
-
-        private void CheckRequirements()
-        {
-            bool allRequirementsMet = true;
-            foreach(KeyValuePair<string, bool> pair in requirements)
-            {
-                //TODO handle individual errors
-                LogHelper.Log("MainViewModel:CheckRequirements: " + pair.Key + " " + pair.Value);
-                if (!pair.Value)
-                {
-                    FirmwareSetupStatus += pair.Key + " " + pair.Value + " ";
-                }
-                allRequirementsMet &= pair.Value;
-            }
-
-            LaunchEnabled = allRequirementsMet;
         }
 
         public RelayCommand LaunchRelayCommand
