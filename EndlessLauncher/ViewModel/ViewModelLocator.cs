@@ -14,7 +14,6 @@
 
 using CommonServiceLocator;
 using EndlessLauncher.service;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using static EndlessLauncher.NativeAPI;
@@ -58,6 +57,8 @@ namespace EndlessLauncher.ViewModel
             #region ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<IncompatibilityViewModel>();
+            SimpleIoc.Default.Register<WrongUSBPortViewModel>();
+            SimpleIoc.Default.Register<WrongUSBPortInfoViewModel>();
             #endregion
         }
 
@@ -77,6 +78,22 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
+        public WrongUSBPortViewModel WrongUSBPortViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<WrongUSBPortViewModel>();
+            }
+        }
+
+        public WrongUSBPortInfoViewModel WrongUSBPortInfoViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<WrongUSBPortInfoViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
         }
@@ -86,7 +103,7 @@ namespace EndlessLauncher.ViewModel
             var navigationService = new FrameNavigationService();
             navigationService.Configure("WelcomePage", new Uri("../Views/WelcomePage.xaml", UriKind.Relative));
             navigationService.Configure("IncompatibilityPage", new Uri("../Views/IncompatibilityPage.xaml", UriKind.Relative));
-            navigationService.Configure("WrongPortInfoPage", new Uri("../Views/WrongPortInfoPage.xaml", UriKind.Relative));
+            navigationService.Configure("WrongUSBPortInfoPage", new Uri("../Views/WrongUSBPortInfoPage.xaml", UriKind.Relative));
             navigationService.Configure("WrongUSBPortPage", new Uri("../Views/WrongUSBPortPage.xaml", UriKind.Relative));
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }

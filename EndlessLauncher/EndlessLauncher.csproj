@@ -117,17 +117,19 @@
     <Compile Include="ViewModel\IncompatibilityViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WrongUSBPortInfoViewModel.cs" />
+    <Compile Include="ViewModel\WrongUSBPortViewModel.cs" />
     <Compile Include="Views\IncompatibilityPage.xaml.cs">
       <DependentUpon>IncompatibilityPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\WrongPortInfoPage.xaml.cs">
-      <DependentUpon>WrongPortInfoPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\WrongUSBPortPage.xaml.cs">
       <DependentUpon>WrongUSBPortPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WrongUSBPortInfoPage.xaml.cs">
+      <DependentUpon>WrongUSBPortInfoPage.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -149,11 +151,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WrongPortInfoPage.xaml">
+    <Page Include="Views\WrongUSBPortPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WrongUSBPortPage.xaml">
+    <Page Include="Views\WrongUSBPortInfoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -230,6 +232,11 @@
     <Resource Include="Resources\Images\customer_support_default.png" />
     <Resource Include="Resources\Images\customer_support_hover.png" />
     <Resource Include="Resources\Images\customer_support_pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\back_default.png" />
+    <Resource Include="Resources\Images\back_hover.png" />
+    <Resource Include="Resources\Images\back_pressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

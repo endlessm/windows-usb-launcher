@@ -2,13 +2,89 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:EndlessLauncher.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:resources="clr-namespace:EndlessLauncher.Resources"
+      DataContext="{Binding WrongUSBPortViewModel, Source={StaticResource Locator}}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="WrongUSBPortPage">
+    <Page.Resources>
+        <Style x:Key="InfoButton"
+               TargetType="Button">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="True" />
+            <Setter Property="Margin"
+                    Value="{StaticResource DefaultButtonMargin}" />
+            <Setter Property="Width"
+                    Value="36" />
+            <Setter Property="Height"
+                    Value="36" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            <Border.Background>
+                                <ImageBrush ImageSource="/Resources/Images/wrong_port_default.png" />
+                            </Border.Background>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/wrong_port_hover.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/wrong_port_pressed.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
 
-    <Grid Background="Beige">
-        
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid Margin="{StaticResource DefaultPageMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0"
+               Style="{StaticResource PagePrimaryImageLogoStyle}"
+               Source="/Resources/Images/wrong_port.png" />
+
+        <StackPanel Grid.Row="1"
+                    Style="{StaticResource HackTextTitlePanelStyle}">
+
+            <TextBlock Text="{x:Static resources:Literals.wrong_port_partial_title}"
+                       Style="{StaticResource TitleTextBlockStyle}" />
+            <Image Grid.Row="0"
+                   Style="{StaticResource HackTextLogoStyle}" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="2"
+                   Style="{StaticResource MessageTextBlockStyle}"
+                   Text="{x:Static resources:Literals.wrong_port_msg}" />
+
+        <Button Grid.Row="3"
+                Command="{Binding MoreInfoRelayCommand}"
+                Style="{StaticResource InfoButton}" />
     </Grid>
 </Page>

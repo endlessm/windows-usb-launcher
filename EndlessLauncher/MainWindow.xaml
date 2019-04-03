@@ -48,6 +48,7 @@
 
             <Frame x:Name="MainFrame"
                    Background="White"
+                   NavigationUIVisibility="Hidden"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Stretch"
                    Grid.Row="1" />

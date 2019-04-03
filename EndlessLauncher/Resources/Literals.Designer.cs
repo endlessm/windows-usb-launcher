@@ -106,6 +106,24 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Most devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port..
+        /// </summary>
+        public static string wrong_port_info_msg1 {
+            get {
+                return ResourceManager.GetString("wrong_port_info_msg1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USB 3.0 ports are sometimes blue to distinguish them from USB 2.0 ports..
+        /// </summary>
+        public static string wrong_port_info_msg2 {
+            get {
+                return ResourceManager.GetString("wrong_port_info_msg2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
         /// </summary>
         public static string wrong_port_msg {

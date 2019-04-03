@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace EndlessLauncher.Views
 {
     /// <summary>
-    /// Interaction logic for WrongUSBPortPage.xaml
+    /// Interaction logic for WrongPortInfoPage.xaml
     /// </summary>
     public partial class WrongUSBPortPage : Page
     {

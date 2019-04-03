@@ -98,7 +98,7 @@ namespace EndlessLauncher.ViewModel
                     ?? (loadedCommand = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo("IncompatibilityPage");
+                        navigationService.NavigateTo("WelcomePage");
                     }));
             }
         }
