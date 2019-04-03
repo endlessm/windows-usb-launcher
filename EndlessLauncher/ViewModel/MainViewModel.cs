@@ -24,13 +24,10 @@ namespace EndlessLauncher.ViewModel
         private SystemVerificationService sysInfoService;
 
         private bool launchEnabled;
-        private bool rebootEnabled;
 
         private RelayCommand launchRelayCommand;
         private RelayCommand closeRelayCommand;
-        private RelayCommand rebootRelayCommand;
 
-        private string firmwareSetupStatus = "Status:";
         private IFrameNavigationService navigationService;
 
         public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
@@ -48,28 +45,38 @@ namespace EndlessLauncher.ViewModel
             this.sysInfoService.VerificationFailed += SysInfoService_VerificationFailed;
             this.sysInfoService.VerificationPassed += SysInfoService_VerificationPassed;
 
-            sysInfoService.VerifyRequirements();
         }
 
         private void SysInfoService_VerificationPassed(object sender, System.EventArgs e)
         {
+            navigationService.NavigateTo("WelcomePage");
             LaunchEnabled = true;
         }
 
         private void SysInfoService_VerificationFailed(object sender, SystemVerificationErrorCode e)
         {
-            FirmwareSetupStatus = "Status: ErrorCode: " + (int)e + " " + e;
+
+            LogHelper.Log("SystemVerificationFailed: " + e);
+            switch (e)
+            {
+                case SystemVerificationErrorCode.NotUSB30Port:
+                    navigationService.NavigateTo("WrongUSBPortPage");
+                    break;
+
+                default:
+                    navigationService.NavigateTo("IncompatibilityPage");
+                    break;
+            }
         }
 
         private void FirmwareService_SetupFailed(object sender, FirmwareSetupErrorCode e)
         {
-            FirmwareSetupStatus = "Status: ErrorCode: " + (int)e + " " + e;
+            navigationService.NavigateTo("IncompatibilityPage");
         }
 
         private void FirmwareService_SetupCompleted(object sender, System.EventArgs e)
         {
-            FirmwareSetupStatus = "Status: Firmware Setup: Success";
-            RebootEnabled = true;
+            firmwareService.Reboot();
         }
 
         public RelayCommand LaunchRelayCommand
@@ -98,7 +105,7 @@ namespace EndlessLauncher.ViewModel
                     ?? (loadedCommand = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo("WelcomePage");
+                        sysInfoService.VerifyRequirements();
                     }));
             }
         }
@@ -117,20 +124,6 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
-        public RelayCommand RebootRelayCommand
-        {
-            get
-            {
-                return rebootRelayCommand
-                    ?? (rebootRelayCommand = new RelayCommand(
-                    () =>
-                    {
-                        LogHelper.Log("rebootRelayCommand: ");
-                        firmwareService.Reboot();
-                    }));
-            }
-        }
-
         public bool LaunchEnabled
         {
             get
@@ -142,30 +135,5 @@ namespace EndlessLauncher.ViewModel
                 Set(ref launchEnabled, value);
             }
         }
-
-        public bool RebootEnabled
-        {
-            get
-            {
-                return rebootEnabled;
-            }
-            set
-            {
-                Set(ref rebootEnabled, value);
-            }
-        }
-
-        public string FirmwareSetupStatus
-        {
-            get
-            {
-                return firmwareSetupStatus;
-            }
-            set
-            {
-                Set(ref firmwareSetupStatus, value);
-            }
-        }
-
     }
 }

@@ -189,6 +189,7 @@ namespace EndlessLauncher.service
                 await Task.Run(() => VerifyUSB30());
                 LogHelper.Log("SystemVerificationService:VerifyRequirements: Success");
                 VerificationPassed?.Invoke(this, null);
+
             }
             catch (SystemVerificationException ex)
             {
