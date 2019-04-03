@@ -1,14 +1,114 @@
 ﻿<Page x:Class="EndlessLauncher.Views.IncompatibilityPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:resources="clr-namespace:EndlessLauncher.Resources"
       xmlns:local="clr-namespace:EndlessLauncher.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      DataContext="{Binding IncompatibilityViewModel, Source={StaticResource Locator}}"
+      mc:Ignorable="d"
+      d:DesignHeight="450"
+      d:DesignWidth="800"
       Title="IncompatibilityPage">
 
-    <Grid Background="Red">
-        
+    <Page.Resources>
+        <sys:Double x:Key="TitleFontSizeOverride">28</sys:Double>
+
+        <Style x:Key="HyperlinkTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Top"/>
+            <Setter Property="FontSize"
+                    Value="12"/>
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="0,10,0,0" />
+        </Style>
+        <Style x:Key="CustomerSupportButtonStyle"
+               TargetType="Button">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="True" />
+            <Setter Property="Margin"
+                    Value="{StaticResource DefaultButtonMargin}" />
+            <Setter Property="Width"
+                    Value="120" />
+            <Setter Property="Height"
+                    Value="30" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            <Border.Background>
+                                <ImageBrush ImageSource="/Resources/Images/customer_support_default.png" />
+                            </Border.Background>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/customer_support_hover.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/customer_support_pressed.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="{StaticResource DefaultPageMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0"
+               Style="{StaticResource PagePrimaryImageLogoStyle}"
+               Source="/Resources/Images/incompatible_usb.png" />
+
+        <StackPanel Grid.Row="1"
+                    Style="{StaticResource HackTextTitlePanelStyle}">
+
+            <TextBlock Text="{x:Static resources:Literals.incompatibility_title}"
+                       FontSize="{StaticResource TitleFontSizeOverride}"
+                       Style="{StaticResource TitleTextBlockStyle}" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="2"
+                   Style="{StaticResource MessageTextBlockStyle}"
+                   Text="{x:Static resources:Literals.incompatibility_msg}" />
+
+        <Button Grid.Row="3"
+                Command="{Binding SupportRelayCommand}"
+                Style="{StaticResource CustomerSupportButtonStyle}" />
+
+        <TextBlock Grid.Row="4"
+                   Style="{StaticResource HyperlinkTextBlockStyle}">
+            <Hyperlink Command="{Binding ShowLogRelayCommand}">
+                <Run Text="{x:Static resources:Literals.log_file_title}" />
+            </Hyperlink>
+        </TextBlock>
     </Grid>
 </Page>

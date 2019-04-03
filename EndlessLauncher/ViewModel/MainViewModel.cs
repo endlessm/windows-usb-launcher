@@ -98,7 +98,7 @@ namespace EndlessLauncher.ViewModel
                     ?? (loadedCommand = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo("WrongPortInfoPage");
+                        navigationService.NavigateTo("IncompatibilityPage");
                     }));
             }
         }

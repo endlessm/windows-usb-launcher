@@ -23,7 +23,8 @@
             <Thickness x:Key="DefaultPageMargin">20</Thickness>
             <Thickness x:Key="DefaultMessageMargin">0,10,0,0</Thickness>
             <Thickness x:Key="DefaultButtonMargin">0,40,0,0</Thickness>
-            <Thickness x:Key="HackTextLogoAlignmentMargin">20,40,0,10</Thickness>
+            <Thickness x:Key="HackTitlePanelMargin">0,40,0,0</Thickness>
+            <Thickness x:Key="HackTextLogoAlignmentMargin">20,0,0,10</Thickness>
 
             <SolidColorBrush x:Key="AppBorderBrush"
                              Color="#6c6c6c" />
@@ -91,6 +92,8 @@
                         Value="Center" />
                 <Setter Property="Orientation"
                         Value="Horizontal" />
+                <Setter Property="Margin"
+                        Value="{StaticResource HackTitlePanelMargin}" />
             </Style>
 
             <Style x:Key="PagePrimaryImageLogoStyle"

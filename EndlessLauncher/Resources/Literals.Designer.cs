@@ -61,6 +61,33 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please contact us with any other questions..
+        /// </summary>
+        public static string incompatibility_msg {
+            get {
+                return ResourceManager.GetString("incompatibility_msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This USB stick is not compatibile with you computer..
+        /// </summary>
+        public static string incompatibility_title {
+            get {
+                return ResourceManager.GetString("incompatibility_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log file.
+        /// </summary>
+        public static string log_file_title {
+            get {
+                return ResourceManager.GetString("log_file_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click below to restart your computer into the HACK experience.
         /// </summary>
         public static string welcome_click_to_restart_msg {

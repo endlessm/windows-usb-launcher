@@ -7,22 +7,9 @@ namespace EndlessLauncher.logger
     class FileLogger : LoggerBase
     {
         private readonly string logFilePath = "";
-        public FileLogger()
+        public FileLogger(string logFilePath)
         {
-            try
-            {
-                string logFolder = AppDomain.CurrentDomain.BaseDirectory;
-                logFilePath += logFolder 
-                    + "EndlessLauncher_" 
-                    + DateTime.Now.ToString("dd_MM_yyyy_hh_mm") 
-                    + ".log";
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error: " + e.Message);
-            }
-
-            Debug.WriteLine(logFilePath);
+            this.logFilePath = logFilePath;
         }
 
         public override void Log(string message)

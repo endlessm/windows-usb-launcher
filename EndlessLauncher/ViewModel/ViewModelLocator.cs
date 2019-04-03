@@ -57,6 +57,7 @@ namespace EndlessLauncher.ViewModel
 
             #region ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<IncompatibilityViewModel>();
             #endregion
         }
 
@@ -67,7 +68,15 @@ namespace EndlessLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-        
+
+        public IncompatibilityViewModel IncompatibilityViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<IncompatibilityViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
         }

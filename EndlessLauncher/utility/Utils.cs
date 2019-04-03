@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -27,6 +28,17 @@ namespace EndlessLauncher.utility
             Marshal.FreeHGlobal(ptr);
 
             return size;
+        }
+
+        public static void OpenUrl(string url, string args)
+        {
+            try
+            {
+                Process.Start(url, args);
+            }
+            catch(Exception ex)
+            {
+            }
         }
     }
 }

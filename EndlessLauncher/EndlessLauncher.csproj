@@ -114,6 +114,7 @@
     <Compile Include="service\LegacyService.cs" />
     <Compile Include="service\SystemVerificationService.cs" />
     <Compile Include="utility\Utils.cs" />
+    <Compile Include="ViewModel\IncompatibilityViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\IncompatibilityPage.xaml.cs">
@@ -224,6 +225,11 @@
     <Resource Include="Resources\Images\wrong_port_default.png" />
     <Resource Include="Resources\Images\wrong_port_hover.png" />
     <Resource Include="Resources\Images\wrong_port_pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\customer_support_default.png" />
+    <Resource Include="Resources\Images\customer_support_hover.png" />
+    <Resource Include="Resources\Images\customer_support_pressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

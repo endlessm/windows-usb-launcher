@@ -10,10 +10,31 @@ namespace EndlessLauncher.logger
 
         static LogHelper()
         {
-            //if (!Debugger.IsAttached)
-            //{
-                loggerList.Add(new FileLogger());
-            //}
+            try
+            {
+                string logFolder = AppDomain.CurrentDomain.BaseDirectory;
+                LogFilePath += logFolder
+                    + "EndlessLauncher_"
+                    + DateTime.Now.ToString("dd_MM_yyyy_hh_mm")
+                    + ".log";
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error: " + e.Message);
+            }
+
+            Debug.WriteLine(LogFilePath);
+
+            if (!string.IsNullOrEmpty(LogFilePath))
+            {
+                loggerList.Add(new FileLogger(LogFilePath));
+            }
+        }
+
+        public static string LogFilePath
+        {
+            get;
+            private set;
         }
 
         private static string Format(ref string message)
