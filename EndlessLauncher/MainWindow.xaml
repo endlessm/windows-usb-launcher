@@ -3,56 +3,54 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EndlessLauncher"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
+        SnapsToDevicePixels="true"
         Name="window"
+        Background="Transparent"
         Title="MainWindow"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
         AllowsTransparency="True"
-        Height="450"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
+        Height="550"
         Width="800">
-    <Border Background="White"
-            BorderBrush="Black"
-            BorderThickness="1,1,1,1"
-            CornerRadius="10">
-        <Grid Loaded="Grid_Loaded" Margin="20">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border BorderBrush="{StaticResource AppBorderBrush}"
+            Background="{StaticResource AppBackgroudBrush}"
+            BorderThickness="{StaticResource AppBorderThickness}"
+            CornerRadius="{StaticResource AppBorderCornerRadius}">
+        <Grid Background="Transparent">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="{StaticResource TopBarHeight}" />
+                <RowDefinition />
             </Grid.RowDefinitions>
+            <!-- Altough seems useless, this border is necessary to cover to corner of the main border-->
+            <Border Grid.Row="0"
+                    Margin="{StaticResource SecondaryCoverBorderMargin}"
+                    BorderBrush="{StaticResource AppBorderBrush}"
+                    Background="{StaticResource AppBackgroudBrush}"
+                    MouseDown="TopBar_MouseDown"
+                    CornerRadius="{StaticResource AppBorderCornerRadius}">
+                <Button Command="{Binding CloseRelayCommand}"
+                        Style="{StaticResource CloseButtonStyle}">
+                    <TextBlock Text="&#xE8BB;"
+                               FontFamily="Segoe MDL2 Assets" />
+                </Button>
+            </Border>
 
-            <TextBlock x:Name="mTextBlock" Text="Endless Launcher" FontSize="30"
-                       Grid.Row="0"/>
-            <TextBlock x:Name="SetupStatusTextBlock"
-                       Grid.Row="1"
-                       Text="{Binding FirmwareSetupStatus}"
-                       FontSize="14" />
-            <Button Content="Launch"
-                    Width="100"
-                    Grid.Row="3"
-                    Height="30"
-                    IsEnabled="{Binding LaunchEnabled}"
-                    HorizontalAlignment="Right"
-                    Command="{Binding LaunchRelayCommand}"/>
-
-            <Button Content="Close"
-                    Width="100"
-                    Height="30"
-                    Command="{Binding CloseRelayCommand}"
-                    HorizontalAlignment="Right"
-                    Margin="20" />
-
-            <Button Content="Reboot"
-                    Width="100"
-                    Grid.Row="3"
-                    Height="30"
-                    IsEnabled="{Binding RebootEnabled}"
-                    HorizontalAlignment="Left"
-                    Command="{Binding RebootRelayCommand}"/>
+            <Frame x:Name="MainFrame"
+                   Background="White"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch"
+                   Grid.Row="1" />
         </Grid>
     </Border>
 </Window>

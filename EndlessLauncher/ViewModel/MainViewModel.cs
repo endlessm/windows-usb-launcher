@@ -31,9 +31,12 @@ namespace EndlessLauncher.ViewModel
         private RelayCommand rebootRelayCommand;
 
         private string firmwareSetupStatus = "Status:";
+        private IFrameNavigationService navigationService;
 
-        public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService)
+        public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
+            this.navigationService = frameNavigationService;
+
             this.firmwareService = firmwareService;
             this.sysInfoService = sysInfoService;
 
@@ -66,6 +69,7 @@ namespace EndlessLauncher.ViewModel
 
         private void FirmwareService_SetupCompleted(object sender, System.EventArgs e)
         {
+            FirmwareSetupStatus = "Status: Firmware Setup: Success";
             RebootEnabled = true;
         }
 
@@ -86,20 +90,31 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
+        private RelayCommand loadedCommand;
+        public RelayCommand LoadedCommand
+        {
+            get
+            {
+                return loadedCommand
+                    ?? (loadedCommand = new RelayCommand(
+                    () =>
+                    {
+                        navigationService.NavigateTo("WelcomePage");
+                    }));
+            }
+        }
+
         public RelayCommand CloseRelayCommand
         {
             get
             {
-                if (closeRelayCommand == null)
-                {
-                    closeRelayCommand = new RelayCommand(() =>
+                return closeRelayCommand
+                    ?? (closeRelayCommand = new RelayCommand(
+                    () =>
                     {
                         LogHelper.Log("CloseRelayCommand: ");
                         System.Windows.Application.Current.Shutdown();
-                    });
-                }
-
-                return closeRelayCommand;
+                    }));
             }
         }
 
@@ -107,17 +122,13 @@ namespace EndlessLauncher.ViewModel
         {
             get
             {
-                if (rebootRelayCommand == null)
-                {
-                    rebootRelayCommand = new RelayCommand(() =>
+                return rebootRelayCommand
+                    ?? (rebootRelayCommand = new RelayCommand(
+                    () =>
                     {
                         LogHelper.Log("rebootRelayCommand: ");
                         firmwareService.Reboot();
-                        
-                    });
-                }
-
-                return rebootRelayCommand;
+                    }));
             }
         }
 

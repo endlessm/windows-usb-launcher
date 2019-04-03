@@ -5,12 +5,234 @@
              StartupUri="MainWindow.xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              d1p1:Ignorable="d"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator"
                                  d:IsDataSource="True"
                                  xmlns:vm="clr-namespace:EndlessLauncher.ViewModel" />
+
+            <CornerRadius x:Key="AppBorderCornerRadius"
+                          BottomLeft="0"
+                          BottomRight="0"
+                          TopLeft="10"
+                          TopRight="10" />
+            <Thickness x:Key="AppBorderThickness">2</Thickness>
+            <Thickness x:Key="SecondaryCoverBorderMargin">-2,-2,-2,0</Thickness>
+            <Thickness x:Key="DefaultPageMargin">20</Thickness>
+            <Thickness x:Key="DefaultMessageMargin">0,10,0,0</Thickness>
+            <Thickness x:Key="DefaultButtonMargin">0,40,0,0</Thickness>
+            <Thickness x:Key="HackTextLogoAlignmentMargin">20,40,0,10</Thickness>
+
+            <SolidColorBrush x:Key="AppBorderBrush"
+                             Color="#6c6c6c" />
+            <SolidColorBrush x:Key="AppBackgroudBrush"
+                             Color="#6c6c6c"></SolidColorBrush>
+            <SolidColorBrush x:Key="DefaultForegroundColor"
+                             Color="#181866"></SolidColorBrush>
+            <GridLength x:Key="TopBarHeight">40</GridLength>
+
+            <sys:Double x:Key="DefaultMsgFontSize">15</sys:Double>
+            <sys:Double x:Key="DefaultTitleFontSize">40</sys:Double>
+            <sys:Double x:Key="HackTextLogoHeight">50</sys:Double>
+            <sys:Double x:Key="PagePrimaryImageLogoHeight">160</sys:Double>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+            <Style x:Key="MessageTextBlockStyle"
+                   TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+                <Setter Property="FontFamily"
+                        Value="/Resources/Fonts/Metropolis-RegularItalic.otf#Metropolis Regular Italic" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource DefaultForegroundColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource DefaultMsgFontSize}" />
+                <Setter Property="Margin"
+                        Value="{StaticResource DefaultMessageMargin}" />
+            </Style>
+
+            <Style x:Key="TitleTextBlockStyle"
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment"
+                        Value="Bottom" />
+                <Setter Property="FontFamily"
+                        Value="/Resources/Fonts/Metropolis-SemiBold.otf#Metropolis Semi Bold" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource DefaultForegroundColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource DefaultTitleFontSize}" />
+                <Setter Property="LineHeight"
+                        Value="{StaticResource HackTextLogoHeight}" />
+                <Setter Property="LineStackingStrategy"
+                        Value="BlockLineHeight" />
+            </Style>
+
+            <Style x:Key="HackTextLogoStyle"
+                   TargetType="Image">
+                <Setter Property="RenderOptions.BitmapScalingMode"
+                        Value="HighQuality" />
+                <Setter Property="RenderOptions.EdgeMode"
+                        Value="Aliased" />
+                <Setter Property="Height"
+                        Value="{StaticResource HackTextLogoHeight}" />
+                <Setter Property="Margin"
+                        Value="{StaticResource HackTextLogoAlignmentMargin}" />
+                <Setter Property="Source"
+                        Value="/Resources/Images/hack_logotype_blue.png" />
+                <Setter Property="VerticalAlignment"
+                        Value="Bottom" />
+            </Style>
+
+            <Style x:Key="HackTextTitlePanelStyle" TargetType="StackPanel">
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+                <Setter Property="Orientation"
+                        Value="Horizontal" />
+            </Style>
+
+            <Style x:Key="PagePrimaryImageLogoStyle"
+                   TargetType="Image">
+                <Setter Property="RenderOptions.BitmapScalingMode"
+                        Value="HighQuality" />
+                <Setter Property="RenderOptions.EdgeMode"
+                        Value="Aliased" />
+                <Setter Property="VerticalAlignment"
+                        Value="Bottom" />
+                <Setter Property="Height"
+                        Value="{StaticResource PagePrimaryImageLogoHeight}" />
+            </Style>
+
+            <!--Close button-->
+            <Style x:Key="FocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Margin="2"
+                                       SnapsToDevicePixels="true"
+                                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                       StrokeThickness="1"
+                                       StrokeDashArray="1 2" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="LetsGoButton"
+                   TargetType="Button">
+                <Setter Property="OverridesDefaultStyle"
+                        Value="True" />
+                <Setter Property="Margin"
+                        Value="{StaticResource DefaultButtonMargin}" />
+                <Setter Property="Width"
+                        Value="100" />
+                <Setter Property="Height"
+                        Value="36" />
+                <Setter Property="VerticalAlignment"
+                        Value="Top" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Name="border"
+                                    BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                <Border.Background>
+                                    <ImageBrush ImageSource="/Resources/Images/lets_go_default.png" />
+                                </Border.Background>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            TargetName="border">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="/Resources/Images/lets_go_hover.png" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            TargetName="border">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="/Resources/Images/lets_go_pressed.png" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CloseButtonStyle"
+                   TargetType="{x:Type Button}">
+                <Setter Property="FocusVisualStyle"
+                        Value="{StaticResource FocusVisual}" />
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="White" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="FontSize"
+                        Value="16" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Width"
+                        Value="32" />
+                <Setter Property="Height"
+                        Value="32" />
+                <Setter Property="Margin"
+                        Value="0,0,4,0" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="border"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}"
+                                    SnapsToDevicePixels="true">
+                                <ContentPresenter x:Name="contentPresenter"
+                                                  Focusable="False"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="true">
+                                    <Setter Property="Background"
+                                            TargetName="border"
+                                            Value="#33FFFFFF" />
+                                </Trigger>
+                                <Trigger Property="IsPressed"
+                                         Value="true">
+                                    <Setter Property="Background"
+                                            TargetName="border"
+                                            Value="#55FFFFFF" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

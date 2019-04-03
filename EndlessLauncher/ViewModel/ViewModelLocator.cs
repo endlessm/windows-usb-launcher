@@ -34,8 +34,9 @@ namespace EndlessLauncher.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            #region Services
+            SetupNavigation();
 
+            #region Services
             //Register the system requirement verification service.
             SimpleIoc.Default.Register<SystemVerificationService, SystemVerificationService>();
 
@@ -69,7 +70,16 @@ namespace EndlessLauncher.ViewModel
         
         public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+        }
+
+        private static void SetupNavigation()
+        {
+            var navigationService = new FrameNavigationService();
+            navigationService.Configure("WelcomePage", new Uri("../Views/WelcomePage.xaml", UriKind.Relative));
+            navigationService.Configure("IncompatibilityPage", new Uri("../Views/IncompatibilityPage.xaml", UriKind.Relative));
+            navigationService.Configure("WrongPortInfoPage", new Uri("../Views/WrongPortInfoPage.xaml", UriKind.Relative));
+            navigationService.Configure("WrongUSBPortPage", new Uri("../Views/WrongUSBPortPage.xaml", UriKind.Relative));
+            SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
 
 

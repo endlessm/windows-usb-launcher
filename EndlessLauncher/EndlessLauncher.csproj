@@ -71,6 +71,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -101,13 +102,32 @@
     <Compile Include="model\FirmwareSetupException.cs" />
     <Compile Include="model\SystemVerificationException.cs" />
     <Compile Include="NativeAPI.cs" />
+    <Compile Include="Resources\Literals.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Literals.resx</DependentUpon>
+    </Compile>
     <Compile Include="service\EFIFirmwareService.cs" />
     <Compile Include="service\FirmwareServiceBase.cs" />
+    <Compile Include="service\FrameNavigationService.cs" />
+    <Compile Include="service\IFrameNavigationServiceBase.cs" />
     <Compile Include="service\LegacyService.cs" />
     <Compile Include="service\SystemVerificationService.cs" />
     <Compile Include="utility\Utils.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Views\IncompatibilityPage.xaml.cs">
+      <DependentUpon>IncompatibilityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomePage.xaml.cs">
+      <DependentUpon>WelcomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WrongPortInfoPage.xaml.cs">
+      <DependentUpon>WrongPortInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WrongUSBPortPage.xaml.cs">
+      <DependentUpon>WrongUSBPortPage.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,6 +140,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\IncompatibilityPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WrongPortInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WrongUSBPortPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -139,12 +175,19 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Literals.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Literals.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Fonts\Metropolis-Regular.otf" />
+    <Resource Include="Resources\Fonts\Metropolis-RegularItalic.otf" />
+    <Resource Include="Resources\Fonts\Metropolis-SemiBold.otf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -162,6 +205,20 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\hack_logotype_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\compatible_usb.png" />
+    <Resource Include="Resources\Images\incompatible_usb.png" />
+    <Resource Include="Resources\Images\wrong_port.png" />
+    <Resource Include="Resources\Images\wrong_port_info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\lets_go_default.png" />
+    <Resource Include="Resources\Images\lets_go_hover.png" />
+    <Resource Include="Resources\Images\lets_go_pressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
