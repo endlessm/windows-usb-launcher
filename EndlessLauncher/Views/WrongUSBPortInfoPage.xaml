@@ -4,12 +4,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:resources="clr-namespace:EndlessLauncher.Resources"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       DataContext="{Binding WrongUSBPortInfoViewModel, Source={StaticResource Locator}}"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="800"
       Title="WrongUSBPortInfoPage">
 
     <Page.Resources>
+        <GridLength x:Key="LogoImageRowHeight">200</GridLength>
+        <sys:Double x:Key="LogoImageHeightOverride">100</sys:Double>
+        <Thickness x:Key="MessageSeparatorMargin">0,4,0,0</Thickness>
+        
         <Style x:Key="InfoButton"
                TargetType="Button">
             <Setter Property="OverridesDefaultStyle"
@@ -60,27 +65,25 @@
     </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
+            <RowDefinition Height="{StaticResource LogoImageRowHeight}" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
-               Height="100"
+               Height="{StaticResource LogoImageHeightOverride}"
                Source="/Resources/Images/wrong_port_info.png" />
         <StackPanel Grid.Row="1"
                     Orientation="Vertical"
                     Style="{StaticResource HackTextTitlePanelStyle}">
 
             <TextBlock Text="{x:Static resources:Literals.wrong_port_info_msg1}"
-                       Margin="0"
                        Style="{StaticResource MessageTextBlockStyle}" />
-            <TextBlock Margin="0,4,0,0"
+            <TextBlock Margin="{StaticResource MessageSeparatorMargin}"
                        Style="{StaticResource MessageTextBlockStyle}"
                        Text="{x:Static resources:Literals.wrong_port_info_msg2}" />
         </StackPanel>
-
 
         <Button Grid.Row="2"
                 Command="{Binding BackRelayCommand}"
