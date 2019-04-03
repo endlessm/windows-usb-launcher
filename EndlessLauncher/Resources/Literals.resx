@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="click_to_restart_msg" xml:space="preserve">
+  <data name="welcome_click_to_restart_msg" xml:space="preserve">
     <value>Click below to restart your computer into the HACK experience</value>
   </data>
-  <data name="welcome_to_title" xml:space="preserve">
+  <data name="welcome_partial_title" xml:space="preserve">
     <value>Welcome to</value>
+  </data>
+  <data name="wrong_port_msg" xml:space="preserve">
+    <value>This USB stick is in the wrong port. Try a different port.</value>
+  </data>
+  <data name="wrong_port_partial_title" xml:space="preserve">
+    <value>You're almost ready to</value>
   </data>
 </root>

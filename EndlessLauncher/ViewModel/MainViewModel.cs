@@ -54,7 +54,6 @@ namespace EndlessLauncher.ViewModel
         private void SysInfoService_VerificationPassed(object sender, System.EventArgs e)
         {
             LaunchEnabled = true;
-            FirmwareSetupStatus = "Status: System Verification: Success";
         }
 
         private void SysInfoService_VerificationFailed(object sender, SystemVerificationErrorCode e)
@@ -99,7 +98,7 @@ namespace EndlessLauncher.ViewModel
                     ?? (loadedCommand = new RelayCommand(
                     () =>
                     {
-                        navigationService.NavigateTo("WelcomePage");
+                        navigationService.NavigateTo("WrongPortInfoPage");
                     }));
             }
         }

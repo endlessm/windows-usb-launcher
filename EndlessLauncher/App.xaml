@@ -34,7 +34,7 @@
             <GridLength x:Key="TopBarHeight">40</GridLength>
 
             <sys:Double x:Key="DefaultMsgFontSize">15</sys:Double>
-            <sys:Double x:Key="DefaultTitleFontSize">40</sys:Double>
+            <sys:Double x:Key="DefaultTitleFontSize">36</sys:Double>
             <sys:Double x:Key="HackTextLogoHeight">50</sys:Double>
             <sys:Double x:Key="PagePrimaryImageLogoHeight">160</sys:Double>
 
@@ -105,74 +105,8 @@
                         Value="{StaticResource PagePrimaryImageLogoHeight}" />
             </Style>
 
-            <!--Close button-->
-            <Style x:Key="FocusVisual">
-                <Setter Property="Control.Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Rectangle Margin="2"
-                                       SnapsToDevicePixels="true"
-                                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                       StrokeThickness="1"
-                                       StrokeDashArray="1 2" />
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="LetsGoButton"
-                   TargetType="Button">
-                <Setter Property="OverridesDefaultStyle"
-                        Value="True" />
-                <Setter Property="Margin"
-                        Value="{StaticResource DefaultButtonMargin}" />
-                <Setter Property="Width"
-                        Value="100" />
-                <Setter Property="Height"
-                        Value="36" />
-                <Setter Property="VerticalAlignment"
-                        Value="Top" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border Name="border"
-                                    BorderThickness="0">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
-                                <Border.Background>
-                                    <ImageBrush ImageSource="/Resources/Images/lets_go_default.png" />
-                                </Border.Background>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver"
-                                         Value="True">
-                                    <Setter Property="Background"
-                                            TargetName="border">
-                                        <Setter.Value>
-                                            <ImageBrush ImageSource="/Resources/Images/lets_go_hover.png" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsPressed"
-                                         Value="True">
-                                    <Setter Property="Background"
-                                            TargetName="border">
-                                        <Setter.Value>
-                                            <ImageBrush ImageSource="/Resources/Images/lets_go_pressed.png" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
             <Style x:Key="CloseButtonStyle"
                    TargetType="{x:Type Button}">
-                <Setter Property="FocusVisualStyle"
-                        Value="{StaticResource FocusVisual}" />
                 <Setter Property="Background"
                         Value="Transparent" />
                 <Setter Property="Foreground"

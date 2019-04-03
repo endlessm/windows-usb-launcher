@@ -11,7 +11,56 @@
       DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
       UseLayoutRounding="True"
       Title="WelcomePage">
+    <Page.Resources>
+        <Style x:Key="LetsGoButton"
+               TargetType="Button">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="True" />
+            <Setter Property="Margin"
+                    Value="{StaticResource DefaultButtonMargin}" />
+            <Setter Property="Width"
+                    Value="100" />
+            <Setter Property="Height"
+                    Value="36" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            <Border.Background>
+                                <ImageBrush ImageSource="/Resources/Images/lets_go_default.png" />
+                            </Border.Background>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/lets_go_hover.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="/Resources/Images/lets_go_pressed.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
 
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,7 +76,7 @@
         <StackPanel Grid.Row="1"
                     Style="{StaticResource HackTextTitlePanelStyle}">
 
-            <TextBlock Text="{x:Static resources:Literals.welcome_to_title}"
+            <TextBlock Text="{x:Static resources:Literals.welcome_partial_title}"
                        Style="{StaticResource TitleTextBlockStyle}"/>
             <Image Grid.Row="0"
                    Style="{StaticResource HackTextLogoStyle}" />
@@ -35,7 +84,7 @@
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource MessageTextBlockStyle}"
-                   Text="{x:Static resources:Literals.click_to_restart_msg}"/>
+                   Text="{x:Static resources:Literals.welcome_click_to_restart_msg}"/>
 
         <Button Grid.Row="3"
                 Command="{Binding LaunchRelayCommand}"

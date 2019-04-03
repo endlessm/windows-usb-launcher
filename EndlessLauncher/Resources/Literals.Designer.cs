@@ -63,18 +63,36 @@ namespace EndlessLauncher.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Click below to restart your computer into the HACK experience.
         /// </summary>
-        public static string click_to_restart_msg {
+        public static string welcome_click_to_restart_msg {
             get {
-                return ResourceManager.GetString("click_to_restart_msg", resourceCulture);
+                return ResourceManager.GetString("welcome_click_to_restart_msg", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Welcome to.
         /// </summary>
-        public static string welcome_to_title {
+        public static string welcome_partial_title {
             get {
-                return ResourceManager.GetString("welcome_to_title", resourceCulture);
+                return ResourceManager.GetString("welcome_partial_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
+        /// </summary>
+        public static string wrong_port_msg {
+            get {
+                return ResourceManager.GetString("wrong_port_msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re almost ready to.
+        /// </summary>
+        public static string wrong_port_partial_title {
+            get {
+                return ResourceManager.GetString("wrong_port_partial_title", resourceCulture);
             }
         }
     }

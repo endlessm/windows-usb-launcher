@@ -220,5 +220,10 @@
     <Resource Include="Resources\Images\lets_go_hover.png" />
     <Resource Include="Resources\Images\lets_go_pressed.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\wrong_port_default.png" />
+    <Resource Include="Resources\Images\wrong_port_hover.png" />
+    <Resource Include="Resources\Images\wrong_port_pressed.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
