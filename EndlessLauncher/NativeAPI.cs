@@ -412,5 +412,14 @@ namespace EndlessLauncher
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetPhysicallyInstalledSystemMemory(out long kiloBytes);
+
+        [DllImport("user32", CharSet = CharSet.Unicode)]
+        public static extern IntPtr FindWindow(string cls, string win);
+        [DllImport("user32")]
+        public static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32")]
+        public static extern bool IsIconic(IntPtr hWnd);
+        [DllImport("user32")]
+        public static extern bool OpenIcon(IntPtr hWnd);
     }
 }
