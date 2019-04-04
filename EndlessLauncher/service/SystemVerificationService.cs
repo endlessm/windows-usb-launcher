@@ -14,7 +14,6 @@ using static EndlessLauncher.NativeAPI;
 
 namespace EndlessLauncher.service
 {
-    //TODO implement async query
     public class SystemVerificationService
     {
         private const int MINIMUM_RAM = 2 * 1024 * 1024; //KB
@@ -288,7 +287,6 @@ namespace EndlessLauncher.service
         {
             int disk = -1;
 
-            //TODO query only the necessary fields
             string query = "ASSOCIATORS OF {Win32_LogicalDisk.DeviceID='" +
                 driveLetter + "'} " +
                 "WHERE AssocClass = Win32_LogicalDiskToPartition";
@@ -302,7 +300,6 @@ namespace EndlessLauncher.service
                     partition["DeviceID"] + "'}" +
                     " WHERE AssocClass = Win32_DiskDriveToDiskPartition";
 
-                //TODO query only the necessary fields
                 queryResults = new ManagementObjectSearcher(query);
 
                 ManagementObjectCollection drives = queryResults.Get();

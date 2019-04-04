@@ -2,7 +2,6 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
@@ -10,7 +9,6 @@ using System.Text;
 using static EndlessLauncher.utility.Utils;
 using static EndlessLauncher.NativeAPI;
 using EndlessLauncher.model;
-using static EndlessLauncher.model.FirmwareSetupException;
 
 namespace EndlessLauncher.service
 {
@@ -59,7 +57,6 @@ namespace EndlessLauncher.service
 
             PrintUefiEntries();
 
-            //TODO Use configuration for Entry name and entry path
             UefiGPTEntry entry = CreateUefiEntry(partitionInfo, description, path);
 
             if (entry == null)
@@ -442,8 +439,6 @@ namespace EndlessLauncher.service
                     int devPathTypeStart = 6 + entry.description.Length * 2 + 2;
                     int iteration = 0;
 
-
-                    //TODO Use EFI_HARD_DRIVE_PATH structure instead of parsing the entire byte array "manually"
                     while (devPathTypeStart + HARD_DRIVE_DISKPATH_SIZE < (int)size)
                     {
                         iteration++;
@@ -517,8 +512,7 @@ namespace EndlessLauncher.service
                 return null;
 
             //Get the blockSize of the ESP partition
-            //TODO query only the necessary fields
-            ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_DiskPartition where DiskIndex like " + physicalDriveNumber);
+            ObjectQuery query = new ObjectQuery("SELECT Bootable, BlockSize FROM Win32_DiskPartition where DiskIndex like " + physicalDriveNumber);
             ManagementObjectSearcher moSearcher = new ManagementObjectSearcher(query);
 
             foreach (ManagementObject mo in moSearcher.Get())
@@ -531,18 +525,15 @@ namespace EndlessLauncher.service
             }
 
             //Query for the Volume{GUID}
-            //TODO query only the necessary fields
-            query = new ObjectQuery("SELECT * FROM Win32_Volume");
+            query = new ObjectQuery("SELECT DeviceId, DriveLetter, Name, FileSystem, Label FROM Win32_Volume");
             moSearcher = new ManagementObjectSearcher(query);
 
             foreach (ManagementObject mo in moSearcher.Get())
             {
-                //TODO Use regex
                 string deviceId = mo["DeviceID"].ToString().Replace("\\", "").Replace("?", "");
                 int disk = GetDiskForVolume(deviceId);
 
                 //We assume the USB stick has exactly 2 partition
-                //TODO Maybe add an extra check
                 if (disk == physicalDriveNumber &&
                     (mo["DriveLetter"] == null || !mo["DriveLetter"].ToString().Equals(systemVerificationService.CurrentDriveLetter)))
                 {
@@ -610,7 +601,6 @@ namespace EndlessLauncher.service
         {
             int disk = -1;
 
-            //TODO query only the necessary fields
             string query = "ASSOCIATORS OF {Win32_LogicalDisk.DeviceID='" +
                 driveLetter + "'} " +
                 "WHERE AssocClass = Win32_LogicalDiskToPartition";
@@ -624,7 +614,6 @@ namespace EndlessLauncher.service
                     partition["DeviceID"] + "'}" +
                     " WHERE AssocClass = Win32_DiskDriveToDiskPartition";
 
-                //TODO query only the necessary fields
                 queryResults = new ManagementObjectSearcher(query);
 
                 ManagementObjectCollection drives = queryResults.Get();
