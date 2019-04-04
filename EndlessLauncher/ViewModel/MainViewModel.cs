@@ -29,6 +29,8 @@ namespace EndlessLauncher.ViewModel
         private RelayCommand closeRelayCommand;
 
         private IFrameNavigationService navigationService;
+        private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
+        private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Hack OS";
 
         public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
@@ -88,7 +90,7 @@ namespace EndlessLauncher.ViewModel
                     launchRelayCommand = new RelayCommand(() =>
                     {
                         LaunchEnabled = false;
-                        firmwareService.SetupEndlessLaunchAsync();
+                        firmwareService.SetupEndlessLaunchAsync(ENDLESS_ENTRY_DESCRIPTION, EFI_BOOTLOADER_PATH);
                     });
                 }
 

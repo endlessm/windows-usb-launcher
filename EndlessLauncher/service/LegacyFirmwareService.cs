@@ -7,7 +7,7 @@ namespace EndlessLauncher.service
     {
         public LegacyFirmwareService(SystemVerificationService service) : base(service) { }
 
-        protected override void SetupEndlessLaunch()
+        protected override void SetupEndlessLaunch(string desscription, string path)
         {
             throw new FirmwareSetupException(FirmwareSetupErrorCode.FirmwareServiceInitializationError, "Unsupported firmware");
         }

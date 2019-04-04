@@ -44,6 +44,7 @@ namespace EndlessLauncher
         public const string EFI_GLOBAL_VARIABLE = "{8BE4DF61-93CA-11D2-AA0D-00E098032B8C}";
         public const string LOAD_OPTION_FORMAT = "Boot{0:X4}";
         public const Int64 ERROR_ENVVAR_NOT_FOUND = 203L;
+        public static readonly Guid ESP_GUID = new Guid("C12A7328-F81F-11D2-BA4B-00A0C93EC93B");
         #endregion
 
         public const string DEVINTERFACE_USB_HUB = "{F18A0E88-C30C-11D0-8815-00A0C906BED8}";
@@ -232,8 +233,6 @@ namespace EndlessLauncher
         {
             [FieldOffset(0)]
             public PARTITION_INFORMATION_GPT Gpt;
-            [FieldOffset(0)]
-            public PARTITION_INFORMATION_MBR Mbr;
         }
 
         [StructLayout(LayoutKind.Sequential)]

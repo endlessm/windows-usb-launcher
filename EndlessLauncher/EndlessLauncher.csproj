@@ -111,7 +111,7 @@
     <Compile Include="service\FirmwareServiceBase.cs" />
     <Compile Include="service\FrameNavigationService.cs" />
     <Compile Include="service\IFrameNavigationServiceBase.cs" />
-    <Compile Include="service\LegacyService.cs" />
+    <Compile Include="service\LegacyFirmwareService.cs" />
     <Compile Include="service\SystemVerificationService.cs" />
     <Compile Include="utility\Utils.cs" />
     <Compile Include="ViewModel\IncompatibilityViewModel.cs" />

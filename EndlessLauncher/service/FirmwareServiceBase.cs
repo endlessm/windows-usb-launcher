@@ -17,13 +17,13 @@ namespace EndlessLauncher.service
             this.systemVerificationService = service;
         }
 
-        public async void SetupEndlessLaunchAsync()
+        public async void SetupEndlessLaunchAsync(string description, string path)
         {
             LogHelper.Log("SetupEndlessLaunchAsync:Start:");
             
             try
             {
-                await Task.Run(() => SetupEndlessLaunch());
+                await Task.Run(() => SetupEndlessLaunch(description, path));
                 SetupCompleted?.Invoke(this, null);
             } catch(FirmwareSetupException ex)
             {
@@ -51,7 +51,7 @@ namespace EndlessLauncher.service
             }
         }
 
-        protected abstract void SetupEndlessLaunch();
+        protected abstract void SetupEndlessLaunch(string description, string path);
     }
 
 }

@@ -34,23 +34,21 @@ namespace EndlessLauncher.service
             public int partitionNumber;
         }
 
-        protected override void SetupEndlessLaunch()
+        protected override void SetupEndlessLaunch(string description, string path)
         {
             LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch:");
 
             ObtainPrivileges(SE_SYSTEM_ENVIRONMENT_NAME);
             ObtainPrivileges(SE_SHUTDOWN_NAME);
 
-            KeyValuePair<string, long> volumeInfo = GetESPVolume();
+            ESPPartitionInfo partitionInfo = FindESPPartition();
 
-            if (volumeInfo.Key == null)
+            if (partitionInfo == null)
             {
-                throw new FirmwareSetupException(FirmwareSetupErrorCode.EspVolumeNotFoundError, "Could not Found USB ESP volume");
+                throw new FirmwareSetupException(FirmwareSetupErrorCode.EspPartitionNotFoundError, "Could not Found USB ESP volume");
             }
 
-            string volume = "\\\\.\\" + volumeInfo.Key;
-
-            LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch: volume: {0}", volume);
+            LogHelper.Log("EFIFirmwareService:SetupEndlessLaunch: ESP partition found:{0}", partitionInfo);
 
             //We assume there is at least the Windows UEFI entry
             entries = GetGPTUefiEntries();
@@ -62,7 +60,7 @@ namespace EndlessLauncher.service
             PrintUefiEntries();
 
             //TODO Use configuration for Entry name and entry path
-            UefiGPTEntry entry = CreateUEfiEntry(volume, "Hack OS", "\\EFI\\BOOT\\BOOTX64.EFI", volumeInfo.Value);
+            UefiGPTEntry entry = CreateUefiEntry(partitionInfo, description, path);
 
             if (entry == null)
             {
@@ -132,25 +130,47 @@ namespace EndlessLauncher.service
             LogHelper.Log("EFIFirmwareService:PrintUefiEntries:----------------------------");
         }
 
-        private UefiGPTEntry CreateUEfiEntry(string volume, string description, string path, long blockSize)
+        private class ESPPartitionInfo
         {
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: {0}", volume);
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Description: {0}", description);
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Path: {0}", path);
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:BlockSize: {0}", blockSize);
+            public string volume;
+            public long blockSize;
+            public Int32 partitionNumber;
+            public Int64 startingOffset;
+            public Int64 partitionLength;
+            public Guid partitionId;
+            public Guid partitionType;
 
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("\n");
+                sb.AppendFormat("Volume: {0}\n", volume);
+                sb.AppendFormat("blockSize: {0}\n", blockSize);
+                sb.AppendFormat("partitionNumber: {0}\n", partitionNumber);
+                sb.AppendFormat("startingOffset: {0}\n", startingOffset);
+                sb.AppendFormat("partitionLength: {0}\n", partitionLength);
+                sb.AppendFormat("partitionId: {0}\n", partitionId);
+                sb.AppendFormat("partitionType: {0}\n", partitionType);
 
-            SafeFileHandle hndl = CreateFile(volume,
-                                               GENERIC_READ | GENERIC_WRITE,
-                                               FILE_SHARE_READ | FILE_SHARE_WRITE,
-                                               IntPtr.Zero,
-                                               OPEN_EXISTING,
-                                               FILE_ATTRIBUTE_READONLY,
-                                               IntPtr.Zero);
+                return sb.ToString();
+            }
+        }
+
+        private ESPPartitionInfo GetESPPartitionInfo(string volumePath)
+        {
+            ESPPartitionInfo partitionInfo = null;
+            volumePath = "\\\\.\\" + volumePath;
+
+            SafeFileHandle hndl = CreateFile(volumePath,
+                                              GENERIC_READ | GENERIC_WRITE,
+                                              FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                              IntPtr.Zero,
+                                              OPEN_EXISTING,
+                                              FILE_ATTRIBUTE_READONLY,
+                                              IntPtr.Zero);
             if (hndl.IsInvalid)
             {
-                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Invalid handle:Error: {0}", Marshal.GetLastWin32Error());
-                hndl.Close();
+                LogHelper.Log("EFIFirmwareService:CreateUefiEntry:Invalid handle:Error: {0}", Marshal.GetLastWin32Error());
                 throw new FirmwareSetupException(FirmwareSetupErrorCode.GetPartitionEspInfoError, "Get ESP partition information failed");
             }
 
@@ -158,9 +178,8 @@ namespace EndlessLauncher.service
 
             UInt32 outBufferSize = (UInt32)Marshal.SizeOf(partition);
             IntPtr outBuffer = Marshal.AllocHGlobal((int)outBufferSize);
+
             UInt32 bytesReturned = 0;
-
-
 
             if (DeviceIoControl(hndl,
                              IOCTL_DISK_GET_PARTITION_INFO_EX,
@@ -172,31 +191,48 @@ namespace EndlessLauncher.service
                              IntPtr.Zero))
             {
                 partition = (PARTITION_INFORMATION_EX)Marshal.PtrToStructure(outBuffer, typeof(PARTITION_INFORMATION_EX));
+
+                PARTITION_INFORMATION_GPT gptPartition = partition.DriveLayoutInformaiton.Gpt;
+
+                partitionInfo = new ESPPartitionInfo()
+                {
+                    volume = volumePath,
+                    partitionId = gptPartition.PartitionId,
+                    partitionType = gptPartition.PartitionType,
+                    partitionNumber = partition.PartitionNumber,
+                    startingOffset = partition.StartingOffset,
+                    partitionLength = partition.PartitionLength
+                };
             }
             else
             {
-                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:IOCTL_DISK_GET_PARTITION_INFO_EX Failed: Error: {0}", Marshal.GetLastWin32Error());
-                Marshal.FreeHGlobal(outBuffer);
-                hndl.Close();
-                throw new FirmwareSetupException(FirmwareSetupErrorCode.GetPartitionEspInfoError, "Get ESP partition information failed");
+                LogHelper.Log("EFIFirmwareService:CreateUefiEntry:IOCTL_DISK_GET_PARTITION_INFO_EX Failed: Error: {0}",
+                    Marshal.GetLastWin32Error());
             }
 
-            PARTITION_INFORMATION_GPT gptPartition = partition.DriveLayoutInformaiton.Gpt;
+            Marshal.FreeHGlobal(outBuffer);
+            hndl.Close();
+
+            return partitionInfo;
+        }
+
+        private UefiGPTEntry CreateUefiEntry(ESPPartitionInfo espPartitionInfo, string description, string path)
+        {
+            LogHelper.Log("EFIFirmwareService:CreateUefiEntry:Description: {0}", description);
+            LogHelper.Log("EFIFirmwareService:CreateUefiEntry:Path: {0}", path);
 
             foreach (UefiGPTEntry entry in entries)
             {
-                if (entry.guid.Equals(gptPartition.PartitionId))
+                if (entry.guid.Equals(espPartitionInfo.partitionId))
                 {
-                    LogHelper.Log("EFIFirmwareService:CreateUEfiEntry:Entry for {0} already exists. Return the existing entry", gptPartition.PartitionId);
-                    hndl.Close();
-                    Marshal.FreeHGlobal(outBuffer);
+                    LogHelper.Log("EFIFirmwareService:CreateUefiEntry:Entry for {0} already exists. Return the existing entry", espPartitionInfo.partitionId);
                     return entry;
                 }
             }
 
             EFI_HARD_DRIVE_PATH hdPath = new EFI_HARD_DRIVE_PATH();
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Partition StartingOffset: {0}", (UInt64)(partition.StartingOffset / blockSize));
-            LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: PartitionLength: {0}", (UInt64)(partition.PartitionLength / blockSize));
+            LogHelper.Log("EFIFirmwareService:CreateUefiEntry: Partition startingOffset: {0}", espPartitionInfo.startingOffset / espPartitionInfo.blockSize);
+            LogHelper.Log("EFIFirmwareService:CreateUefiEntry: PartitionLength: {0}", espPartitionInfo.partitionLength / espPartitionInfo.blockSize);
 
 
             //EFI_HARD_DRIVE_PATH
@@ -204,10 +240,10 @@ namespace EndlessLauncher.service
             hdPath.subtype = 0x1;
             hdPath.signature = new byte[16];
             hdPath.length = (ushort)Marshal.SizeOf(hdPath);
-            hdPath.part_num = (uint)partition.PartitionNumber;
-            hdPath.start = (UInt64)(partition.StartingOffset / blockSize);
-            hdPath.size = (UInt64)(partition.PartitionLength / blockSize);
-            hdPath.signature = gptPartition.PartitionId.ToByteArray();
+            hdPath.part_num = (UInt32)espPartitionInfo.partitionNumber;
+            hdPath.start = (UInt64)(espPartitionInfo.startingOffset / espPartitionInfo.blockSize);
+            hdPath.size = (UInt64)(espPartitionInfo.partitionLength / espPartitionInfo.blockSize);
+            hdPath.signature = espPartitionInfo.partitionId.ToByteArray();
             hdPath.mbr_type = 2; /* GPT */
             hdPath.signature_type = 2; /* GPT partition UUID */
 
@@ -263,9 +299,7 @@ namespace EndlessLauncher.service
             int firstFreeEntry = GetFirstFreeUefiEntryNumber();
             if (firstFreeEntry == -1)
             {
-                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Could not find a free Uefi entry:");
-                Marshal.FreeHGlobal(outBuffer);
-                hndl.Close();
+                LogHelper.Log("EFIFirmwareService:CreateUefiEntry: Could not find a free Uefi entry:");
                 throw new FirmwareSetupException(FirmwareSetupErrorCode.FindFreeUefiEntryError, "Could not find a free Uefi entry");
             }
 
@@ -274,20 +308,17 @@ namespace EndlessLauncher.service
             UefiGPTEntry newEntry = null;
             if (success)
             {
-                LogHelper.Log("EFIFirmwareService:CreateUEfiEntry: Entry Created:");
+                LogHelper.Log("EFIFirmwareService:CreateUefiEntry: Entry Created:");
 
                 newEntry = new UefiGPTEntry()
                 {
                     description = description,
                     path = path,
                     partitionNumber = (int)hdPath.part_num,
-                    guid = gptPartition.PartitionId,
+                    guid = espPartitionInfo.partitionId,
                     number = (ushort)firstFreeEntry
                 };
             }
-
-            hndl.Close();
-            Marshal.FreeHGlobal(outBuffer);
 
             return newEntry;
         }
@@ -471,20 +502,19 @@ namespace EndlessLauncher.service
             return entries;
         }
 
-        //TODO create a class/struct? It's not clear what's the purpose of KeyValuePair
-        private KeyValuePair<string, long> GetESPVolume()
+        private ESPPartitionInfo FindESPPartition()
         {
-            LogHelper.Log("EFIFirmwareService:GetESPVolume:");
+            LogHelper.Log("EFIFirmwareService:FindESPPartition:");
 
             //Assume it's 512 bytes
             long blockSize = 512;
 
             //Get the physical disk for the application partition
             int physicalDriveNumber = systemVerificationService.CurrentPhysicalDiskIndex;
-            LogHelper.Log("EFIFirmwareService:GetESPVolume: Current physical drive: {0}", physicalDriveNumber);
+            LogHelper.Log("EFIFirmwareService:FindESPPartition: Current physical drive: {0}", physicalDriveNumber);
 
             if (physicalDriveNumber == -1)
-                return new KeyValuePair<string, long>(null, blockSize);
+                return null;
 
             //Get the blockSize of the ESP partition
             //TODO query only the necessary fields
@@ -516,16 +546,22 @@ namespace EndlessLauncher.service
                 if (disk == physicalDriveNumber &&
                     (mo["DriveLetter"] == null || !mo["DriveLetter"].ToString().Equals(systemVerificationService.CurrentDriveLetter)))
                 {
-                    LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP Volume: {0}", deviceId);
-                    LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP Name: {0}", mo["name"]);
-                    LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP FileSystem: {0}", mo["FileSystem"]);
-                    LogHelper.Log("EFIFirmwareService:GetESPVolume: ESP Label: {0}", mo["Label"] == null ? "Null" : mo["Label"].ToString());
+                    LogHelper.Log("EFIFirmwareService:FindESPPartition: ESP Volume: {0}", deviceId);
+                    LogHelper.Log("EFIFirmwareService:FindESPPartition: ESP Name: {0}", mo["name"]);
+                    LogHelper.Log("EFIFirmwareService:FindESPPartition: ESP FileSystem: {0}", mo["FileSystem"]);
+                    LogHelper.Log("EFIFirmwareService:FindESPPartition: ESP Label: {0}", mo["Label"] == null ? "Null" : mo["Label"].ToString());
 
-                    return new KeyValuePair<string, long>(deviceId, blockSize);
+                    ESPPartitionInfo tempPartitionInfo = GetESPPartitionInfo(deviceId);
+
+                    if (tempPartitionInfo != null && ESP_GUID.Equals(tempPartitionInfo.partitionType))
+                    {
+                        tempPartitionInfo.blockSize = blockSize;
+                        return tempPartitionInfo;
+                    }
                 }
             }
 
-            return new KeyValuePair<string, long>(null, blockSize);
+            return null;
         }
 
         private int GetDiskForVolume(string volume)

@@ -12,7 +12,7 @@ namespace EndlessLauncher.model
         OpenProcessTokenError = 1,
         LookupPrivilegeError,
         AdjustTokenPrivilegeError,
-        EspVolumeNotFoundError,
+        EspPartitionNotFoundError,
         GetBootBorderError,
         NoExistingUefiEntriesError,
         GetPartitionEspInfoError,
