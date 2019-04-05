@@ -6,6 +6,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         SnapsToDevicePixels="true"
         Name="window"
         Background="Transparent"
