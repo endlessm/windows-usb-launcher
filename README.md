@@ -7,7 +7,7 @@ USB Launcher app for Windows
 - [nuget](https://www.nuget.org/downloads)
 - [.net development tools 4.6](https://dotnet.microsoft.com/download/visual-studio-sdks)
 #### Commands
-1. Restore nuget depencies
+1. Restore nuget dependencies
 ```
 nuget.exe restore
 ```
