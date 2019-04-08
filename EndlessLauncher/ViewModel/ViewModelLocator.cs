@@ -38,20 +38,6 @@ namespace EndlessLauncher.ViewModel
             #region Services
             //Register the system requirement verification service.
             SimpleIoc.Default.Register<SystemVerificationService, SystemVerificationService>();
-
-            //Register the firmware service
-            switch (SystemVerificationService.FirmwareType)
-            {
-                case FirmwareType.FirmwareTypeUefi:
-                    SimpleIoc.Default.Register<FirmwareServiceBase, EFIFirmwareService>();
-                    break;
-
-                case FirmwareType.FirmwareTypeUnknown:
-                case FirmwareType.FirmwareTypeMax:
-                case FirmwareType.FirmwareTypeBios:
-                    SimpleIoc.Default.Register<FirmwareServiceBase, LegacyFirmwareService>();
-                    break;
-            }
             #endregion
 
             #region ViewModels

@@ -3,6 +3,7 @@ using EndlessLauncher.model;
 using EndlessLauncher.service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace EndlessLauncher.ViewModel
 {
@@ -32,16 +33,10 @@ namespace EndlessLauncher.ViewModel
         private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
         private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Hack OS";
 
-        public MainViewModel(FirmwareServiceBase firmwareService, SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
+        public MainViewModel(SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
             this.navigationService = frameNavigationService;
-
-            this.firmwareService = firmwareService;
             this.sysInfoService = sysInfoService;
-
-            //Subscribe for firmware setup events
-            this.firmwareService.SetupCompleted += FirmwareService_SetupCompleted;
-            this.firmwareService.SetupFailed += FirmwareService_SetupFailed;
 
             //Subscribe for verification events
             this.sysInfoService.VerificationFailed += SysInfoService_VerificationFailed;
@@ -52,6 +47,12 @@ namespace EndlessLauncher.ViewModel
         private void SysInfoService_VerificationPassed(object sender, System.EventArgs e)
         {
             navigationService.NavigateTo("WelcomePage");
+
+            //Subscribe for firmware setup events
+            firmwareService = SimpleIoc.Default.GetInstance<FirmwareServiceBase>();
+            firmwareService.SetupCompleted += FirmwareService_SetupCompleted;
+            firmwareService.SetupFailed += FirmwareService_SetupFailed;
+
             LaunchEnabled = true;
         }
 

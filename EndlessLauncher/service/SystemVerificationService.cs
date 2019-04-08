@@ -1,5 +1,6 @@
 ﻿using EndlessLauncher.logger;
 using EndlessLauncher.model;
+using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace EndlessLauncher.service
         private const int SUPPORTED_WINDOWS_VERSION = 10;
         private const int MINIMUM_CPU_CORES = 2;
 
-        private static readonly FirmwareType firmwareType = FirmwareType.FirmwareTypeUnknown;
         private int currentPhysicalDiskIndex = -1;
         private string currentDriveLetter = null;
 
@@ -131,13 +131,6 @@ namespace EndlessLauncher.service
             FirmwareType.FirmwareTypeUefi
         };
 
-        public static FirmwareType FirmwareType => firmwareType;
-
-        static SystemVerificationService()
-        {
-            GetFirmwareType(ref firmwareType);
-        }
-
         public async void VerifyRequirements()
         {
             LogHelper.Log("SystemVerificationService:VerifyRequirements:");
@@ -156,13 +149,6 @@ namespace EndlessLauncher.service
                 return;
             }
 
-            //Check if UEFI firmware
-            if (!IsFirwareSupported())
-            {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.UnsupportedFirmware);
-                return;
-            }
-
             //Check Windows version
             if (!VerifyWindowsVersion())
             {
@@ -174,6 +160,13 @@ namespace EndlessLauncher.service
             if (!VerifyRAM())
             {
                 VerificationFailed?.Invoke(this, SystemVerificationErrorCode.InsufficientRAM);
+                return;
+            }
+
+            //Check if UEFI firmware
+            if (!InitializeFrameworkService())
+            {
+                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.UnsupportedFirmware);
                 return;
             }
 
@@ -203,9 +196,33 @@ namespace EndlessLauncher.service
             }
         }
 
-        private bool IsFirwareSupported()
+        private bool InitializeFrameworkService()
         {
-            return supportedFirmwares.Contains(FirmwareType);
+            FirmwareType firmwareType = FirmwareType.FirmwareTypeUnknown;
+
+            try
+            {
+                GetFirmwareType(ref firmwareType);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("SystemVerificationService:InitializeFrameworkService: Failed: StackTrace: {0}", ex.Message);
+            }
+
+            switch (firmwareType)
+            {
+                case FirmwareType.FirmwareTypeUefi:
+                    SimpleIoc.Default.Register<FirmwareServiceBase, EFIFirmwareService>();
+                    break;
+
+                case FirmwareType.FirmwareTypeUnknown:
+                case FirmwareType.FirmwareTypeMax:
+                case FirmwareType.FirmwareTypeBios:
+                    SimpleIoc.Default.Register<FirmwareServiceBase, LegacyFirmwareService>();
+                    break;
+            }
+
+            return supportedFirmwares.Contains(firmwareType);
         }
 
         private bool RunningAsAdministrator()
