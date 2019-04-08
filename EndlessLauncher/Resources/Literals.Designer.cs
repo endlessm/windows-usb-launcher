@@ -70,7 +70,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This USB stick is not compatibile with you computer..
+        ///   Looks up a localized string similar to This USB stick is not compatible with your computer..
         /// </summary>
         public static string incompatibility_title {
             get {

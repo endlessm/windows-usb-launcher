@@ -121,7 +121,7 @@
     <value>Please contact us with any other questions.</value>
   </data>
   <data name="incompatibility_title" xml:space="preserve">
-    <value>This USB stick is not compatibile with you computer.</value>
+    <value>This USB stick is not compatible with your computer.</value>
   </data>
   <data name="log_file_title" xml:space="preserve">
     <value>Log file</value>
