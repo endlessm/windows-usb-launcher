@@ -1,4 +1,5 @@
 ﻿using EndlessLauncher.logger;
+using EndlessLauncher.Resources;
 using EndlessLauncher.utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -10,6 +11,7 @@ namespace EndlessLauncher.ViewModel
     {
         private RelayCommand showLogRelayCommand;
         private RelayCommand supportRelayCommand;
+        private int errorCode;
 
         public RelayCommand ShowLogRelayCommand
         {
@@ -46,6 +48,25 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
+        public int ErrorCode
+        {
+            get
+            {
+                return errorCode;
+            }
+            set
+            {
+                Set(ref errorCode, value);
+                RaisePropertyChanged("Message");
+            }
+        }
 
+        public string Message
+        {
+            get
+            {
+                return string.Format("{0} Error: {1}", Literals.incompatibility_msg, errorCode);
+            }
+        }
     }
 }

@@ -98,7 +98,7 @@
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource MessageTextBlockStyle}"
-                   Text="{x:Static resources:Literals.incompatibility_msg}" />
+                   Text="{Binding Message}" />
 
         <Button Grid.Row="3"
                 Command="{Binding SupportRelayCommand}"

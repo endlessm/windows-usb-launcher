@@ -67,6 +67,7 @@ namespace EndlessLauncher.ViewModel
                     break;
 
                 default:
+                    SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().ErrorCode = (int) e.ErrorCode;
                     navigationService.NavigateTo("IncompatibilityPage");
                     break;
             }
@@ -74,6 +75,7 @@ namespace EndlessLauncher.ViewModel
 
         private void FirmwareService_SetupFailed(object sender, EndlessErrorEventArgs<FirmwareSetupErrorCode> e)
         {
+            SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().ErrorCode = (int) e.ErrorCode;
             navigationService.NavigateTo("IncompatibilityPage");
         }
 
