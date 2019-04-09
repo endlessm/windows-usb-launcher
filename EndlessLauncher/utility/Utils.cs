@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EndlessLauncher.logger;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -38,6 +39,7 @@ namespace EndlessLauncher.utility
             }
             catch(Exception ex)
             {
+                LogHelper.Log("OpenUrl: {0} Failed: {1}", url, ex.Message);
             }
         }
     }
