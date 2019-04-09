@@ -56,11 +56,11 @@ namespace EndlessLauncher.ViewModel
             LaunchEnabled = true;
         }
 
-        private void SysInfoService_VerificationFailed(object sender, SystemVerificationErrorCode e)
+        private void SysInfoService_VerificationFailed(object sender, EndlessErrorEventArgs<SystemVerificationErrorCode> e)
         {
 
             LogHelper.Log("SystemVerificationFailed: " + e);
-            switch (e)
+            switch (e.ErrorCode)
             {
                 case SystemVerificationErrorCode.NotUSB30Port:
                     navigationService.NavigateTo("WrongUSBPortPage");
@@ -72,7 +72,7 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
-        private void FirmwareService_SetupFailed(object sender, FirmwareSetupErrorCode e)
+        private void FirmwareService_SetupFailed(object sender, EndlessErrorEventArgs<FirmwareSetupErrorCode> e)
         {
             navigationService.NavigateTo("IncompatibilityPage");
         }

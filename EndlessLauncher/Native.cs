@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
+using static EndlessLauncher.NativeAPI;
 
 namespace EndlessLauncher
 {
@@ -151,7 +152,7 @@ namespace EndlessLauncher
             public UInt32 cbSize;
             public Guid ClassGuid;
             public UInt32 DevInst;
-            public UIntPtr Reserved;
+            private UIntPtr Reserved;
         }
 
         [Flags]
@@ -246,16 +247,12 @@ namespace EndlessLauncher
             public UInt32 HiddenSectors;
         }
 
-        [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct PARTITION_INFORMATION_GPT
         {
-            [FieldOffset(0)]
             public Guid PartitionType;
-            [FieldOffset(16)]
             public Guid PartitionId;
-            [FieldOffset(32)]
             public UInt64 Attributes;
-            [FieldOffset(40)]
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 36)]
             public string Name;
         }
@@ -297,9 +294,12 @@ namespace EndlessLauncher
             public UInt32 attributes;
             public UInt16 file_path_list_length;
         }
+    }
 
+    internal class NativeMethods
+    {
         [DllImport("setupapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern bool SetupDiGetDeviceRegistryProperty(
+        internal static extern bool SetupDiGetDeviceRegistryProperty(
             IntPtr deviceInfoSet,
             ref SP_DEVINFO_DATA deviceInfoData,
             UInt32 property,
@@ -311,7 +311,7 @@ namespace EndlessLauncher
 
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeviceIoControl(SafeFileHandle hDevice,
+        internal static extern bool DeviceIoControl(SafeFileHandle hDevice,
             UInt32 ioControlCode,
             IntPtr inBuffer,
             UInt32 inBufferSize,
@@ -320,9 +320,8 @@ namespace EndlessLauncher
             out UInt32 bytesReturned,
             IntPtr overlapped);
 
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern SafeFileHandle CreateFile(string lpFileName,
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        internal static extern SafeFileHandle CreateFile(string lpFileName,
             UInt32 dwDesiredAccess,
             UInt32 dwShareMode,
             IntPtr SecurityAttributes,
@@ -331,13 +330,13 @@ namespace EndlessLauncher
             IntPtr hTemplateFile);
 
         [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern bool OpenProcessToken(IntPtr h, Int32 acc, ref IntPtr phtok);
+        internal static extern bool OpenProcessToken(IntPtr h, Int32 acc, ref IntPtr phtok);
 
-        [DllImport("advapi32.dll", SetLastError = true)]
-        public static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
 
         [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern bool AdjustTokenPrivileges(
+        internal static extern bool AdjustTokenPrivileges(
             IntPtr htok,
             bool disall,
             ref TokenPrivelege newst,
@@ -346,14 +345,14 @@ namespace EndlessLauncher
             IntPtr relen);
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern IntPtr GetCurrentProcess();
+        internal static extern IntPtr GetCurrentProcess();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool CloseHandle(IntPtr hObject);
+        internal static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("setupapi.dll", SetLastError = true, ExactSpelling = true)]
-        public static extern bool SetupDiGetDeviceInterfaceDetailW(
+        internal static extern bool SetupDiGetDeviceInterfaceDetailW(
             IntPtr hDevInfo,
             ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData,
             IntPtr deviceInterfaceDetailData,
@@ -363,7 +362,7 @@ namespace EndlessLauncher
 
 
         [DllImport(@"setupapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern bool SetupDiEnumDeviceInterfaces(
+        internal static extern bool SetupDiEnumDeviceInterfaces(
             IntPtr hDevInfo,
             IntPtr devInfo,
             ref Guid interfaceClassGuid,
@@ -372,54 +371,57 @@ namespace EndlessLauncher
         );
 
         [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SetupDiGetClassDevs(
+        internal static extern IntPtr SetupDiGetClassDevs(
             ref Guid ClassGuid,
             IntPtr Enumerator,
             IntPtr hwndParent,
             int Flags
         );
         [DllImport("setupapi.dll", SetLastError = true)]
-        public static extern bool SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
+        internal static extern bool SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
 
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool ExitWindowsEx(ExitWindows uFlags, ShutdownReason dwReason);
+        internal static extern bool ExitWindowsEx(ExitWindows uFlags, ShutdownReason dwReason);
 
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern bool SetFirmwareEnvironmentVariable(
+        internal static extern bool SetFirmwareEnvironmentVariable(
             [MarshalAs(UnmanagedType.LPWStr)]
-            string lpName, 
+            string lpName,
             [MarshalAs(UnmanagedType.LPWStr)]
-            string lpGuid, 
-            byte[] pValue, 
+            string lpGuid,
+            byte[] pValue,
             UInt32 nSize
             );
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetFirmwareType(ref FirmwareType FirmwareType);
+        internal static extern bool GetFirmwareType(ref FirmwareType FirmwareType);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 GetFirmwareEnvironmentVariable(
+        internal static extern UInt32 GetFirmwareEnvironmentVariable(
             [MarshalAs(UnmanagedType.LPWStr)]
-            string lpName, 
+            string lpName,
             [MarshalAs(UnmanagedType.LPWStr)]
-            string lpGuid, 
-            byte[] pBuffer, 
+            string lpGuid,
+            byte[] pBuffer,
             UInt32 nSize);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetPhysicallyInstalledSystemMemory(out long kiloBytes);
+        internal static extern bool GetPhysicallyInstalledSystemMemory(out long kiloBytes);
 
         [DllImport("user32", CharSet = CharSet.Unicode)]
-        public static extern IntPtr FindWindow(string cls, string win);
+        internal static extern IntPtr FindWindow(string cls, string win);
+
         [DllImport("user32")]
-        public static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+        internal static extern bool SetForegroundWindow(IntPtr hWnd);
+
         [DllImport("user32")]
-        public static extern bool IsIconic(IntPtr hWnd);
+        internal static extern bool IsIconic(IntPtr hWnd);
+
         [DllImport("user32")]
-        public static extern bool OpenIcon(IntPtr hWnd);
+        internal static extern bool OpenIcon(IntPtr hWnd);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
-using static EndlessLauncher.NativeAPI;
+using static EndlessLauncher.NativeMethods;
 
 namespace EndlessLauncher
 {
@@ -28,7 +28,9 @@ namespace EndlessLauncher
             {
                 SetForegroundWindow(other);
                 if (IsIconic(other))
+                {
                     OpenIcon(other);
+                }
             }
         }
     }

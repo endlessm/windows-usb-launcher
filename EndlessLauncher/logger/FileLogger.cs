@@ -21,7 +21,6 @@ namespace EndlessLauncher.logger
                     using (StreamWriter streamWriter = new StreamWriter(logFilePath, true))
                     {
                         streamWriter.WriteLine(message);
-                        streamWriter.Close();
                     }
                 }
                 catch (Exception) { }

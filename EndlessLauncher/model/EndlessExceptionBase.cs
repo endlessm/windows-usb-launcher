@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EndlessLauncher.model
 {
+    [SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
     public abstract class EndlessExceptionBase<T> : Exception 
     {
         public EndlessExceptionBase(T errorCode, string message) : base(message) => Code = errorCode;

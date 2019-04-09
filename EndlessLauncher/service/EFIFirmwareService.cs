@@ -7,6 +7,7 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using static EndlessLauncher.utility.Utils;
+using static EndlessLauncher.NativeMethods;
 using static EndlessLauncher.NativeAPI;
 using EndlessLauncher.model;
 
@@ -30,6 +31,32 @@ namespace EndlessLauncher.service
             public string path;
             public string description;
             public int partitionNumber;
+        }
+
+        private class ESPPartitionInfo
+        {
+            public string volume;
+            public Int64 blockSize;
+            public Int32 partitionNumber;
+            public Int64 startingOffset;
+            public Int64 partitionLength;
+            public Guid partitionId;
+            public Guid partitionType;
+
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("\n");
+                sb.AppendFormat("Volume: {0}\n", volume);
+                sb.AppendFormat("blockSize: {0}\n", blockSize);
+                sb.AppendFormat("partitionNumber: {0}\n", partitionNumber);
+                sb.AppendFormat("startingOffset: {0}\n", startingOffset);
+                sb.AppendFormat("partitionLength: {0}\n", partitionLength);
+                sb.AppendFormat("partitionId: {0}\n", partitionId);
+                sb.AppendFormat("partitionType: {0}\n", partitionType);
+
+                return sb.ToString();
+            }
         }
 
         protected override void SetupEndlessLaunch(string description, string path)
@@ -92,23 +119,25 @@ namespace EndlessLauncher.service
             LogHelper.Log("EFIFirmwareService:SetBootNext: Boot{0}", entry.number.ToString("X4"));
             byte[] bootNextBytes = BitConverter.GetBytes(entry.number);
 
-            bool success = SetFirmwareEnvironmentVariable("BootNext", EFI_GLOBAL_VARIABLE, bootNextBytes, (uint)bootNextBytes.Length);
-            if (success)
-            {
-                LogHelper.Log("EFIFirmwareService:SetBootNext: Success");
-            }
-            else
+
+            if (!SetFirmwareEnvironmentVariable("BootNext", EFI_GLOBAL_VARIABLE, bootNextBytes, (uint)bootNextBytes.Length))
             {
                 LogHelper.Log("EFIFirmwareService:SetBootNext: Error: {0}", Marshal.GetLastWin32Error());
             }
-            return success;
+            else
+            {
+                LogHelper.Log("EFIFirmwareService:SetBootNext: Success");
+                return true;
+            }
+
+            return false;
         }
 
         private void PrintUefiEntries()
         {
             if (entries == null)
             {
-                LogHelper.Log("EFIFirmwareService:PrintUefiEntries: No UEFI entries" );
+                LogHelper.Log("EFIFirmwareService:PrintUefiEntries: No UEFI entries");
                 return;
             }
 
@@ -125,32 +154,6 @@ namespace EndlessLauncher.service
             }
 
             LogHelper.Log("EFIFirmwareService:PrintUefiEntries:----------------------------");
-        }
-
-        private class ESPPartitionInfo
-        {
-            public string volume;
-            public long blockSize;
-            public Int32 partitionNumber;
-            public Int64 startingOffset;
-            public Int64 partitionLength;
-            public Guid partitionId;
-            public Guid partitionType;
-
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("\n");
-                sb.AppendFormat("Volume: {0}\n", volume);
-                sb.AppendFormat("blockSize: {0}\n", blockSize);
-                sb.AppendFormat("partitionNumber: {0}\n", partitionNumber);
-                sb.AppendFormat("startingOffset: {0}\n", startingOffset);
-                sb.AppendFormat("partitionLength: {0}\n", partitionLength);
-                sb.AppendFormat("partitionId: {0}\n", partitionId);
-                sb.AppendFormat("partitionType: {0}\n", partitionType);
-
-                return sb.ToString();
-            }
         }
 
         private ESPPartitionInfo GetESPPartitionInfo(string volumePath)
@@ -178,7 +181,7 @@ namespace EndlessLauncher.service
 
             UInt32 bytesReturned = 0;
 
-            if (DeviceIoControl(hndl,
+            if (!DeviceIoControl(hndl,
                              IOCTL_DISK_GET_PARTITION_INFO_EX,
                              IntPtr.Zero,
                              0,
@@ -187,9 +190,14 @@ namespace EndlessLauncher.service
                              out bytesReturned,
                              IntPtr.Zero))
             {
+                LogHelper.Log("EFIFirmwareService:CreateUefiEntry:IOCTL_DISK_GET_PARTITION_INFO_EX Failed: Error: {0}", Marshal.GetLastWin32Error());
+            }
+            else
+            {
                 partition = (PARTITION_INFORMATION_EX)Marshal.PtrToStructure(outBuffer, typeof(PARTITION_INFORMATION_EX));
 
                 PARTITION_INFORMATION_GPT gptPartition = partition.DriveLayoutInformaiton.Gpt;
+                LogHelper.Log("EFIFirmwareService:GetESPPartitionInfo:gptPartition:{0}", gptPartition.Name);
 
                 partitionInfo = new ESPPartitionInfo()
                 {
@@ -200,11 +208,6 @@ namespace EndlessLauncher.service
                     startingOffset = partition.StartingOffset,
                     partitionLength = partition.PartitionLength
                 };
-            }
-            else
-            {
-                LogHelper.Log("EFIFirmwareService:CreateUefiEntry:IOCTL_DISK_GET_PARTITION_INFO_EX Failed: Error: {0}",
-                    Marshal.GetLastWin32Error());
             }
 
             Marshal.FreeHGlobal(outBuffer);
@@ -361,7 +364,7 @@ namespace EndlessLauncher.service
 
         private void PrintBootOrder(UInt16[] bootOrderArray)
         {
-            if (bootOrderArray == null  || bootOrderArray.Length == 0)
+            if (bootOrderArray == null || bootOrderArray.Length == 0)
             {
                 LogHelper.Log("EFIFirmwareService:PrintBootOrder: BootOrder is null or empty");
                 return;
@@ -570,7 +573,8 @@ namespace EndlessLauncher.service
             if (hndl.IsInvalid)
             {
                 LogHelper.Log("EFIFirmwareService:GetDiskForVolume: Invalid handle:");
-            } else
+            }
+            else
             {
                 VOLUME_DISK_EXTENTS vde = new VOLUME_DISK_EXTENTS();
                 UInt32 outBufferSize = (UInt32)Marshal.SizeOf(vde);
@@ -649,6 +653,5 @@ namespace EndlessLauncher.service
             if (!AdjustTokenPrivileges(hToken, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero))
                 throw new FirmwareSetupException(FirmwareSetupErrorCode.AdjustTokenPrivilegeError, "ObtainPrivileges: AdjustTokenPrivileges failed:" + privilege);
         }
-
     }
 }

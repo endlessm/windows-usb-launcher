@@ -2,6 +2,7 @@
 using EndlessLauncher.model;
 using System;
 using System.Threading.Tasks;
+using static EndlessLauncher.NativeMethods;
 using static EndlessLauncher.NativeAPI;
 
 namespace EndlessLauncher.service
@@ -9,7 +10,7 @@ namespace EndlessLauncher.service
     public abstract class FirmwareServiceBase
     {
         public event EventHandler SetupCompleted;
-        public event EventHandler<FirmwareSetupErrorCode> SetupFailed;
+        public event EventHandler<EndlessErrorEventArgs<FirmwareSetupErrorCode>> SetupFailed;
         protected SystemVerificationService systemVerificationService;
 
         public FirmwareServiceBase(SystemVerificationService service)
@@ -20,21 +21,29 @@ namespace EndlessLauncher.service
         public async void SetupEndlessLaunchAsync(string description, string path)
         {
             LogHelper.Log("SetupEndlessLaunchAsync:Start:");
-            
+
             try
             {
                 await Task.Run(() => SetupEndlessLaunch(description, path));
                 SetupCompleted?.Invoke(this, null);
-            } catch(FirmwareSetupException ex)
+            }
+            catch (FirmwareSetupException ex)
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: Error:{0} Message:{1}", ex.Code, ex.Message);
-                SetupFailed?.Invoke(this, ex.Code);
+                SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
+                {
+                    ErrorCode = ex.Code
+                });
 
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: Message: {0}", ex.Message);
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: StackTrace: {0}", ex.StackTrace);
-                SetupFailed?.Invoke(this, FirmwareSetupErrorCode.GenericError);
+                SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
+                {
+                    ErrorCode = FirmwareSetupErrorCode.GenericError
+                });
             }
 
             LogHelper.Log("SetupEndlessLaunchAsync:End:");

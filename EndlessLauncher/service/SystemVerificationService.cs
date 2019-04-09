@@ -12,6 +12,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using static EndlessLauncher.NativeAPI;
+using static EndlessLauncher.NativeMethods;
 
 namespace EndlessLauncher.service
 {
@@ -24,7 +25,7 @@ namespace EndlessLauncher.service
         private int currentPhysicalDiskIndex = -1;
         private string currentDriveLetter = null;
 
-        public event EventHandler<SystemVerificationErrorCode> VerificationFailed;
+        public event EventHandler<EndlessErrorEventArgs<SystemVerificationErrorCode>> VerificationFailed;
         public event EventHandler VerificationPassed;
 
         private enum SupportedOS
@@ -138,35 +139,50 @@ namespace EndlessLauncher.service
             //Check 64-bit OS
             if (!Environment.Is64BitOperatingSystem)
             {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.Not64BitSystem);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.Not64BitSystem
+                });
                 return;
             }
 
             //Check admin rights
             if (!RunningAsAdministrator())
             {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.NoAdminRights);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.NoAdminRights
+                });
                 return;
             }
 
             //Check Windows version
             if (!VerifyWindowsVersion())
             {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.UnsupportedOS);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.UnsupportedOS
+                });
                 return;
             }
 
             //Check RAM
             if (!VerifyRAM())
             {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.InsufficientRAM);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.InsufficientRAM
+                });
                 return;
             }
 
             //Check if UEFI firmware
             if (!InitializeFrameworkService())
             {
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.UnsupportedFirmware);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.UnsupportedFirmware
+                });
                 return;
             }
 
@@ -174,7 +190,10 @@ namespace EndlessLauncher.service
             {
                 if (!await Task.Run(() => CheckCPUCoresCount()))
                 {
-                    VerificationFailed?.Invoke(this, SystemVerificationErrorCode.SingleCoreProcessor);
+                    VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                    {
+                        ErrorCode = SystemVerificationErrorCode.SingleCoreProcessor
+                    });
                     return;
                 }
 
@@ -185,14 +204,20 @@ namespace EndlessLauncher.service
             }
             catch (SystemVerificationException ex)
             {
-                VerificationFailed?.Invoke(this, ex.Code);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = ex.Code
+                });
             }
             catch (Exception ex)
             {
                 LogHelper.Log("SystemVerificationService:VerifyRequirements: Message: {0}", ex.Message);
                 LogHelper.Log("SystemVerificationService:VerifyRequirements: StackTrace: {0}", ex.StackTrace);
 
-                VerificationFailed?.Invoke(this, SystemVerificationErrorCode.GenericError);
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = SystemVerificationErrorCode.GenericError
+                });
             }
         }
 
@@ -466,13 +491,14 @@ namespace EndlessLauncher.service
             string devicePropertyValue = null;
             byte[] ptrBuf = new byte[256];
 
-            if (SetupDiGetDeviceRegistryProperty(deviceEnumHandle, ref devInfodata, (UInt32)property, out UInt32 RegType, ptrBuf, 256, out UInt32 RequiredSize))
+            if (!SetupDiGetDeviceRegistryProperty(deviceEnumHandle, ref devInfodata, (UInt32)property, out UInt32 RegType, ptrBuf, 256, out UInt32 RequiredSize))
             {
-                devicePropertyValue = new string(Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize).TakeWhile(x => x != 0).ToArray());
+                LogHelper.Log("GetDeviceProperty: Failed: Error: {0}", Marshal.GetLastWin32Error());
+
             }
             else
             {
-                LogHelper.Log("GetDeviceProperty: Failed: Error: {0}", Marshal.GetLastWin32Error());
+                devicePropertyValue = new string(Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize).TakeWhile(x => x != 0).ToArray());
             }
 
             return devicePropertyValue;
@@ -484,7 +510,8 @@ namespace EndlessLauncher.service
             UInt32 dtSize = 0;
 
             SetupDiGetDeviceInterfaceDetailW(deviceEnumHandle, ref devInterfaceData, IntPtr.Zero, 0, ref dtSize, ref devInfodata);
-            if (Marshal.GetLastWin32Error() == ERROR_INSUFFICIENT_BUFFER)
+            int error = Marshal.GetLastWin32Error();
+            if (error == ERROR_INSUFFICIENT_BUFFER)
             {
                 IntPtr devInfoDetailData = Marshal.AllocHGlobal((int)dtSize);
 
@@ -492,22 +519,22 @@ namespace EndlessLauncher.service
                 Marshal.WriteInt32(devInfoDetailData, IntPtr.Size);
 
                 //Get the DevicePath
-                bool success = SetupDiGetDeviceInterfaceDetailW(deviceEnumHandle, ref devInterfaceData, devInfoDetailData, (UInt32)(dtSize), ref dtSize, ref devInfodata);
 
-                if (success)
+
+                if (!SetupDiGetDeviceInterfaceDetailW(deviceEnumHandle, ref devInterfaceData, devInfoDetailData, (UInt32)(dtSize), ref dtSize, ref devInfodata))
                 {
-                    devicePathName = Marshal.PtrToStringUni(devInfoDetailData + 4);
+                    LogHelper.Log("GetDevicePath: Failed to get devicePath: {0}", Marshal.GetLastWin32Error());
                 }
                 else
                 {
-                    LogHelper.Log("GetDevicePath: Failed to get devicePath: {0}", Marshal.GetLastWin32Error());
+                    devicePathName = Marshal.PtrToStringUni(devInfoDetailData + 4);
                 }
 
                 Marshal.FreeHGlobal(devInfoDetailData);
             }
             else
             {
-                LogHelper.Log("GetDevicePath: Failed to get size: {0}", Marshal.GetLastWin32Error());
+                LogHelper.Log("GetDevicePath: Failed to get size: {0}", error);
             }
 
             return devicePathName;
@@ -587,7 +614,11 @@ namespace EndlessLauncher.service
                 IntPtr ptrNodeInfo = Marshal.AllocHGlobal((int)usbNodeInfoSize);
                 Marshal.StructureToPtr(usbNodeInfo, ptrNodeInfo, true);
 
-                if (DeviceIoControl(hndl, IOCTL_USB_GET_NODE_INFORMATION, ptrNodeInfo, usbNodeInfoSize, ptrNodeInfo, usbNodeInfoSize, out UInt32 returnedSize, IntPtr.Zero))
+                if (!DeviceIoControl(hndl, IOCTL_USB_GET_NODE_INFORMATION, ptrNodeInfo, usbNodeInfoSize, ptrNodeInfo, usbNodeInfoSize, out UInt32 returnedSize, IntPtr.Zero))
+                {
+                    LogHelper.Log("CheckHubPorts: Failed to get usb hub port count: {0}", Marshal.GetLastWin32Error());
+                }
+                else
                 {
                     usbNodeInfo = (USB_NODE_INFORMATION)Marshal.PtrToStructure(ptrNodeInfo, typeof(USB_NODE_INFORMATION));
                     LogHelper.Log("CheckHubPorts:Total number of ports: {0}", usbNodeInfo.u.HubInformation.HubDescriptor.bNumberOfPorts);
@@ -604,10 +635,6 @@ namespace EndlessLauncher.service
 
                         hub.Ports.Add(port);
                     }
-                }
-                else
-                {
-                    LogHelper.Log("CheckHubPorts: Failed to get usb hub port count: {0}", Marshal.GetLastWin32Error());
                 }
                 Marshal.FreeHGlobal(ptrNodeInfo);
 
@@ -632,16 +659,14 @@ namespace EndlessLauncher.service
             IntPtr ptrNodeInfoExV2 = Marshal.AllocHGlobal((int)size);
             Marshal.StructureToPtr(nodeInfoExV2, ptrNodeInfoExV2, true);
 
-            bool success = DeviceIoControl(hndl, IOCTL_USB_GET_NODE_CONNECTION_INFORMATION_EX_V2, ptrNodeInfoExV2, (UInt32)size, ptrNodeInfoExV2, size, out size, IntPtr.Zero);
-
-            if (success)
+            if (!DeviceIoControl(hndl, IOCTL_USB_GET_NODE_CONNECTION_INFORMATION_EX_V2, ptrNodeInfoExV2, (UInt32)size, ptrNodeInfoExV2, size, out size, IntPtr.Zero))
             {
-                nodeInfoExV2 = (USB_NODE_CONNECTION_INFORMATION_EX_V2)Marshal.PtrToStructure(ptrNodeInfoExV2, typeof(USB_NODE_CONNECTION_INFORMATION_EX_V2));
-                isUSB30 = nodeInfoExV2.SupportedUsbProtocols.HasFlag(USB_PROTOCOLS.Usb300);
+                LogHelper.Log("CheckHubPorts: IsUSB30Port: Failed: Error: {0}", Marshal.GetLastWin32Error());
             }
             else
             {
-                LogHelper.Log("CheckHubPorts: IsUSB30Port: Failed: Error: {0}", Marshal.GetLastWin32Error());
+                nodeInfoExV2 = (USB_NODE_CONNECTION_INFORMATION_EX_V2)Marshal.PtrToStructure(ptrNodeInfoExV2, typeof(USB_NODE_CONNECTION_INFORMATION_EX_V2));
+                isUSB30 = nodeInfoExV2.SupportedUsbProtocols.HasFlag(USB_PROTOCOLS.Usb300);
             }
 
             Marshal.FreeHGlobal(ptrNodeInfoExV2);
@@ -670,7 +695,6 @@ namespace EndlessLauncher.service
             Marshal.FreeHGlobal(ptrDriverKey);
             return deviceDriverKeyName;
         }
-
 
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EndlessLauncher.model
 {
@@ -38,5 +34,12 @@ namespace EndlessLauncher.model
         NoUSBPortsFound
     };
 
-
+    public class EndlessErrorEventArgs<T> : EventArgs
+    {
+        public T ErrorCode
+        {
+            get;
+            set;
+        }
+    }
 }
