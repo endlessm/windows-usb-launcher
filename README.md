@@ -15,3 +15,44 @@ nuget.exe restore
 ```
 MSBuild.exe EndlessLauncher.sln /p:Configuration="<Debug/Release>";outdir="<release_folder>"
 ```
+## Other info
+It is possbile to "force" a system verification or a firmware setup error by running the application with "-e <errorCode>", 
+"--errorCode <errorCode>" command arguments
+```
+EndlessLauncher.exe -e GenericVerificationError
+EndlessLauncher.exe --errorCode 100
+```
+Firmware setup error codes:
+```
+NoError = int.MinValue,
+GenericFirmwareError = -1,
+OpenProcessTokenError = 1,
+LookupPrivilegeError,
+AdjustTokenPrivilegeError,
+EspPartitionNotFoundError,
+GetBootBorderError,
+NoExistingUefiEntriesError,
+GetPartitionEspInfoError,
+FindFreeUefiEntryError,
+CreateNewUefiEntryError,
+AddToBootOrderError,
+SetBootNextError,
+FirmwareServiceInitializationError
+```
+System requirements verification error codes
+```
+NoError = int.MinValue,
+GenericVerificationError = 100,
+Not64BitSystem,
+UnsupportedFirmware,
+NoAdminRights,
+UnsupportedOS,
+InsufficientRAM,
+SingleCoreProcessor,
+UsbDeviceNotFound,
+UsbPortNotFound,
+NotUSB30Port,
+NoUSBPortsFound
+```
+  
+ This will redirect the application to the incompatible USB(error) screen.
