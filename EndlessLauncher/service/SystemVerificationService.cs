@@ -1,5 +1,6 @@
 ﻿using EndlessLauncher.logger;
 using EndlessLauncher.model;
+using EndlessLauncher.utility;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -136,6 +137,16 @@ namespace EndlessLauncher.service
         {
             LogHelper.Log("SystemVerificationService:VerifyRequirements:");
 
+            if (Debug.SimulatedVerificationError != SystemVerificationErrorCode.NoError)
+            {
+                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                {
+                    ErrorCode = Debug.SimulatedVerificationError
+                });
+
+                return;
+            }
+
             //Check 64-bit OS
             if (!Environment.Is64BitOperatingSystem)
             {
@@ -216,7 +227,7 @@ namespace EndlessLauncher.service
 
                 VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
                 {
-                    ErrorCode = SystemVerificationErrorCode.GenericError
+                    ErrorCode = SystemVerificationErrorCode.GenericVerificationError
                 });
             }
         }

@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using static EndlessLauncher.NativeMethods;
 using static EndlessLauncher.NativeAPI;
+using EndlessLauncher.utility;
 
 namespace EndlessLauncher.service
 {
@@ -21,6 +22,16 @@ namespace EndlessLauncher.service
         public async void SetupEndlessLaunchAsync(string description, string path)
         {
             LogHelper.Log("SetupEndlessLaunchAsync:Start:");
+
+            if (Debug.SimulatedFirmwareError != FirmwareSetupErrorCode.NoError)
+            {
+                SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
+                {
+                    ErrorCode = Debug.SimulatedFirmwareError
+                });
+
+                return;
+            }
 
             try
             {
@@ -42,7 +53,7 @@ namespace EndlessLauncher.service
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: StackTrace: {0}", ex.StackTrace);
                 SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
                 {
-                    ErrorCode = FirmwareSetupErrorCode.GenericError
+                    ErrorCode = FirmwareSetupErrorCode.GenericFirmwareError
                 });
             }
 

@@ -4,7 +4,8 @@ namespace EndlessLauncher.model
 {
     public enum FirmwareSetupErrorCode : int
     {
-        GenericError = -1,
+        NoError = int.MinValue,
+        GenericFirmwareError = -1,
         OpenProcessTokenError = 1,
         LookupPrivilegeError,
         AdjustTokenPrivilegeError,
@@ -21,7 +22,8 @@ namespace EndlessLauncher.model
 
     public enum SystemVerificationErrorCode : int
     {
-        GenericError = 100,
+        NoError = int.MinValue,
+        GenericVerificationError = 100,
         Not64BitSystem,
         UnsupportedFirmware,
         NoAdminRights,
