@@ -42,12 +42,12 @@
                     CornerRadius="{StaticResource AppBorderCornerRadius}">
                 <Button Command="{Binding CloseRelayCommand}"
                         Style="{StaticResource CloseButtonStyle}">
-                    <TextBlock Text="&#xE8BB;"
-                               FontFamily="Segoe MDL2 Assets" />
+                    <Image Source="/Resources/Images/close.png"/>
                 </Button>
             </Border>
 
             <Frame x:Name="MainFrame"
+                   Focusable="False"
                    Background="White"
                    NavigationUIVisibility="Hidden"
                    VerticalAlignment="Stretch"

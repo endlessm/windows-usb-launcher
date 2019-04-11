@@ -11,10 +11,10 @@
       Title="WrongUSBPortInfoPage">
 
     <Page.Resources>
-        <GridLength x:Key="LogoImageRowHeight">200</GridLength>
-        <sys:Double x:Key="LogoImageHeightOverride">100</sys:Double>
+        <GridLength x:Key="LogoImageRowHeight">230</GridLength>
+        <sys:Double x:Key="LogoImageHeightOverride">90</sys:Double>
         <Thickness x:Key="MessageSeparatorMargin">0,4,0,0</Thickness>
-        
+        <Thickness x:Key="HackTextTitlePanelOverride">0,50,0,0</Thickness>
         <Style x:Key="InfoButton"
                TargetType="Button">
             <Setter Property="OverridesDefaultStyle"
@@ -76,6 +76,7 @@
                Source="/Resources/Images/wrong_port_info.png" />
         <StackPanel Grid.Row="1"
                     Orientation="Vertical"
+                    Margin="{StaticResource HackTextTitlePanelOverride}"
                     Style="{StaticResource HackTextTitlePanelStyle}">
 
             <TextBlock Text="{x:Static resources:Literals.wrong_port_info_msg1}"

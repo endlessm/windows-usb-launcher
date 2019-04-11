@@ -14,19 +14,31 @@
             <Setter Property="OverridesDefaultStyle"
                     Value="True" />
             <Setter Property="Margin"
-                    Value="{StaticResource DefaultButtonMargin}" />
+                    Value="0,60,0,0" />
             <Setter Property="Width"
-                    Value="36" />
+                    Value="{StaticResource DefaultButtonHeight}" />
             <Setter Property="Height"
-                    Value="36" />
+                    Value="{StaticResource DefaultButtonHeight}" />
+            <Setter Property="FontSize"
+                    Value="{StaticResource DefaultButtonFontSize}" />
+            <Setter Property="FontFamily"
+                    Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center" />
+            <Setter Property="Foreground"
+                    Value="{StaticResource DefaultForegroundColor}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Name="border"
                                 BorderThickness="0">
                             <ContentPresenter HorizontalAlignment="Center"
+                                              Name="Presenter"
+                                              Margin="0,0,2,0"
                                               VerticalAlignment="Center" />
                             <Border.Background>
                                 <ImageBrush ImageSource="/Resources/Images/wrong_port_default.png" />
@@ -50,8 +62,15 @@
                                         <ImageBrush ImageSource="/Resources/Images/wrong_port_pressed.png" />
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextElement.Foreground"
+                                        TargetName="Presenter"
+                                        Value="{StaticResource DefaultButtonPressedForegroundColor}">
+                                </Setter>
+                                <Setter Property="Margin"
+                                        TargetName="Presenter"
+                                        Value="2,4,0,0">
+                                </Setter>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -60,7 +79,7 @@
     </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="200" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -72,7 +91,6 @@
 
         <StackPanel Grid.Row="1"
                     Style="{StaticResource HackTextTitlePanelStyle}">
-
             <TextBlock Text="{x:Static resources:Literals.wrong_port_partial_title}"
                        Style="{StaticResource TitleTextBlockStyle}" />
             <Image Grid.Row="0"
@@ -85,6 +103,7 @@
 
         <Button Grid.Row="3"
                 Command="{Binding MoreInfoRelayCommand}"
-                Style="{StaticResource InfoButton}" />
+                Style="{StaticResource InfoButton}"
+                Content="{x:Static resources:Literals.button_question_mark}" />
     </Grid>
 </Page>

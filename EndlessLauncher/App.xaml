@@ -16,14 +16,14 @@
             <CornerRadius x:Key="AppBorderCornerRadius"
                           BottomLeft="0"
                           BottomRight="0"
-                          TopLeft="10"
-                          TopRight="10" />
+                          TopLeft="20"
+                          TopRight="20" />
             <Thickness x:Key="AppBorderThickness">2</Thickness>
             <Thickness x:Key="SecondaryCoverBorderMargin">-2,-2,-2,0</Thickness>
             <Thickness x:Key="DefaultPageMargin">20</Thickness>
             <Thickness x:Key="DefaultMessageMargin">0,10,0,0</Thickness>
-            <Thickness x:Key="DefaultButtonMargin">0,40,0,0</Thickness>
-            <Thickness x:Key="HackTitlePanelMargin">0,40,0,0</Thickness>
+            <Thickness x:Key="DefaultButtonMargin">0,50,0,0</Thickness>
+            <Thickness x:Key="HackTitlePanelMargin">0,30,0,0</Thickness>
             <Thickness x:Key="HackTextLogoAlignmentMargin">20,0,0,10</Thickness>
 
             <SolidColorBrush x:Key="AppBorderBrush"
@@ -32,12 +32,17 @@
                              Color="#6c6c6c"></SolidColorBrush>
             <SolidColorBrush x:Key="DefaultForegroundColor"
                              Color="#181866"></SolidColorBrush>
+            <SolidColorBrush x:Key="DefaultButtonPressedForegroundColor"
+                             Color="#54FFC9"></SolidColorBrush>
+
             <GridLength x:Key="TopBarHeight">40</GridLength>
 
             <sys:Double x:Key="DefaultMsgFontSize">15</sys:Double>
-            <sys:Double x:Key="DefaultTitleFontSize">36</sys:Double>
+            <sys:Double x:Key="DefaultTitleFontSize">40</sys:Double>
             <sys:Double x:Key="HackTextLogoHeight">50</sys:Double>
             <sys:Double x:Key="PagePrimaryImageLogoHeight">160</sys:Double>
+            <sys:Double x:Key="DefaultButtonHeight">36</sys:Double>
+            <sys:Double x:Key="DefaultButtonFontSize">13</sys:Double>
 
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
@@ -60,7 +65,7 @@
                 <Setter Property="VerticalAlignment"
                         Value="Bottom" />
                 <Setter Property="FontFamily"
-                        Value="/Resources/Fonts/Metropolis-SemiBold.otf#Metropolis Semi Bold" />
+                        Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
                 <Setter Property="Foreground"
                         Value="{StaticResource DefaultForegroundColor}" />
                 <Setter Property="FontSize"
@@ -99,13 +104,15 @@
             <Style x:Key="PagePrimaryImageLogoStyle"
                    TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode"
-                        Value="HighQuality" />
+                        Value="Linear" />
                 <Setter Property="RenderOptions.EdgeMode"
                         Value="Aliased" />
                 <Setter Property="VerticalAlignment"
                         Value="Bottom" />
                 <Setter Property="Height"
                         Value="{StaticResource PagePrimaryImageLogoHeight}" />
+                <Setter Property="Margin"
+                        Value="0,40,0,0" />
             </Style>
 
             <Style x:Key="CloseButtonStyle"
@@ -129,11 +136,11 @@
                 <Setter Property="Height"
                         Value="32" />
                 <Setter Property="Margin"
-                        Value="0,0,4,0" />
+                        Value="0,0,6,0" />
                 <Setter Property="VerticalContentAlignment"
                         Value="Center" />
                 <Setter Property="Padding"
-                        Value="0" />
+                        Value="8" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">

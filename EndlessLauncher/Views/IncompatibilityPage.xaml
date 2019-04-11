@@ -14,6 +14,7 @@
 
     <Page.Resources>
         <sys:Double x:Key="TitleFontSizeOverride">28</sys:Double>
+        <Thickness x:Key="PagePrimaryImageLogoHeightOverride">0,60,0,0</Thickness>
 
         <Style x:Key="HyperlinkTextBlockStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment"
@@ -25,16 +26,25 @@
             <Setter Property="Margin"
                     Value="0,10,0,0" />
         </Style>
+
         <Style x:Key="CustomerSupportButtonStyle"
                TargetType="Button">
             <Setter Property="OverridesDefaultStyle"
                     Value="True" />
             <Setter Property="Margin"
-                    Value="{StaticResource DefaultButtonMargin}" />
+                    Value="0,30,0,0" />
             <Setter Property="Width"
-                    Value="120" />
+                    Value="140" />
             <Setter Property="Height"
-                    Value="30" />
+                    Value="{StaticResource DefaultButtonHeight}" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="FontFamily"
+                    Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
+            <Setter Property="Foreground"
+                    Value="{StaticResource DefaultForegroundColor}" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
             <Setter Property="Template">
@@ -43,6 +53,7 @@
                         <Border Name="border"
                                 BorderThickness="0">
                             <ContentPresenter HorizontalAlignment="Center"
+                                              Name="Presenter"
                                               VerticalAlignment="Center" />
                             <Border.Background>
                                 <ImageBrush ImageSource="/Resources/Images/customer_support_default.png" />
@@ -66,6 +77,14 @@
                                         <ImageBrush ImageSource="/Resources/Images/customer_support_pressed.png" />
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextElement.Foreground"
+                                        TargetName="Presenter"
+                                        Value="{StaticResource DefaultButtonPressedForegroundColor}">
+                                </Setter>
+                                <Setter Property="Margin"
+                                        TargetName="Presenter"
+                                        Value="0,4,0,0">
+                                </Setter>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -85,6 +104,7 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0"
+               Margin="{StaticResource PagePrimaryImageLogoHeightOverride}"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
                Source="/Resources/Images/incompatible_usb.png" />
 
@@ -101,12 +121,16 @@
                    Text="{Binding Message}" />
 
         <Button Grid.Row="3"
+                Height="44"
                 Command="{Binding SupportRelayCommand}"
-                Style="{StaticResource CustomerSupportButtonStyle}" />
+                Style="{StaticResource CustomerSupportButtonStyle}"
+                Content="{x:Static resources:Literals.button_customer_support}"/>
 
         <TextBlock Grid.Row="4"
                    Style="{StaticResource HyperlinkTextBlockStyle}">
-            <Hyperlink Command="{Binding ShowLogRelayCommand}">
+            <Hyperlink Command="{Binding ShowLogRelayCommand}"
+                       FontFamily="/Resources/Fonts/Metropolis-RegularItalic.otf#Metropolis Regular Italic"
+                       Foreground="{StaticResource DefaultForegroundColor}">
                 <Run Text="{x:Static resources:Literals.log_file_title}" />
             </Hyperlink>
         </TextBlock>

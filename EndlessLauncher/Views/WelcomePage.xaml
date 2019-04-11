@@ -12,6 +12,7 @@
       UseLayoutRounding="True"
       Title="WelcomePage">
     <Page.Resources>
+        <Thickness x:Key="HackTextTitlePanelOverride">0,50,0,0</Thickness>
         <Style x:Key="LetsGoButton"
                TargetType="Button">
             <Setter Property="OverridesDefaultStyle"
@@ -21,7 +22,15 @@
             <Setter Property="Width"
                     Value="100" />
             <Setter Property="Height"
-                    Value="36" />
+                    Value="{StaticResource DefaultButtonHeight}" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="FontSize"
+                    Value="{StaticResource DefaultButtonFontSize}" />
+            <Setter Property="FontFamily"
+                    Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
+            <Setter Property="Foreground"
+                    Value="{StaticResource DefaultForegroundColor}" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
             <Setter Property="Template">
@@ -30,6 +39,7 @@
                         <Border Name="border"
                                 BorderThickness="0">
                             <ContentPresenter HorizontalAlignment="Center"
+                                              Name="Presenter"
                                               VerticalAlignment="Center" />
                             <Border.Background>
                                 <ImageBrush ImageSource="/Resources/Images/lets_go_default.png" />
@@ -53,8 +63,15 @@
                                         <ImageBrush ImageSource="/Resources/Images/lets_go_pressed.png" />
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextElement.Foreground"
+                                        TargetName="Presenter"
+                                        Value="{StaticResource DefaultButtonPressedForegroundColor}">
+                                </Setter>
+                                <Setter Property="Margin"
+                                        TargetName="Presenter"
+                                        Value="0,4,0,0">
+                                </Setter>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -63,32 +80,35 @@
     </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Image Grid.Row="0"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
                Source="/Resources/Images/compatible_usb.png" />
-        
+
         <StackPanel Grid.Row="1"
+                    Margin="{StaticResource HackTextTitlePanelOverride}"
                     Style="{StaticResource HackTextTitlePanelStyle}">
 
             <TextBlock Text="{x:Static resources:Literals.welcome_partial_title}"
-                       Style="{StaticResource TitleTextBlockStyle}"/>
+                       Style="{StaticResource TitleTextBlockStyle}" />
             <Image Grid.Row="0"
                    Style="{StaticResource HackTextLogoStyle}" />
         </StackPanel>
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource MessageTextBlockStyle}"
-                   Text="{x:Static resources:Literals.welcome_click_to_restart_msg}"/>
+                   Text="{x:Static resources:Literals.welcome_click_to_restart_msg}" />
 
         <Button Grid.Row="3"
                 Command="{Binding LaunchRelayCommand}"
                 Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                Style="{StaticResource LetsGoButton}"/>
+                Style="{StaticResource LetsGoButton}"
+                Content="{x:Static resources:Literals.button_lets_go}">
+        </Button>
     </Grid>
 </Page>

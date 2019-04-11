@@ -198,9 +198,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Fonts\Metropolis-Medium.otf" />
     <Resource Include="Resources\Fonts\Metropolis-Regular.otf" />
     <Resource Include="Resources\Fonts\Metropolis-RegularItalic.otf" />
-    <Resource Include="Resources\Fonts\Metropolis-SemiBold.otf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -247,6 +247,9 @@
     <Resource Include="Resources\Images\back_default.png" />
     <Resource Include="Resources\Images\back_hover.png" />
     <Resource Include="Resources\Images\back_pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\close.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('..\packages\Fody.4.0.2\build\Fody.targets')" />

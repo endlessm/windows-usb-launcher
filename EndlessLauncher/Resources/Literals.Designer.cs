@@ -61,6 +61,33 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customer Support.
+        /// </summary>
+        public static string button_customer_support {
+            get {
+                return ResourceManager.GetString("button_customer_support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let&apos;s go!.
+        /// </summary>
+        public static string button_lets_go {
+            get {
+                return ResourceManager.GetString("button_lets_go", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ?.
+        /// </summary>
+        public static string button_question_mark {
+            get {
+                return ResourceManager.GetString("button_question_mark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please contact us with any other questions..
         /// </summary>
         public static string incompatibility_msg {
@@ -79,7 +106,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log file.
+        ///   Looks up a localized string similar to debug log file.
         /// </summary>
         public static string log_file_title {
             get {

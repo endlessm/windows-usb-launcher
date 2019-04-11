@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="button_customer_support" xml:space="preserve">
+    <value>Customer Support</value>
+  </data>
+  <data name="button_lets_go" xml:space="preserve">
+    <value>Let's go!</value>
+  </data>
+  <data name="button_question_mark" xml:space="preserve">
+    <value>?</value>
+  </data>
   <data name="incompatibility_msg" xml:space="preserve">
     <value>Please contact us with any other questions.</value>
   </data>
@@ -124,7 +133,7 @@
     <value>This USB stick is not compatible with your computer.</value>
   </data>
   <data name="log_file_title" xml:space="preserve">
-    <value>Log file</value>
+    <value>debug log file</value>
   </data>
   <data name="welcome_click_to_restart_msg" xml:space="preserve">
     <value>Click below to restart your computer into the HACK experience</value>
