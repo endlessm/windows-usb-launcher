@@ -1,6 +1,7 @@
 ﻿using EndlessLauncher.logger;
 using EndlessLauncher.utility;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using static EndlessLauncher.NativeMethods;
@@ -16,6 +17,7 @@ namespace EndlessLauncher
         protected override void OnStartup(StartupEventArgs e)
         {
             string errorCode = null;
+            bool fullLogging = false;
 
             if (e.Args != null && e.Args.Length > 0)
             {
@@ -26,10 +28,16 @@ namespace EndlessLauncher
                         errorCode = e.Args[i + 1];
                     if (arg.Equals("--fulllog") || arg.Equals("-fl"))
                     {
-                        Debug.ImmediateFileLogging = true;
+                        fullLogging = true;
                     }
                 }
+            }
 
+            Debug.ImmediateFileLogging = fullLogging;
+
+            LogHelper.Log("AppVersion:{0}", Assembly.GetExecutingAssembly().GetName().Version);
+            if (errorCode != null)
+            {
                 LogHelper.Log("OnStartup:Simulate Error:{0}", errorCode);
                 Debug.SetDebugSimulatedError(errorCode);
             }
