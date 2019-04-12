@@ -37,5 +37,12 @@ namespace EndlessLauncher.utility
                 LogHelper.Log("SetDebugSimulatedError: " + SimulatedFirmwareError);
             }
         }
+
+        public static bool ImmediateFileLogging
+        {
+            get;
+            set;
+        }
+
     }
 }

@@ -136,98 +136,73 @@ namespace EndlessLauncher.service
         public async void VerifyRequirements()
         {
             LogHelper.Log("SystemVerificationService:VerifyRequirements:");
+            SystemVerificationErrorCode errorCode = SystemVerificationErrorCode.NoError;
 
             if (Debug.SimulatedVerificationError != SystemVerificationErrorCode.NoError)
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = Debug.SimulatedVerificationError
-                });
-
-                return;
+                errorCode = Debug.SimulatedVerificationError;
             }
-
-            //Check 64-bit OS
-            if (!Environment.Is64BitOperatingSystem)
+            else if (!Environment.Is64BitOperatingSystem)
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.Not64BitSystem
-                });
-                return;
+                errorCode = SystemVerificationErrorCode.Not64BitSystem;
             }
-
-            //Check admin rights
-            if (!RunningAsAdministrator())
+            else if (!RunningAsAdministrator())
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.NoAdminRights
-                });
-                return;
+                errorCode = SystemVerificationErrorCode.NoAdminRights;
             }
-
-            //Check Windows version
-            if (!VerifyWindowsVersion())
+            else if (!VerifyWindowsVersion())
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.UnsupportedOS
-                });
-                return;
+                errorCode = SystemVerificationErrorCode.UnsupportedOS;
             }
-
-            //Check RAM
-            if (!VerifyRAM())
+            else if (!VerifyRAM())
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.InsufficientRAM
-                });
-                return;
+                errorCode = SystemVerificationErrorCode.InsufficientRAM;
             }
-
-            //Check if UEFI firmware
-            if (!InitializeFrameworkService())
+            else if (!InitializeFrameworkService())
             {
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.UnsupportedFirmware
-                });
-                return;
+                errorCode = SystemVerificationErrorCode.UnsupportedFirmware;
             }
-
-            try
+            else
             {
-                if (!await Task.Run(() => CheckCPUCoresCount()))
+                try
                 {
-                    VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
+                    if (!await Task.Run(() => CheckCPUCoresCount()))
                     {
-                        ErrorCode = SystemVerificationErrorCode.SingleCoreProcessor
-                    });
-                    return;
+                        errorCode = SystemVerificationErrorCode.SingleCoreProcessor;
+                    }
+                    else
+                    {
+                        await Task.Run(() => VerifyUSB30());
+                        LogHelper.Log("SystemVerificationService:VerifyRequirements: Success");
+                    }
+                }
+                catch (SystemVerificationException ex)
+                {
+                    errorCode = ex.Code;
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.Log("SystemVerificationService:VerifyRequirements: Message: {0}", ex.Message);
+                    LogHelper.Log("SystemVerificationService:VerifyRequirements: StackTrace: {0}", ex.StackTrace);
+
+                    errorCode = SystemVerificationErrorCode.GenericVerificationError;
+                }
+            }
+
+            if (errorCode == SystemVerificationErrorCode.NoError)
+            {
+                VerificationPassed?.Invoke(this, null);
+            } else
+            {
+                LogHelper.Log("SystemVerificationService:VerifyRequirements: Error: {0}", errorCode);
+                if (errorCode != SystemVerificationErrorCode.NotUSB30Port)
+                {
+                    LogHelper.Flush();
                 }
 
-                await Task.Run(() => VerifyUSB30());
-                LogHelper.Log("SystemVerificationService:VerifyRequirements: Success");
-                VerificationPassed?.Invoke(this, null);
-
-            }
-            catch (SystemVerificationException ex)
-            {
                 VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
                 {
-                    ErrorCode = ex.Code
-                });
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Log("SystemVerificationService:VerifyRequirements: Message: {0}", ex.Message);
-                LogHelper.Log("SystemVerificationService:VerifyRequirements: StackTrace: {0}", ex.StackTrace);
-
-                VerificationFailed?.Invoke(this, new EndlessErrorEventArgs<SystemVerificationErrorCode>
-                {
-                    ErrorCode = SystemVerificationErrorCode.GenericVerificationError
+                    ErrorCode = errorCode
                 });
             }
         }
@@ -395,11 +370,6 @@ namespace EndlessLauncher.service
             LogHelper.Log("VerifyUSB30: Found the USB device: {0}", usbDevice);
 
             List<UsbHub> hubs = GetAvailableUSBPorts();
-
-            //foreach (UsbHub hub in hubs)
-            //{
-            //    LogHelper.Log("VerifyUSB30: " + hub);
-            //}
 
             UsbPort connectedPort = null;
 

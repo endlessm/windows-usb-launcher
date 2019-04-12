@@ -12,9 +12,9 @@ namespace EndlessLauncher.logger
         {
             try
             {
-                string logFolder = AppDomain.CurrentDomain.BaseDirectory;
+                string logFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 LogFilePath += logFolder
-                    + "EndlessLauncher_"
+                    + "\\EndlessLauncher_"
                     + DateTime.Now.ToString("dd_MM_yyyy_hh_mm")
                     + ".log";
             }
@@ -60,6 +60,14 @@ namespace EndlessLauncher.logger
         public static void Log(string format, params object[] objects)
         {
             Log(string.Format(format, objects));
+        }
+
+        public static void Flush()
+        {
+            foreach (var logger in loggerList)
+            {
+                logger.Flush();
+            }
         }
     }
 }

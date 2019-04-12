@@ -21,7 +21,7 @@ namespace EndlessLauncher.service
 
         public async void SetupEndlessLaunchAsync(string description, string path)
         {
-            LogHelper.Log("SetupEndlessLaunchAsync:Start:");
+            LogHelper.Log("SetupEndlessLaunchAsync:");
 
             if (Debug.SimulatedFirmwareError != FirmwareSetupErrorCode.NoError)
             {
@@ -41,6 +41,7 @@ namespace EndlessLauncher.service
             catch (FirmwareSetupException ex)
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:FirmwareSetupException: Error:{0} Message:{1}", ex.Code, ex.Message);
+                LogHelper.Flush();
                 SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
                 {
                     ErrorCode = ex.Code
@@ -51,13 +52,13 @@ namespace EndlessLauncher.service
             {
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: Message: {0}", ex.Message);
                 LogHelper.Log("SetupEndlessLaunchAsync:Exception: StackTrace: {0}", ex.StackTrace);
+                LogHelper.Flush();
                 SetupFailed?.Invoke(this, new EndlessErrorEventArgs<FirmwareSetupErrorCode>
                 {
                     ErrorCode = FirmwareSetupErrorCode.GenericFirmwareError
                 });
             }
 
-            LogHelper.Log("SetupEndlessLaunchAsync:End:");
         }
 
         public void Reboot()

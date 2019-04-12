@@ -19,11 +19,15 @@ namespace EndlessLauncher
 
             if (e.Args != null && e.Args.Length > 0)
             {
-                for (int i = 0; i < e.Args.Length; i += 2)
+                for (int i = 0; i < e.Args.Length; i += 1)
                 {
                     string arg = e.Args[i].ToLower();
                     if ( i + 1 < e.Args.Length && (arg.Equals("-e") || arg.Equals("--errorcode")))
                         errorCode = e.Args[i + 1];
+                    if (arg.Equals("--fullLog") || arg.Equals("-fl"))
+                    {
+                        Debug.ImmediateFileLogging = true;
+                    }
                 }
 
                 LogHelper.Log("OnStartup:Simulate Error:{0}", errorCode);
