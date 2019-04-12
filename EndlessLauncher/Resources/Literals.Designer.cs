@@ -88,6 +88,15 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error Code:.
+        /// </summary>
+        public static string error_code_message {
+            get {
+                return ResourceManager.GetString("error_code_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please contact us with any other questions..
         /// </summary>
         public static string incompatibility_msg {

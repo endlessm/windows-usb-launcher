@@ -100,6 +100,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -118,14 +119,18 @@
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource MessageTextBlockStyle}"
-                   Text="{Binding Message}" />
+                   Text="{x:Static resources:Literals.incompatibility_msg}" />
 
-        <Button Grid.Row="3"
+        <TextBlock Grid.Row="3"
+                   Style="{StaticResource MessageTextBlockStyle}"
+                   Text="{Binding ErrorMessage}" />
+
+        <Button Grid.Row="4"
                 Command="{Binding SupportRelayCommand}"
                 Style="{StaticResource CustomerSupportButtonStyle}"
                 Content="{x:Static resources:Literals.button_customer_support}"/>
 
-        <TextBlock Grid.Row="4"
+        <TextBlock Grid.Row="5"
                    Style="{StaticResource HyperlinkTextBlockStyle}">
             <Hyperlink Command="{Binding ShowLogRelayCommand}"
                        FontFamily="/Resources/Fonts/Metropolis-RegularItalic.otf#Metropolis Regular Italic"

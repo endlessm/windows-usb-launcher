@@ -126,6 +126,9 @@
   <data name="button_question_mark" xml:space="preserve">
     <value>?</value>
   </data>
+  <data name="error_code_message" xml:space="preserve">
+    <value>Error Code:</value>
+  </data>
   <data name="incompatibility_msg" xml:space="preserve">
     <value>Please contact us with any other questions.</value>
   </data>

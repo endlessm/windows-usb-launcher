@@ -57,15 +57,15 @@ namespace EndlessLauncher.ViewModel
             set
             {
                 Set(ref errorCode, value);
-                RaisePropertyChanged("Message");
+                RaisePropertyChanged("ErrorMessage");
             }
         }
 
-        public string Message
+        public string ErrorMessage
         {
             get
             {
-                return string.Format("{0} Error: {1}", Literals.incompatibility_msg, errorCode);
+                return string.Format("{0} {1}", Literals.error_code_message, errorCode.ToString("000"));
             }
         }
     }
