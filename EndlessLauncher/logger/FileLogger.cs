@@ -23,7 +23,7 @@ namespace EndlessLauncher.logger
                 {
                     using (StreamWriter streamWriter = new StreamWriter(logFilePath, true))
                     {
-                        streamWriter.WriteLine(message);
+                        streamWriter.Write(message);
                     }
                 }
                 catch (Exception) { }
@@ -34,7 +34,7 @@ namespace EndlessLauncher.logger
         {
             if (!Debug.ImmediateFileLogging)
             {
-                delayedLog.Append(message).Append("\n");
+                delayedLog.Append(message).Append("\r\n");
             } else
             {
                 WriteToFile(message);
