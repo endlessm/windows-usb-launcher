@@ -24,7 +24,7 @@ namespace EndlessLauncher
                     string arg = e.Args[i].ToLower();
                     if ( i + 1 < e.Args.Length && (arg.Equals("-e") || arg.Equals("--errorcode")))
                         errorCode = e.Args[i + 1];
-                    if (arg.Equals("--fullLog") || arg.Equals("-fl"))
+                    if (arg.Equals("--fulllog") || arg.Equals("-fl"))
                     {
                         Debug.ImmediateFileLogging = true;
                     }
