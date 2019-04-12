@@ -1,4 +1,3 @@
-using EndlessLauncher.logger;
 using EndlessLauncher.model;
 using EndlessLauncher.service;
 using GalaSoft.MvvmLight;
@@ -58,8 +57,6 @@ namespace EndlessLauncher.ViewModel
 
         private void SysInfoService_VerificationFailed(object sender, EndlessErrorEventArgs<SystemVerificationErrorCode> e)
         {
-
-            LogHelper.Log("SystemVerificationFailed: " + e.ErrorCode);
             switch (e.ErrorCode)
             {
                 case SystemVerificationErrorCode.NotUSB30Port:
@@ -123,7 +120,6 @@ namespace EndlessLauncher.ViewModel
                     ?? (closeRelayCommand = new RelayCommand(
                     () =>
                     {
-                        LogHelper.Log("CloseRelayCommand: ");
                         System.Windows.Application.Current.Shutdown();
                     }));
             }

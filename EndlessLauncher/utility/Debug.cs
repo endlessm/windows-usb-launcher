@@ -30,11 +30,9 @@ namespace EndlessLauncher.utility
             if (Enum.IsDefined(typeof(SystemVerificationErrorCode), errorCode))
             {
                 SimulatedVerificationError = (SystemVerificationErrorCode)errorCode;
-                LogHelper.Log("SetDebugSimulatedError: " + SimulatedVerificationError);
             } else if (Enum.IsDefined(typeof(FirmwareSetupErrorCode), errorCode))
             {
                 SimulatedFirmwareError = (FirmwareSetupErrorCode)errorCode;
-                LogHelper.Log("SetDebugSimulatedError: " + SimulatedFirmwareError);
             }
         }
 

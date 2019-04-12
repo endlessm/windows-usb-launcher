@@ -1,5 +1,4 @@
-﻿using EndlessLauncher.logger;
-using EndlessLauncher.service;
+﻿using EndlessLauncher.service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -23,7 +22,6 @@ namespace EndlessLauncher.ViewModel
                     ?? (moreInfoRelayCommand = new RelayCommand(
                     () =>
                     {
-                        LogHelper.Log("MoreInfoRelayCommand: ");
                         this.navigationService.NavigateTo("WrongUSBPortInfoPage");
                     }));
             }

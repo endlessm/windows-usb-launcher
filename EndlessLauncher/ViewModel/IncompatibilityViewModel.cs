@@ -21,8 +21,6 @@ namespace EndlessLauncher.ViewModel
                     ?? (showLogRelayCommand = new RelayCommand(
                     () =>
                     {
-                        LogHelper.Log("ShowLogRelayCommand: {0}", LogHelper.LogFilePath);
-
                         string filePath = LogHelper.LogFilePath;
                         if (!File.Exists(filePath))
                         {
@@ -42,7 +40,6 @@ namespace EndlessLauncher.ViewModel
                     ?? (supportRelayCommand = new RelayCommand(
                     () =>
                     {
-                        LogHelper.Log("SupportRelayCommand:");
                         Utils.OpenUrl("https://support.hack-computer.com/hc/en-us", null);
                     }));
             }
