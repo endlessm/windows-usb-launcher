@@ -15,9 +15,14 @@ nuget.exe restore
 ```
 MSBuild.exe EndlessLauncher.sln /p:Configuration="<Debug/Release>";outdir="<release_folder>"
 ```
-## Other info
+## Logging
+By default, the application generates a desktop log file only if firmware setup or system requirements verification
+fails with an error different than "NotUSB30Port".
+To force the app to always generate the log file, run the application with "-fl/--fullLog" arguments
+
+## Debug
 It is possbile to "force" a system verification or a firmware setup error by running the application with "-e <errorCode>", 
-"--errorCode <errorCode>" command arguments
+"--errorCode <errorCode>" command arguments.
 ```
 EndlessLauncher.exe -e GenericVerificationError
 EndlessLauncher.exe --errorCode 100
