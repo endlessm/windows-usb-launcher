@@ -34,13 +34,13 @@
             <Setter Property="Margin"
                     Value="0,30,0,0" />
             <Setter Property="Width"
-                    Value="140" />
+                    Value="187" />
             <Setter Property="Height"
                     Value="{StaticResource DefaultButtonHeight}" />
             <Setter Property="VerticalContentAlignment"
                     Value="Center" />
             <Setter Property="FontSize"
-                    Value="12" />
+                    Value="{StaticResource DefaultButtonFontSize}" />
             <Setter Property="FontFamily"
                     Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
             <Setter Property="Foreground"
@@ -121,7 +121,6 @@
                    Text="{Binding Message}" />
 
         <Button Grid.Row="3"
-                Height="44"
                 Command="{Binding SupportRelayCommand}"
                 Style="{StaticResource CustomerSupportButtonStyle}"
                 Content="{x:Static resources:Literals.button_customer_support}"/>

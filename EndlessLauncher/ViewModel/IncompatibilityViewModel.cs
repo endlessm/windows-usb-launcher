@@ -43,7 +43,7 @@ namespace EndlessLauncher.ViewModel
                     () =>
                     {
                         LogHelper.Log("SupportRelayCommand:");
-                        Utils.OpenUrl("https://support.endlessm.com/hc/en-us", null);
+                        Utils.OpenUrl("https://support.hack-computer.com/hc/en-us", null);
                     }));
             }
         }
