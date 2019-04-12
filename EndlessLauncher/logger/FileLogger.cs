@@ -8,7 +8,7 @@ namespace EndlessLauncher.logger
     class FileLogger : LoggerBase
     {
         private readonly string logFilePath = "";
-        private readonly StringBuilder delayedLog = new StringBuilder();
+        private StringBuilder delayedLog = new StringBuilder();
 
         public FileLogger(string logFilePath)
         {
@@ -46,6 +46,7 @@ namespace EndlessLauncher.logger
             if (!Debug.ImmediateFileLogging)
             {
                 WriteToFile(delayedLog.ToString());
+                delayedLog.Clear();
             }
         }
     }
