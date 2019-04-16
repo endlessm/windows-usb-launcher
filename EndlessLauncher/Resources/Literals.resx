@@ -144,6 +144,9 @@
   <data name="welcome_partial_title" xml:space="preserve">
     <value>Welcome to</value>
   </data>
+  <data name="window_title" xml:space="preserve">
+    <value>Hack Launcher</value>
+  </data>
   <data name="wrong_port_info_msg1" xml:space="preserve">
     <value>Most devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port.</value>
   </data>

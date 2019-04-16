@@ -142,6 +142,15 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hack Launcher.
+        /// </summary>
+        public static string window_title {
+            get {
+                return ResourceManager.GetString("window_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Most devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port..
         /// </summary>
         public static string wrong_port_info_msg1 {
