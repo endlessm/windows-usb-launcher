@@ -12,7 +12,7 @@
 
     <Page.Resources>
         <GridLength x:Key="LogoImageRowHeight">230</GridLength>
-        <sys:Double x:Key="LogoImageHeightOverride">90</sys:Double>
+        <sys:Double x:Key="LogoImageHeightOverride">200</sys:Double>
         <Thickness x:Key="MessageSeparatorMargin">0,4,0,0</Thickness>
         <Thickness x:Key="HackTextTitlePanelOverride">0,50,0,0</Thickness>
         <Style x:Key="InfoButton"
@@ -73,7 +73,7 @@
         <Image Grid.Row="0"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
                Height="{StaticResource LogoImageHeightOverride}"
-               Source="/Resources/Images/wrong_port_info.png" />
+               Source="/Resources/Images/wrong_port_info.png" Margin="0,0,0,72" Grid.RowSpan="2" />
         <StackPanel Grid.Row="1"
                     Orientation="Vertical"
                     Margin="{StaticResource HackTextTitlePanelOverride}"
