@@ -22,6 +22,8 @@ namespace EndlessLauncher.service
         private const int MINIMUM_RAM = 2 * 1024 * 1024; //KB
         private const int SUPPORTED_WINDOWS_VERSION = 10;
         private const int MINIMUM_CPU_CORES = 2;
+        private const int SUPPORTED_SCREEN_WIDTH = 1920;
+        private const int SUPPORTED_SCREEN_HEIGHT = 1080;
 
         private int currentPhysicalDiskIndex = -1;
         private string currentDriveLetter = null;
@@ -158,6 +160,10 @@ namespace EndlessLauncher.service
             {
                 errorCode = SystemVerificationErrorCode.InsufficientRAM;
             }
+            else if (!VerifyVideoResolution())
+            {
+                errorCode = SystemVerificationErrorCode.UnsupportedResolution;
+            }
             else if (!InitializeFrameworkService())
             {
                 errorCode = SystemVerificationErrorCode.UnsupportedFirmware;
@@ -205,6 +211,14 @@ namespace EndlessLauncher.service
                     ErrorCode = errorCode
                 });
             }
+        }
+
+        private bool VerifyVideoResolution()
+        {
+            double screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            double screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+
+            return screenWidth == SUPPORTED_SCREEN_WIDTH && screenHeight == SUPPORTED_SCREEN_HEIGHT;
         }
 
         private bool InitializeFrameworkService()

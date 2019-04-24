@@ -33,7 +33,8 @@ namespace EndlessLauncher.model
         UsbDeviceNotFound,
         UsbPortNotFound,
         NotUSB30Port,
-        NoUSBPortsFound
+        NoUSBPortsFound,
+        UnsupportedResolution
     };
 
     public class EndlessErrorEventArgs<T> : EventArgs
