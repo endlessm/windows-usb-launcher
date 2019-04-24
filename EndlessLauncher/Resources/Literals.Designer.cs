@@ -19,7 +19,7 @@ namespace EndlessLauncher.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Literals {
@@ -151,7 +151,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Most devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port..
+        ///   Looks up a localized string similar to Some devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port..
         /// </summary>
         public static string wrong_port_info_msg1 {
             get {
@@ -160,7 +160,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to USB 3.0 ports are sometimes blue to distinguish them from USB 2.0 ports..
+        ///   Looks up a localized string similar to USB 3.0 ports are sometimes blue or have an &quot;SS&quot; mark to distinguish them from USB 2.0 ports..
         /// </summary>
         public static string wrong_port_info_msg2 {
             get {
