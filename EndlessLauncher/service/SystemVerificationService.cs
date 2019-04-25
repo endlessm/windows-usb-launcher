@@ -215,8 +215,36 @@ namespace EndlessLauncher.service
 
         private bool VerifyVideoResolution()
         {
-            double screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-            double screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+            double screenWidth = 0;
+            double screenHeight = 0;
+
+            try
+            {
+                DEVMODE devMode = new DEVMODE();
+                int i = 0;
+
+                while (EnumDisplaySettings(null, i, ref devMode))
+                {
+                    if (devMode.dmPelsWidth >= screenWidth && devMode.dmPelsHeight >= screenHeight)
+                    {
+                        screenWidth = devMode.dmPelsWidth;
+                        screenHeight = devMode.dmPelsHeight;
+                    }
+
+                    i++;
+                }
+
+                LogHelper.Log("SystemVerificationService:VerifyVideoResolution: Detected maximum resolution {0}x{1}", screenWidth, screenHeight);
+            }
+            catch (Exception ex)
+            {
+                screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+                screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+
+                LogHelper.Log("SystemVerificationService:VerifyVideoResolution: Failed to detect maximum resolution: StackTrace: {0}", ex.Message);
+                LogHelper.Log("SystemVerificationService:VerifyVideoResolution: Falling back to current resolution {0}x{1}", screenWidth, screenHeight);
+            }
+
 
             return screenWidth == SUPPORTED_SCREEN_WIDTH && screenHeight == SUPPORTED_SCREEN_HEIGHT;
         }
