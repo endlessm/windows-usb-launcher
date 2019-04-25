@@ -225,7 +225,7 @@ namespace EndlessLauncher.service
 
                 while (EnumDisplaySettings(null, i, ref devMode))
                 {
-                    if (devMode.dmPelsWidth > screenWidth && devMode.dmPelsHeight > screenHeight)
+                    if (devMode.dmPelsWidth >= screenWidth && devMode.dmPelsHeight >= screenHeight)
                     {
                         screenWidth = devMode.dmPelsWidth;
                         screenHeight = devMode.dmPelsHeight;
