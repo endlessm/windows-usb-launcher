@@ -305,7 +305,7 @@ namespace EndlessLauncher.service
 
         private bool VerifyRAM()
         {
-            GetPhysicallyInstalledSystemMemory(out long totalInstalledRam);
+            GetPhysicallyInstalledSystemMemory(out ulong totalInstalledRam);
 
             LogHelper.Log("SystemVerificationService:VerifyRAM: Installed: {0} GB", totalInstalledRam / 1024 / 1024);
 

@@ -448,9 +448,9 @@ namespace EndlessLauncher
             byte[] pBuffer,
             UInt32 nSize);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetPhysicallyInstalledSystemMemory(out long kiloBytes);
+        internal static extern bool GetPhysicallyInstalledSystemMemory(out ulong kiloBytes);
 
         [DllImport("user32", CharSet = CharSet.Unicode)]
         internal static extern IntPtr FindWindow(string cls, string win);
