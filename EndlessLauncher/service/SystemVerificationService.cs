@@ -19,7 +19,7 @@ namespace EndlessLauncher.service
 {
     public class SystemVerificationService
     {
-        private const int MINIMUM_RAM = 2 * 1024 * 1024; //KB
+        private const int MINIMUM_RAM_BYTES = 2 * 1024;
         private const int SUPPORTED_WINDOWS_VERSION = 10;
         private const int MINIMUM_CPU_CORES = 2;
         private const int SUPPORTED_SCREEN_WIDTH = 1920;
@@ -305,11 +305,29 @@ namespace EndlessLauncher.service
 
         private bool VerifyRAM()
         {
-            GetPhysicallyInstalledSystemMemory(out ulong totalInstalledRam);
+            ulong totalInstalledRamBytes = 0;
+            bool success = GetPhysicallyInstalledSystemMemory(out ulong totalInstalledRamKb);
 
-            LogHelper.Log("SystemVerificationService:VerifyRAM: Installed: {0} GB", totalInstalledRam / 1024 / 1024);
+            if (success)
+            {
+                totalInstalledRamBytes = totalInstalledRamKb * 1024;
+            }
+            else
+            {
+                LogHelper.Log("SystemVerificationService:VerifyRAM: GetPhysicallyInstalledSystemMemory() failed: Error: {0}", Marshal.GetLastWin32Error());
+                LogHelper.Log("SystemVerificationService:VerifyRAM: Falling back to WMI query");
 
-            return MINIMUM_RAM <= totalInstalledRam;
+                string query= "SELECT Capacity FROM Win32_PhysicalMemory";
+                ManagementObjectSearcher queryResults = new ManagementObjectSearcher(query);
+
+                foreach (var item in queryResults.Get())
+                {
+                    totalInstalledRamBytes += UInt64.Parse(item["Capacity"].ToString());
+                }
+            }
+
+            LogHelper.Log("SystemVerificationService:VerifyRAM: Installed: {0} MB", totalInstalledRamBytes / 1024 / 1024);
+            return MINIMUM_RAM_BYTES <= totalInstalledRamBytes;
         }
 
         //Assuming physical cores
