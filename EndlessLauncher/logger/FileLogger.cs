@@ -37,7 +37,7 @@ namespace EndlessLauncher.logger
                 delayedLog.Append(message).Append("\r\n");
             } else
             {
-                WriteToFile(message);
+                WriteToFile(message + "\r\n");
             }
         }
 
