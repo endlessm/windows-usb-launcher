@@ -8,7 +8,7 @@
     <ProjectGuid>{A166D3B5-8053-4D2E-B326-F43AC098187F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>EndlessLauncher</RootNamespace>
-    <AssemblyName>Hack Launcher</AssemblyName>
+    <AssemblyName>Endless Launcher</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -16,6 +16,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,11 +31,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -58,11 +58,13 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationIcon>app_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -100,6 +102,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFirewallHelper, Version=1.6.3.40, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsFirewallHelper.1.6.3.40\lib\net40\WindowsFirewallHelper.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -226,33 +231,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\hack_logotype_blue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\compatible_usb.png" />
-    <Resource Include="Resources\Images\incompatible_usb.png" />
-    <Resource Include="Resources\Images\wrong_port.png" />
+    <Resource Include="Resources\Images\logo.png" />
     <Resource Include="Resources\Images\wrong_port_info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\lets_go_default.png" />
-    <Resource Include="Resources\Images\lets_go_hover.png" />
-    <Resource Include="Resources\Images\lets_go_pressed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\wrong_port_default.png" />
-    <Resource Include="Resources\Images\wrong_port_hover.png" />
-    <Resource Include="Resources\Images\wrong_port_pressed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\customer_support_default.png" />
-    <Resource Include="Resources\Images\customer_support_hover.png" />
-    <Resource Include="Resources\Images\customer_support_pressed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\back_default.png" />
-    <Resource Include="Resources\Images\back_hover.png" />
-    <Resource Include="Resources\Images\back_pressed.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\close.png" />

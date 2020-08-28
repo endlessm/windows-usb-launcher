@@ -40,7 +40,7 @@ namespace EndlessLauncher.ViewModel
                     ?? (supportRelayCommand = new RelayCommand(
                     () =>
                     {
-                        Utils.OpenUrl("https://support.hack-computer.com/hc/en-us", null);
+                        Utils.OpenUrl("https://support.endlessm.com/hc/en-us", null);
                     }));
             }
         }

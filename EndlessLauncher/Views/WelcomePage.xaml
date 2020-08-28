@@ -12,103 +12,63 @@
       UseLayoutRounding="True"
       Title="WelcomePage">
     <Page.Resources>
-        <Thickness x:Key="HackTextTitlePanelOverride">0,50,0,0</Thickness>
-        <Style x:Key="LetsGoButton"
-               TargetType="Button">
-            <Setter Property="OverridesDefaultStyle"
-                    Value="True" />
+        <Style x:Key="HelpTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Top"/>
+            <Setter Property="FontSize"
+                    Value="16"/>
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
             <Setter Property="Margin"
-                    Value="{StaticResource DefaultButtonMargin}" />
+                    Value="0,30,0,0" />
+            <Setter Property="FontFamily"
+                    Value="{StaticResource DefaultHyperlinkFontFamily}" />
+        </Style>
+        <Style x:Key="ActionButton"
+               TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,25,0,0" />
             <Setter Property="Width"
-                    Value="100" />
+                    Value="250" />
             <Setter Property="Height"
-                    Value="{StaticResource DefaultButtonHeight}" />
+                    Value="50" />
             <Setter Property="VerticalContentAlignment"
                     Value="Center" />
             <Setter Property="FontSize"
-                    Value="{StaticResource DefaultButtonFontSize}" />
+                    Value="16" />
             <Setter Property="FontFamily"
-                    Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
+                    Value="{StaticResource DefaultButtonFontFamily}" />
             <Setter Property="Foreground"
                     Value="{StaticResource DefaultForegroundColor}" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border"
-                                BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              Name="Presenter"
-                                              VerticalAlignment="Center" />
-                            <Border.Background>
-                                <ImageBrush ImageSource="/Resources/Images/lets_go_default.png" />
-                            </Border.Background>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        TargetName="border">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="/Resources/Images/lets_go_hover.png" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        TargetName="border">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="/Resources/Images/lets_go_pressed.png" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="TextElement.Foreground"
-                                        TargetName="Presenter"
-                                        Value="{StaticResource DefaultButtonPressedForegroundColor}">
-                                </Setter>
-                                <Setter Property="Margin"
-                                        TargetName="Presenter"
-                                        Value="0,4,0,0">
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
     </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0"
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource TitleTextBlockStyle}"
+                   Text="{x:Static resources:Literals.welcome_partial_title}"
+                   FontSize="45"
+                   Margin="0,20,0,0"
+                   Foreground="#555" />
+
+        <Image Grid.Row="1"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
-               Source="/Resources/Images/compatible_usb.png" />
+               Source="/Resources/Images/logo.png"
+               Margin="40,30,40,20" />
 
-        <StackPanel Grid.Row="1"
-                    Margin="{StaticResource HackTextTitlePanelOverride}"
-                    Style="{StaticResource HackTextTitlePanelStyle}">
-
-            <TextBlock Text="{x:Static resources:Literals.welcome_partial_title}"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <Image Grid.Row="0"
-                   Style="{StaticResource HackTextLogoStyle}" />
+        <StackPanel Grid.Row="2"
+                    Orientation="Vertical">
+            <Button Command="{Binding LaunchRelayCommand}"
+                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Content="{x:Static resources:Literals.button_reboot_to_endless}" />
         </StackPanel>
-
-        <TextBlock Grid.Row="2"
-                   Style="{StaticResource MessageTextBlockStyle}"
-                   Text="{x:Static resources:Literals.welcome_click_to_restart_msg}" />
-
-        <Button Grid.Row="3"
-                Command="{Binding LaunchRelayCommand}"
-                Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                Style="{StaticResource LetsGoButton}"
-                Content="{x:Static resources:Literals.button_lets_go}">
-        </Button>
     </Grid>
 </Page>

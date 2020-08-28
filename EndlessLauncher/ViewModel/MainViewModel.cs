@@ -30,7 +30,7 @@ namespace EndlessLauncher.ViewModel
 
         private IFrameNavigationService navigationService;
         private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
-        private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Hack OS";
+        private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Endless OS";
 
         public MainViewModel(SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {

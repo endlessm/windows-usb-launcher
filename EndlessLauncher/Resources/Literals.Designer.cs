@@ -70,20 +70,56 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Let&apos;s go!.
+        ///   Looks up a localized string similar to Go back.
         /// </summary>
-        public static string button_lets_go {
+        public static string button_go_back {
             get {
-                return ResourceManager.GetString("button_lets_go", resourceCulture);
+                return ResourceManager.GetString("button_go_back", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ?.
+        ///   Looks up a localized string similar to Open encyclopedia.
         /// </summary>
-        public static string button_question_mark {
+        public static string button_open_kiwix {
             get {
-                return ResourceManager.GetString("button_question_mark", resourceCulture);
+                return ResourceManager.GetString("button_open_kiwix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Explore content.
+        /// </summary>
+        public static string button_open_kolibri {
+            get {
+                return ResourceManager.GetString("button_open_kolibri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reboot and try Endless OS.
+        /// </summary>
+        public static string button_reboot_to_endless {
+            get {
+                return ResourceManager.GetString("button_reboot_to_endless", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s the right port?.
+        /// </summary>
+        public static string button_whats_the_right_port {
+            get {
+                return ResourceManager.GetString("button_whats_the_right_port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here.
+        /// </summary>
+        public static string click_here {
+            get {
+                return ResourceManager.GetString("click_here", resourceCulture);
             }
         }
         
@@ -115,7 +151,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to debug log file.
+        ///   Looks up a localized string similar to Debug log file.
         /// </summary>
         public static string log_file_title {
             get {
@@ -124,11 +160,11 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click below to restart your computer into the HACK experience.
+        ///   Looks up a localized string similar to Need help?.
         /// </summary>
-        public static string welcome_click_to_restart_msg {
+        public static string need_help {
             get {
-                return ResourceManager.GetString("welcome_click_to_restart_msg", resourceCulture);
+                return ResourceManager.GetString("need_help", resourceCulture);
             }
         }
         
@@ -142,7 +178,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hack Launcher.
+        ///   Looks up a localized string similar to Endless Launcher.
         /// </summary>
         public static string window_title {
             get {
@@ -151,7 +187,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Some devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port..
+        ///   Looks up a localized string similar to Some devices have USB 2.0 and USB 3.0 ports. Endless OS can only be run through a USB 3.0 port..
         /// </summary>
         public static string wrong_port_info_msg1 {
             get {
@@ -178,11 +214,11 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You&apos;re almost ready to.
+        ///   Looks up a localized string similar to You&apos;re almost ready to use Endless OS.
         /// </summary>
-        public static string wrong_port_partial_title {
+        public static string wrong_port_title {
             get {
-                return ResourceManager.GetString("wrong_port_partial_title", resourceCulture);
+                return ResourceManager.GetString("wrong_port_title", resourceCulture);
             }
         }
     }
