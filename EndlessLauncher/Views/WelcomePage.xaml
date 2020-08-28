@@ -71,6 +71,11 @@
                     Style="{StaticResource ActionButton}"
                     Content="{x:Static resources:Literals.button_open_kiwix}" />
 
+            <Button Command="{Binding OpenKolibriRelayCommand}"
+                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Content="{x:Static resources:Literals.button_open_kolibri}" />
+
             <Button Command="{Binding LaunchRelayCommand}"
                     Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                     Style="{StaticResource ActionButton}"

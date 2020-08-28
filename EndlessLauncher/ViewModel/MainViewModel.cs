@@ -4,6 +4,12 @@ using EndlessLauncher.utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
+using HWND = System.IntPtr;
+using System;
+using System.Runtime.InteropServices;
+using System.Linq;
+using WindowsFirewallHelper;
+using WindowsFirewallHelper.FirewallAPIv2.Rules;
 
 namespace EndlessLauncher.ViewModel
 {
@@ -28,11 +34,14 @@ namespace EndlessLauncher.ViewModel
 
         private RelayCommand launchRelayCommand;
         private RelayCommand openKiwixRelayCommand;
+        private RelayCommand openKolibriRelayCommand;
         private RelayCommand closeRelayCommand;
 
         private IFrameNavigationService navigationService;
         private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
         private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Endless OS";
+        private static readonly string FIREWALL_KOLIBRI_RULE_NAME = "Kolibri";
+        private static readonly int WIN32_SW_RESTORE = 9;
 
         public MainViewModel(SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
@@ -83,6 +92,15 @@ namespace EndlessLauncher.ViewModel
             firmwareService.Reboot();
         }
 
+        [DllImport("USER32.DLL")]
+        private static extern HWND FindWindowA(string lpClassName, string lpWindowName);
+
+        [DllImport("USER32.DLL")]
+        private static extern bool ShowWindow(HWND hWnd, int nCmdShow);
+
+        [DllImport("USER32.DLL")]
+        private static extern bool BringWindowToTop(HWND hWnd);
+
         private string GetExecutableDirectory()
         {
             return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -131,6 +149,62 @@ namespace EndlessLauncher.ViewModel
                 }
 
                 return openKiwixRelayCommand;
+            }
+        }
+
+        public RelayCommand OpenKolibriRelayCommand
+        {
+            get
+            {
+                if (openKolibriRelayCommand == null)
+                {
+                    openKolibriRelayCommand = new RelayCommand(() =>
+                    {
+                        // Show Kolibri window if already exists.
+                        // Ideally, this should be done in the Kolibri app but for now we
+                        // stick with this approach.
+                        HWND hWnd = FindWindowA("wxWindowNR", "Kolibri");
+
+                        if (hWnd != IntPtr.Zero)
+                        {
+                            ShowWindow(hWnd, WIN32_SW_RESTORE);
+                            BringWindowToTop(hWnd);
+                            return;
+                        }
+
+                        var kolibriExePath = System.IO.Path.Combine(
+                            GetExecutableDirectory(),
+                            ".kolibri-windows",
+                            "Kolibri.exe"
+                        );
+
+                        var existingFwRule = FirewallManager.Instance.Rules.SingleOrDefault(fwRule => {
+                            if (!(fwRule is StandardRuleWin8))
+                            {
+                                return false;
+                            }
+
+                            var win8Rule = (StandardRuleWin8)fwRule;
+                            return win8Rule.Name == FIREWALL_KOLIBRI_RULE_NAME && win8Rule.ApplicationName == kolibriExePath;
+                        });
+
+                        if (existingFwRule == null)
+                        {
+                            var fwRule = FirewallManager.Instance.CreateApplicationRule(
+                                FirewallManager.Instance.GetProfile().Type,
+                                FIREWALL_KOLIBRI_RULE_NAME,
+                                FirewallAction.Allow,
+                                kolibriExePath
+                            );
+                            fwRule.Direction = FirewallDirection.Inbound;
+                            FirewallManager.Instance.Rules.Add(fwRule);
+                        }
+
+                        Utils.OpenUrl(kolibriExePath, "");
+                    });
+                }
+
+                return openKolibriRelayCommand;
             }
         }
 
