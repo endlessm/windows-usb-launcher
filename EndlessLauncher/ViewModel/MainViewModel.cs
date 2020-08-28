@@ -35,6 +35,7 @@ namespace EndlessLauncher.ViewModel
         private RelayCommand launchRelayCommand;
         private RelayCommand openKiwixRelayCommand;
         private RelayCommand openKolibriRelayCommand;
+        private RelayCommand openReadmeRelayCommand;
         private RelayCommand closeRelayCommand;
 
         private IFrameNavigationService navigationService;
@@ -205,6 +206,27 @@ namespace EndlessLauncher.ViewModel
                 }
 
                 return openKolibriRelayCommand;
+            }
+        }
+
+        public RelayCommand OpenReadmeRelayCommand
+        {
+            get
+            {
+                if (openReadmeRelayCommand == null)
+                {
+                    openReadmeRelayCommand = new RelayCommand(() =>
+                    {
+                        var readmePath = System.IO.Path.Combine(
+                            GetExecutableDirectory(),
+                            "README.pdf"
+                        );
+
+                        Utils.OpenUrl(readmePath, "");
+                    });
+                }
+
+                return openReadmeRelayCommand;
             }
         }
 

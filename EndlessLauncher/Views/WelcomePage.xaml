@@ -48,6 +48,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -81,5 +82,15 @@
                     Style="{StaticResource ActionButton}"
                     Content="{x:Static resources:Literals.button_reboot_to_endless}" />
         </StackPanel>
+
+        <TextBlock Grid.Row="3"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource HelpTextBlockStyle}">
+            <Run Text="{x:Static resources:Literals.need_help}" />
+            <Hyperlink Command="{Binding OpenReadmeRelayCommand}"
+                       Foreground="{StaticResource DefaultForegroundColor}">
+                <Run Text="{x:Static resources:Literals.click_here}" />
+            </Hyperlink>
+        </TextBlock>
     </Grid>
 </Page>
