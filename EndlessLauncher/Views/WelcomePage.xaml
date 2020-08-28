@@ -65,6 +65,12 @@
 
         <StackPanel Grid.Row="2"
                     Orientation="Vertical">
+
+            <Button Command="{Binding OpenKiwixRelayCommand}"
+                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Content="{x:Static resources:Literals.button_open_kiwix}" />
+
             <Button Command="{Binding LaunchRelayCommand}"
                     Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                     Style="{StaticResource ActionButton}"

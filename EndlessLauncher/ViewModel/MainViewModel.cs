@@ -1,5 +1,6 @@
 using EndlessLauncher.model;
 using EndlessLauncher.service;
+using EndlessLauncher.utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
@@ -26,6 +27,7 @@ namespace EndlessLauncher.ViewModel
         private bool launchEnabled;
 
         private RelayCommand launchRelayCommand;
+        private RelayCommand openKiwixRelayCommand;
         private RelayCommand closeRelayCommand;
 
         private IFrameNavigationService navigationService;
@@ -81,6 +83,11 @@ namespace EndlessLauncher.ViewModel
             firmwareService.Reboot();
         }
 
+        private string GetExecutableDirectory()
+        {
+            return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
+
         public RelayCommand LaunchRelayCommand
         {
             get
@@ -95,6 +102,35 @@ namespace EndlessLauncher.ViewModel
                 }
 
                 return launchRelayCommand;
+            }
+        }
+
+        public RelayCommand OpenKiwixRelayCommand
+        {
+            get
+            {
+                if (openKiwixRelayCommand == null)
+                {
+                    openKiwixRelayCommand = new RelayCommand(() =>
+                    {
+                        var kiwixExePath = System.IO.Path.Combine(
+                            GetExecutableDirectory(),
+                            ".kiwix-windows",
+                            "kiwix-desktop.exe"
+                        );
+
+                        var encyclopediaZimPath =  System.IO.Path.Combine(new string[] {
+                            GetExecutableDirectory(),
+                            ".kiwix", "flatpak", "files",
+                            "com.endlessm.encyclopedia.en-openzim-subscription",
+                            "1.zim"
+                        });
+
+                        Utils.OpenUrl(kiwixExePath, encyclopediaZimPath);
+                    });
+                }
+
+                return openKiwixRelayCommand;
             }
         }
 
