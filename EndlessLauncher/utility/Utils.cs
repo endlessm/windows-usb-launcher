@@ -31,15 +31,16 @@ namespace EndlessLauncher.utility
             return size;
         }
 
-        public static void OpenUrl(string url, string args)
+        public static Process OpenUrl(string url, string args)
         {
             try
             {
-                Process.Start(url, args);
+                return Process.Start(url, args);
             }
             catch(Exception ex)
             {
                 LogHelper.Log("OpenUrl: {0} Failed: {1}", url, ex.Message);
+                return null;
             }
         }
     }
