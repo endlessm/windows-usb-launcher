@@ -158,7 +158,7 @@ namespace EndlessLauncher.ViewModel
 
                         var encyclopediaZimPath =  System.IO.Path.Combine(new string[] {
                             GetExecutableDirectory(),
-                            ".kiwix", "flatpak", "files",
+                            ".kiwix", "flatpak",
                             "com.endlessm.encyclopedia.en-openzim-subscription",
                             "1.zim"
                         });
