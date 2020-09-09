@@ -383,8 +383,8 @@ namespace EndlessLauncher.service
 
             if (usbDevice == null)
             {
-                LogHelper.Log("VerifyUSB30: Invalid usb device:");
-                throw new SystemVerificationException(SystemVerificationErrorCode.UsbDeviceNotFound, "Could not find usb device");
+                LogHelper.Log("VerifyUSB30: Could not find USB device. This might be fine, so, continuing...");
+                return;
             }
 
             LogHelper.Log("VerifyUSB30: Found the USB device: {0}", usbDevice);
@@ -456,6 +456,8 @@ namespace EndlessLauncher.service
                 UInt32 memberIndex = 0;
                 SP_DEVICE_INTERFACE_DATA devInterfaceData = new SP_DEVICE_INTERFACE_DATA();
                 devInterfaceData.cbSize = Marshal.SizeOf(devInterfaceData);
+
+                LogHelper.Log("GetCurrentUSBDevice: Enumerating devices connected to hub: {0}", usbHubGuid);
 
                 //enumerate all connected usb devices
                 bool hubEnumSucces = SetupDiEnumDeviceInterfaces(deviceEnumHandle, IntPtr.Zero, ref usbHubGuid, memberIndex, ref devInterfaceData);
