@@ -8,14 +8,11 @@
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       DataContext="{Binding IncompatibilityViewModel, Source={StaticResource Locator}}"
       mc:Ignorable="d"
-      d:DesignHeight="450"
+      d:DesignHeight="500"
       d:DesignWidth="800"
       Title="IncompatibilityPage">
 
     <Page.Resources>
-        <sys:Double x:Key="TitleFontSizeOverride">28</sys:Double>
-        <Thickness x:Key="PagePrimaryImageLogoHeightOverride">0,60,0,0</Thickness>
-
         <Style x:Key="HyperlinkTextBlockStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment"
                     Value="Top"/>
@@ -24,73 +21,9 @@
             <Setter Property="HorizontalAlignment"
                     Value="Center" />
             <Setter Property="Margin"
-                    Value="0,10,0,0" />
-        </Style>
-
-        <Style x:Key="CustomerSupportButtonStyle"
-               TargetType="Button">
-            <Setter Property="OverridesDefaultStyle"
-                    Value="True" />
-            <Setter Property="Margin"
-                    Value="0,30,0,0" />
-            <Setter Property="Width"
-                    Value="187" />
-            <Setter Property="Height"
-                    Value="{StaticResource DefaultButtonHeight}" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="Center" />
-            <Setter Property="FontSize"
-                    Value="{StaticResource DefaultButtonFontSize}" />
+                    Value="0,20,0,0" />
             <Setter Property="FontFamily"
-                    Value="/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium" />
-            <Setter Property="Foreground"
-                    Value="{StaticResource DefaultForegroundColor}" />
-            <Setter Property="VerticalAlignment"
-                    Value="Top" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border"
-                                BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              Name="Presenter"
-                                              VerticalAlignment="Center" />
-                            <Border.Background>
-                                <ImageBrush ImageSource="/Resources/Images/customer_support_default.png" />
-                            </Border.Background>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        TargetName="border">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="/Resources/Images/customer_support_hover.png" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        TargetName="border">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="/Resources/Images/customer_support_pressed.png" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="TextElement.Foreground"
-                                        TargetName="Presenter"
-                                        Value="{StaticResource DefaultButtonPressedForegroundColor}">
-                                </Setter>
-                                <Setter Property="Margin"
-                                        TargetName="Presenter"
-                                        Value="0,4,0,0">
-                                </Setter>
-                            </Trigger>
-
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+                    Value="{StaticResource DefaultHyperlinkFontFamily}" />
         </Style>
     </Page.Resources>
 
@@ -105,17 +38,12 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0"
-               Margin="{StaticResource PagePrimaryImageLogoHeightOverride}"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
-               Source="/Resources/Images/incompatible_usb.png" />
+               Source="/Resources/Images/logo.png" Margin="43,70,40,70" />
 
-        <StackPanel Grid.Row="1"
-                    Style="{StaticResource HackTextTitlePanelStyle}">
-
-            <TextBlock Text="{x:Static resources:Literals.incompatibility_title}"
-                       FontSize="{StaticResource TitleFontSizeOverride}"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-        </StackPanel>
+        <TextBlock Grid.Row="1"
+                   Text="{x:Static resources:Literals.incompatibility_title}"
+                   Style="{StaticResource TitleTextBlockStyle}" />
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource MessageTextBlockStyle}"
@@ -127,13 +55,14 @@
 
         <Button Grid.Row="4"
                 Command="{Binding SupportRelayCommand}"
-                Style="{StaticResource CustomerSupportButtonStyle}"
-                Content="{x:Static resources:Literals.button_customer_support}"/>
+                Style="{StaticResource DefaultButtonStyle}"
+                Content="{x:Static resources:Literals.button_customer_support}"
+                Margin="{StaticResource DefaultButtonMargin}"
+                Width="196" />
 
         <TextBlock Grid.Row="5"
                    Style="{StaticResource HyperlinkTextBlockStyle}">
             <Hyperlink Command="{Binding ShowLogRelayCommand}"
-                       FontFamily="/Resources/Fonts/Metropolis-RegularItalic.otf#Metropolis Regular Italic"
                        Foreground="{StaticResource DefaultForegroundColor}">
                 <Run Text="{x:Static resources:Literals.log_file_title}" />
             </Hyperlink>

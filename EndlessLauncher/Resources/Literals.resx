@@ -120,11 +120,23 @@
   <data name="button_customer_support" xml:space="preserve">
     <value>Customer Support</value>
   </data>
-  <data name="button_lets_go" xml:space="preserve">
-    <value>Let's go!</value>
+  <data name="button_go_back" xml:space="preserve">
+    <value>Go back</value>
   </data>
-  <data name="button_question_mark" xml:space="preserve">
-    <value>?</value>
+  <data name="button_open_kiwix" xml:space="preserve">
+    <value>Open encyclopedia</value>
+  </data>
+  <data name="button_open_kolibri" xml:space="preserve">
+    <value>Explore content</value>
+  </data>
+  <data name="button_reboot_to_endless" xml:space="preserve">
+    <value>Reboot and try Endless OS</value>
+  </data>
+  <data name="button_whats_the_right_port" xml:space="preserve">
+    <value>What's the right port?</value>
+  </data>
+  <data name="click_here" xml:space="preserve">
+    <value>Click here</value>
   </data>
   <data name="error_code_message" xml:space="preserve">
     <value>Error Code:</value>
@@ -136,19 +148,19 @@
     <value>This USB stick is not compatible with your computer.</value>
   </data>
   <data name="log_file_title" xml:space="preserve">
-    <value>debug log file</value>
+    <value>Debug log file</value>
   </data>
-  <data name="welcome_click_to_restart_msg" xml:space="preserve">
-    <value>Click below to restart your computer into the HACK experience</value>
+  <data name="need_help" xml:space="preserve">
+    <value>Need help?</value>
   </data>
   <data name="welcome_partial_title" xml:space="preserve">
     <value>Welcome to</value>
   </data>
   <data name="window_title" xml:space="preserve">
-    <value>Hack Launcher</value>
+    <value>Endless Launcher</value>
   </data>
   <data name="wrong_port_info_msg1" xml:space="preserve">
-    <value>Some devices have USB 2.0 and USB 3.0 ports. HACK can only be run through a USB 3.0 port.</value>
+    <value>Some devices have USB 2.0 and USB 3.0 ports. Endless OS can only be run through a USB 3.0 port.</value>
   </data>
   <data name="wrong_port_info_msg2" xml:space="preserve">
     <value>USB 3.0 ports are sometimes blue or have an "SS" mark to distinguish them from USB 2.0 ports.</value>
@@ -156,7 +168,7 @@
   <data name="wrong_port_msg" xml:space="preserve">
     <value>This USB stick is in the wrong port. Try a different port.</value>
   </data>
-  <data name="wrong_port_partial_title" xml:space="preserve">
-    <value>You're almost ready to</value>
+  <data name="wrong_port_title" xml:space="preserve">
+    <value>You're almost ready to use Endless OS</value>
   </data>
 </root>

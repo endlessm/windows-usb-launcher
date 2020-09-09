@@ -23,24 +23,21 @@
             <Thickness x:Key="DefaultPageMargin">20</Thickness>
             <Thickness x:Key="DefaultMessageMargin">0,10,0,0</Thickness>
             <Thickness x:Key="DefaultButtonMargin">0,50,0,0</Thickness>
-            <Thickness x:Key="HackTitlePanelMargin">0,30,0,0</Thickness>
-            <Thickness x:Key="HackTextLogoAlignmentMargin">20,0,0,10</Thickness>
+
+            <FontFamily x:Key="DefaultButtonFontFamily">/Resources/Fonts/Metropolis-Medium.otf#Metropolis Medium</FontFamily>
+            <FontFamily x:Key="DefaultHyperlinkFontFamily">/Resources/Fonts/Metropolis-RegularItalic.otf#Metropolis Regular Italic</FontFamily>
 
             <SolidColorBrush x:Key="AppBorderBrush"
-                             Color="#6c6c6c" />
+                             Color="#e55713" />
             <SolidColorBrush x:Key="AppBackgroudBrush"
-                             Color="#6c6c6c"></SolidColorBrush>
+                             Color="#e55713"></SolidColorBrush>
             <SolidColorBrush x:Key="DefaultForegroundColor"
-                             Color="#181866"></SolidColorBrush>
-            <SolidColorBrush x:Key="DefaultButtonPressedForegroundColor"
-                             Color="#54FFC9"></SolidColorBrush>
+                             Color="#2b2b2b"></SolidColorBrush>
 
             <GridLength x:Key="TopBarHeight">40</GridLength>
 
             <sys:Double x:Key="DefaultMsgFontSize">15</sys:Double>
-            <sys:Double x:Key="DefaultTitleFontSize">40</sys:Double>
-            <sys:Double x:Key="HackTextLogoHeight">50</sys:Double>
-            <sys:Double x:Key="PagePrimaryImageLogoHeight">160</sys:Double>
+            <sys:Double x:Key="DefaultTitleFontSize">28</sys:Double>
             <sys:Double x:Key="DefaultButtonHeight">36</sys:Double>
             <sys:Double x:Key="DefaultButtonFontSize">13</sys:Double>
 
@@ -62,6 +59,8 @@
 
             <Style x:Key="TitleTextBlockStyle"
                    TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
                 <Setter Property="VerticalAlignment"
                         Value="Bottom" />
                 <Setter Property="FontFamily"
@@ -70,35 +69,8 @@
                         Value="{StaticResource DefaultForegroundColor}" />
                 <Setter Property="FontSize"
                         Value="{StaticResource DefaultTitleFontSize}" />
-                <Setter Property="LineHeight"
-                        Value="{StaticResource HackTextLogoHeight}" />
                 <Setter Property="LineStackingStrategy"
                         Value="BlockLineHeight" />
-            </Style>
-
-            <Style x:Key="HackTextLogoStyle"
-                   TargetType="Image">
-                <Setter Property="RenderOptions.BitmapScalingMode"
-                        Value="HighQuality" />
-                <Setter Property="RenderOptions.EdgeMode"
-                        Value="Aliased" />
-                <Setter Property="Height"
-                        Value="{StaticResource HackTextLogoHeight}" />
-                <Setter Property="Margin"
-                        Value="{StaticResource HackTextLogoAlignmentMargin}" />
-                <Setter Property="Source"
-                        Value="/Resources/Images/hack_logotype_blue.png" />
-                <Setter Property="VerticalAlignment"
-                        Value="Bottom" />
-            </Style>
-
-            <Style x:Key="HackTextTitlePanelStyle" TargetType="StackPanel">
-                <Setter Property="HorizontalAlignment"
-                        Value="Center" />
-                <Setter Property="Orientation"
-                        Value="Horizontal" />
-                <Setter Property="Margin"
-                        Value="{StaticResource HackTitlePanelMargin}" />
             </Style>
 
             <Style x:Key="PagePrimaryImageLogoStyle"
@@ -109,10 +81,28 @@
                         Value="Aliased" />
                 <Setter Property="VerticalAlignment"
                         Value="Bottom" />
-                <Setter Property="Height"
-                        Value="{StaticResource PagePrimaryImageLogoHeight}" />
+                <Setter Property="Width"
+                        Value="600" />
                 <Setter Property="Margin"
-                        Value="0,40,0,0" />
+                        Value="40,70" />
+            </Style>
+
+            <Style x:Key="DefaultButtonStyle"
+                   TargetType="{x:Type Button}">
+                <Setter Property="Height"
+                        Value="{StaticResource DefaultButtonHeight}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource DefaultButtonFontSize}" />
+                <Setter Property="FontFamily"
+                        Value="{StaticResource DefaultButtonFontFamily}" />
+                <Setter Property="VerticalAlignment"
+                        Value="Top" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource DefaultForegroundColor}" />
             </Style>
 
             <Style x:Key="CloseButtonStyle"
