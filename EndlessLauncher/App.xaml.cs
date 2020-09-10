@@ -7,11 +7,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 using EndlessLauncher.logger;
 using EndlessLauncher.utility;
-using System;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using static EndlessLauncher.NativeMethods;
 
 namespace EndlessLauncher
 {
@@ -52,21 +50,8 @@ namespace EndlessLauncher
             mutex = new Mutex(true, "{5E80890D-A4E6-4B8C-B123-FFD89450547F}", out bool isNew);
             if (!isNew)
             {
-                ActivateOtherWindow();
+                Utils.ActivateWindow(null, "MainWindow");
                 Shutdown();
-            }
-        }
-
-        private static void ActivateOtherWindow()
-        {
-            var other = FindWindow(null, "MainWindow");
-            if (other != IntPtr.Zero)
-            {
-                SetForegroundWindow(other);
-                if (IsIconic(other))
-                {
-                    OpenIcon(other);
-                }
             }
         }
     }
