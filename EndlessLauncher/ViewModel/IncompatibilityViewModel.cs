@@ -1,5 +1,7 @@
 ﻿using EndlessLauncher.logger;
+using EndlessLauncher.model;
 using EndlessLauncher.Resources;
+using EndlessLauncher.service;
 using EndlessLauncher.utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -9,9 +11,44 @@ namespace EndlessLauncher.ViewModel
 {
     public class IncompatibilityViewModel : ViewModelBase
     {
+        private RelayCommand wrongUSBPortInfoRelayCommand;
+        private RelayCommand backRelayCommand;
         private RelayCommand showLogRelayCommand;
         private RelayCommand supportRelayCommand;
-        private int errorCode;
+        private IFrameNavigationService navigationService;
+        private SystemVerificationErrorCode systemVerificationErrorCode = SystemVerificationErrorCode.NoError;
+        private FirmwareSetupErrorCode firmwareSetupErrorCode = FirmwareSetupErrorCode.NoError;
+
+        public IncompatibilityViewModel(IFrameNavigationService frameNavigationService)
+        {
+            this.navigationService = frameNavigationService;
+        }
+
+        public RelayCommand WrongUSBPortInfoRelayCommand
+        {
+            get
+            {
+                return wrongUSBPortInfoRelayCommand
+                    ?? (wrongUSBPortInfoRelayCommand = new RelayCommand(
+                    () =>
+                    {
+                        navigationService.NavigateTo("WrongUSBPortInfoPage");
+                    }));
+            }
+        }
+
+        public RelayCommand BackRelayCommand
+        {
+            get
+            {
+                return backRelayCommand
+                    ?? (backRelayCommand = new RelayCommand(
+                    () =>
+                    {
+                        navigationService.NavigateTo("WelcomePage");
+                    }));
+            }
+        }
 
         public RelayCommand ShowLogRelayCommand
         {
@@ -45,16 +82,53 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
-        public int ErrorCode
+        public SystemVerificationErrorCode SystemVerificationErrorCode
         {
             get
             {
-                return errorCode;
+                return systemVerificationErrorCode;
             }
             set
             {
-                Set(ref errorCode, value);
+                Set(ref systemVerificationErrorCode, value);
                 RaisePropertyChanged("ErrorMessage");
+            }
+        }
+
+         public FirmwareSetupErrorCode FirmwareSetupErrorCode
+        {
+            get
+            {
+                return firmwareSetupErrorCode;
+            }
+            set
+            {
+                Set(ref firmwareSetupErrorCode, value);
+                RaisePropertyChanged("ErrorMessage");
+            }
+        }
+
+        public bool IsFirmwareError
+        {
+            get
+            {
+                return this.FirmwareSetupErrorCode != FirmwareSetupErrorCode.NoError;
+            }
+        }
+
+        public bool IsWrongUSBPort
+        {
+            get
+            {
+                return this.SystemVerificationErrorCode == SystemVerificationErrorCode.NotUSB30Port;
+            }
+        }
+
+        public string ErrorTitle
+        {
+            get
+            {
+                return IsFirmwareError ? Literals.launch_failed : Literals.launch_not_supported;
             }
         }
 
@@ -62,7 +136,22 @@ namespace EndlessLauncher.ViewModel
         {
             get
             {
-                return string.Format("{0} {1}", Literals.error_code_message, errorCode.ToString("000"));
+                var errorStringId = "error_unknown";
+
+                if (this.FirmwareSetupErrorCode != FirmwareSetupErrorCode.NoError)
+                {
+                    errorStringId = string.Format("error_firmware_{0}", this.FirmwareSetupErrorCode.ToString());
+                }
+                else if (this.SystemVerificationErrorCode != SystemVerificationErrorCode.NoError)
+                {
+                    errorStringId = string.Format("error_system_{0}", this.SystemVerificationErrorCode.ToString());
+                }
+
+                return string.Format(
+                    "{0}: {1}",
+                    Literals.error_details,
+                    Literals.ResourceManager.GetString(errorStringId, Literals.Culture) ?? errorStringId
+                );
             }
         }
     }

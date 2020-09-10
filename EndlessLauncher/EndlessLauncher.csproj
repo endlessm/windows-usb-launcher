@@ -136,15 +136,11 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WrongUSBPortInfoViewModel.cs" />
-    <Compile Include="ViewModel\WrongUSBPortViewModel.cs" />
     <Compile Include="Views\IncompatibilityPage.xaml.cs">
       <DependentUpon>IncompatibilityPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WrongUSBPortPage.xaml.cs">
-      <DependentUpon>WrongUSBPortPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WrongUSBPortInfoPage.xaml.cs">
       <DependentUpon>WrongUSBPortInfoPage.xaml</DependentUpon>
@@ -166,10 +162,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WelcomePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WrongUSBPortPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
