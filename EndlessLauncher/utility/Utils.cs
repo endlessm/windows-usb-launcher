@@ -10,6 +10,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using static EndlessLauncher.NativeMethods;
 
 namespace EndlessLauncher.utility
 {
@@ -49,6 +50,21 @@ namespace EndlessLauncher.utility
                 LogHelper.Log("OpenUrl: {0} Failed: {1}", url, ex.Message);
                 return null;
             }
+        }
+
+        public static bool ActivateWindow(string cls, string win)
+        {
+            var window = FindWindow(cls, win);
+            if (window != IntPtr.Zero)
+            {
+                SetForegroundWindow(window);
+                if (IsIconic(window))
+                {
+                    OpenIcon(window);
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

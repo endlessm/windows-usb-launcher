@@ -11,10 +11,7 @@ using EndlessLauncher.utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
-using HWND = System.IntPtr;
 using Microsoft.Win32;
-using System;
-using System.Runtime.InteropServices;
 using System.Linq;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.FirewallAPIv2.Rules;
@@ -95,15 +92,6 @@ namespace EndlessLauncher.ViewModel
             firmwareService.Reboot();
         }
 
-        [DllImport("USER32.DLL")]
-        private static extern HWND FindWindowA(string lpClassName, string lpWindowName);
-
-        [DllImport("USER32.DLL")]
-        private static extern bool ShowWindow(HWND hWnd, int nCmdShow);
-
-        [DllImport("USER32.DLL")]
-        private static extern bool BringWindowToTop(HWND hWnd);
-
         private string GetExecutableDirectory()
         {
             return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -182,12 +170,8 @@ namespace EndlessLauncher.ViewModel
                         // Show Kolibri window if already exists.
                         // Ideally, this should be done in the Kolibri app but for now we
                         // stick with this approach.
-                        HWND hWnd = FindWindowA("wxWindowNR", "Kolibri");
-
-                        if (hWnd != IntPtr.Zero)
+                        if (Utils.ActivateWindow("wxWindowNR", "Kolibri"))
                         {
-                            ShowWindow(hWnd, WIN32_SW_RESTORE);
-                            BringWindowToTop(hWnd);
                             return;
                         }
 
