@@ -31,6 +31,12 @@
                              Color="#e55713" />
             <SolidColorBrush x:Key="AppBackgroudBrush"
                              Color="#e55713"></SolidColorBrush>
+            <SolidColorBrush x:Key="WarningBorderBrush"
+                             Color="#857900" />
+            <SolidColorBrush x:Key="WarningForegroundBrush"
+                             Color="#857900"></SolidColorBrush>
+            <SolidColorBrush x:Key="WarningBackgroundBrush"
+                             Color="#FFFFE5"></SolidColorBrush>
             <SolidColorBrush x:Key="DefaultForegroundColor"
                              Color="#2b2b2b"></SolidColorBrush>
 
@@ -89,20 +95,22 @@
 
             <Style x:Key="DefaultButtonStyle"
                    TargetType="{x:Type Button}">
+                <Setter Property="Margin"
+                        Value="0,25,0,0" />
+                <Setter Property="Width"
+                        Value="250" />
                 <Setter Property="Height"
-                        Value="{StaticResource DefaultButtonHeight}" />
-                <Setter Property="FontSize"
-                        Value="{StaticResource DefaultButtonFontSize}" />
-                <Setter Property="FontFamily"
-                        Value="{StaticResource DefaultButtonFontFamily}" />
-                <Setter Property="VerticalAlignment"
-                        Value="Top" />
+                        Value="50" />
                 <Setter Property="VerticalContentAlignment"
                         Value="Center" />
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Center" />
+                <Setter Property="FontSize"
+                        Value="16" />
+                <Setter Property="FontFamily"
+                        Value="{StaticResource DefaultButtonFontFamily}" />
                 <Setter Property="Foreground"
                         Value="{StaticResource DefaultForegroundColor}" />
+                <Setter Property="VerticalAlignment"
+                        Value="Top" />
             </Style>
 
             <Style x:Key="CloseButtonStyle"

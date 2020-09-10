@@ -32,8 +32,6 @@
         <Button Grid.Row="2"
                 Command="{Binding BackRelayCommand}"
                 Style="{StaticResource DefaultButtonStyle}"
-                Content="{x:Static resources:Literals.button_go_back}"
-                Margin="{StaticResource DefaultButtonMargin}"
-                Width="128" />
+                Content="{x:Static resources:Literals.button_go_back}" />
     </Grid>
 </Page>

@@ -4,7 +4,7 @@
       <vm:ViewModelLocator xmlns:vm="clr-namespace:EndlessLauncher"
                            x:Key="Locator" />
   </Application.Resources>
-  
+
   In the View:
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 
@@ -43,7 +43,6 @@ namespace EndlessLauncher.ViewModel
             #region ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<IncompatibilityViewModel>();
-            SimpleIoc.Default.Register<WrongUSBPortViewModel>();
             SimpleIoc.Default.Register<WrongUSBPortInfoViewModel>();
             #endregion
         }
@@ -61,14 +60,6 @@ namespace EndlessLauncher.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<IncompatibilityViewModel>();
-            }
-        }
-
-        public WrongUSBPortViewModel WrongUSBPortViewModel
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<WrongUSBPortViewModel>();
             }
         }
 
@@ -90,10 +81,7 @@ namespace EndlessLauncher.ViewModel
             navigationService.Configure("WelcomePage", new Uri("../Views/WelcomePage.xaml", UriKind.Relative));
             navigationService.Configure("IncompatibilityPage", new Uri("../Views/IncompatibilityPage.xaml", UriKind.Relative));
             navigationService.Configure("WrongUSBPortInfoPage", new Uri("../Views/WrongUSBPortInfoPage.xaml", UriKind.Relative));
-            navigationService.Configure("WrongUSBPortPage", new Uri("../Views/WrongUSBPortPage.xaml", UriKind.Relative));
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
-
-
     }
 }

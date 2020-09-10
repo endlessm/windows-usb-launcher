@@ -97,11 +97,11 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reboot and try Endless OS.
+        ///   Looks up a localized string similar to Restart and try Endless OS.
         /// </summary>
-        public static string button_reboot_to_endless {
+        public static string button_restart_to_endless {
             get {
-                return ResourceManager.GetString("button_reboot_to_endless", resourceCulture);
+                return ResourceManager.GetString("button_restart_to_endless", resourceCulture);
             }
         }
         
@@ -124,29 +124,56 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error Code:.
+        ///   Looks up a localized string similar to Error details.
         /// </summary>
-        public static string error_code_message {
+        public static string error_details {
             get {
-                return ResourceManager.GetString("error_code_message", resourceCulture);
+                return ResourceManager.GetString("error_details", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please contact us with any other questions..
+        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
         /// </summary>
-        public static string incompatibility_msg {
+        public static string error_system_NotUSB30Port {
             get {
-                return ResourceManager.GetString("incompatibility_msg", resourceCulture);
+                return ResourceManager.GetString("error_system_NotUSB30Port", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This USB stick is not compatible with your computer..
+        ///   Looks up a localized string similar to Legacy BIOS is not supported.
         /// </summary>
-        public static string incompatibility_title {
+        public static string error_system_UnsupportedFirmware {
             get {
-                return ResourceManager.GetString("incompatibility_title", resourceCulture);
+                return ResourceManager.GetString("error_system_UnsupportedFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error.
+        /// </summary>
+        public static string error_unknown {
+            get {
+                return ResourceManager.GetString("error_unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Computer restart has failed.
+        /// </summary>
+        public static string launch_failed {
+            get {
+                return ResourceManager.GetString("launch_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to restart computer to Endless OS..
+        /// </summary>
+        public static string launch_not_supported {
+            get {
+                return ResourceManager.GetString("launch_not_supported", resourceCulture);
             }
         }
         
@@ -156,6 +183,15 @@ namespace EndlessLauncher.Resources {
         public static string log_file_title {
             get {
                 return ResourceManager.GetString("log_file_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More information.
+        /// </summary>
+        public static string more_information {
+            get {
+                return ResourceManager.GetString("more_information", resourceCulture);
             }
         }
         
@@ -201,24 +237,6 @@ namespace EndlessLauncher.Resources {
         public static string wrong_port_info_msg2 {
             get {
                 return ResourceManager.GetString("wrong_port_info_msg2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
-        /// </summary>
-        public static string wrong_port_msg {
-            get {
-                return ResourceManager.GetString("wrong_port_msg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You&apos;re almost ready to use Endless OS.
-        /// </summary>
-        public static string wrong_port_title {
-            get {
-                return ResourceManager.GetString("wrong_port_title", resourceCulture);
             }
         }
     }

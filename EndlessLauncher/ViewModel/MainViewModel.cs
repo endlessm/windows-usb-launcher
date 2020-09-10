@@ -31,11 +31,12 @@ namespace EndlessLauncher.ViewModel
         private FirmwareServiceBase firmwareService;
         private SystemVerificationService sysInfoService;
 
-        private bool launchEnabled;
+        private bool launchSupported;
 
         private RelayCommand launchRelayCommand;
         private RelayCommand openKiwixRelayCommand;
         private RelayCommand openKolibriRelayCommand;
+        private RelayCommand moreInformationRelayCommand;
         private RelayCommand openReadmeRelayCommand;
         private RelayCommand closeRelayCommand;
 
@@ -65,27 +66,20 @@ namespace EndlessLauncher.ViewModel
             firmwareService.SetupCompleted += FirmwareService_SetupCompleted;
             firmwareService.SetupFailed += FirmwareService_SetupFailed;
 
-            LaunchEnabled = true;
+            LaunchSupported = true;
         }
 
         private void SysInfoService_VerificationFailed(object sender, EndlessErrorEventArgs<SystemVerificationErrorCode> e)
         {
-            switch (e.ErrorCode)
-            {
-                case SystemVerificationErrorCode.NotUSB30Port:
-                    navigationService.NavigateTo("WrongUSBPortPage");
-                    break;
+            SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().SystemVerificationErrorCode = e.ErrorCode;
+            navigationService.NavigateTo("WelcomePage");
 
-                default:
-                    SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().ErrorCode = (int) e.ErrorCode;
-                    navigationService.NavigateTo("IncompatibilityPage");
-                    break;
-            }
+            LaunchSupported = false;
         }
 
         private void FirmwareService_SetupFailed(object sender, EndlessErrorEventArgs<FirmwareSetupErrorCode> e)
         {
-            SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().ErrorCode = (int) e.ErrorCode;
+            SimpleIoc.Default.GetInstance<IncompatibilityViewModel>().FirmwareSetupErrorCode = e.ErrorCode;
             navigationService.NavigateTo("IncompatibilityPage");
         }
 
@@ -116,7 +110,6 @@ namespace EndlessLauncher.ViewModel
                 {
                     launchRelayCommand = new RelayCommand(() =>
                     {
-                        LaunchEnabled = false;
                         firmwareService.SetupEndlessLaunchAsync(ENDLESS_ENTRY_DESCRIPTION, EFI_BOOTLOADER_PATH);
                     });
                 }
@@ -227,6 +220,22 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
+        public RelayCommand MoreInformationRelayCommand
+         {
+            get
+            {
+                if (moreInformationRelayCommand == null)
+                {
+                    moreInformationRelayCommand = new RelayCommand(() =>
+                    {
+                        navigationService.NavigateTo("IncompatibilityPage");
+                    });
+                }
+
+                return moreInformationRelayCommand;
+            }
+        }
+
         public RelayCommand OpenReadmeRelayCommand
         {
             get
@@ -275,15 +284,23 @@ namespace EndlessLauncher.ViewModel
             }
         }
 
-        public bool LaunchEnabled
+        public bool LaunchSupported
         {
             get
             {
-                return launchEnabled;
+                return launchSupported;
             }
             set
             {
-                Set(ref launchEnabled, value);
+                Set(ref launchSupported, value);
+            }
+        }
+
+        public bool LaunchNotSupported
+        {
+            get
+            {
+                return !launchSupported;
             }
         }
     }

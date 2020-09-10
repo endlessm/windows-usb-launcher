@@ -24,24 +24,29 @@
             <Setter Property="FontFamily"
                     Value="{StaticResource DefaultHyperlinkFontFamily}" />
         </Style>
-        <Style x:Key="ActionButton"
-               TargetType="Button">
-            <Setter Property="Margin"
-                    Value="0,25,0,0" />
-            <Setter Property="Width"
-                    Value="250" />
-            <Setter Property="Height"
-                    Value="50" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="Center" />
+        <Style x:Key="LaunchNotSupportedBlockStyle" TargetType="TextBlock">
             <Setter Property="FontSize"
-                    Value="16" />
+                    Value="16"/>
             <Setter Property="FontFamily"
-                    Value="{StaticResource DefaultButtonFontFamily}" />
+                    Value="{StaticResource DefaultHyperlinkFontFamily}" />
+            <Setter Property="Padding"
+                    Value="15" />
             <Setter Property="Foreground"
-                    Value="{StaticResource DefaultForegroundColor}" />
-            <Setter Property="VerticalAlignment"
-                    Value="Top" />
+                    Value="{StaticResource WarningForegroundBrush}" />
+        </Style>
+        <Style x:Key="LaunchNotSupportedBorderStyle" TargetType="Border">
+             <Setter Property="BorderBrush"
+                     Value="{StaticResource WarningBorderBrush}" />
+             <Setter Property="Background"
+                     Value="{StaticResource WarningBackgroundBrush}" />
+             <Setter Property="BorderThickness"
+                     Value="1" />
+             <Setter Property="HorizontalAlignment"
+                     Value="Center" />
+             <Setter Property="VerticalAlignment"
+                     Value="Center" />
+             <Setter Property="Margin"
+                     Value="0,30,0,0" />
         </Style>
     </Page.Resources>
     <Grid Margin="{StaticResource DefaultPageMargin}">
@@ -68,19 +73,27 @@
                     Orientation="Vertical">
 
             <Button Command="{Binding OpenKiwixRelayCommand}"
-                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource DefaultButtonStyle}"
                     Content="{x:Static resources:Literals.button_open_kiwix}" />
 
             <Button Command="{Binding OpenKolibriRelayCommand}"
-                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource DefaultButtonStyle}"
                     Content="{x:Static resources:Literals.button_open_kolibri}" />
 
             <Button Command="{Binding LaunchRelayCommand}"
-                    Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
-                    Content="{x:Static resources:Literals.button_reboot_to_endless}" />
+                    Visibility="{Binding LaunchSupported, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    Content="{x:Static resources:Literals.button_restart_to_endless}" />
+
+            <Border Style="{StaticResource LaunchNotSupportedBorderStyle}"
+                    Visibility="{Binding LaunchNotSupported, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Style="{StaticResource LaunchNotSupportedBlockStyle}">
+                    <Run Text="{x:Static resources:Literals.launch_not_supported}" />
+                    <Hyperlink Command="{Binding MoreInformationRelayCommand}">
+                        <Run Text="{x:Static resources:Literals.more_information}" />
+                    </Hyperlink>
+                </TextBlock>
+            </Border>
         </StackPanel>
 
         <TextBlock Grid.Row="3"
