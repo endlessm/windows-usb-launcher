@@ -133,11 +133,65 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
+        ///   Looks up a localized string similar to Unknown system verification error.
+        /// </summary>
+        public static string error_system_GenericVerificationError {
+            get {
+                return ResourceManager.GetString("error_system_GenericVerificationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insufficient RAM (2GiB of RAM is required).
+        /// </summary>
+        public static string error_system_InsufficientRAM {
+            get {
+                return ResourceManager.GetString("error_system_InsufficientRAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not running this program as administrator.
+        /// </summary>
+        public static string error_system_NoAdminRights {
+            get {
+                return ResourceManager.GetString("error_system_NoAdminRights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a 64-bit system.
+        /// </summary>
+        public static string error_system_Not64BitSystem {
+            get {
+                return ResourceManager.GetString("error_system_Not64BitSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port.
         /// </summary>
         public static string error_system_NotUSB30Port {
             get {
                 return ResourceManager.GetString("error_system_NotUSB30Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No USB ports found.
+        /// </summary>
+        public static string error_system_NoUSBPortsFound {
+            get {
+                return ResourceManager.GetString("error_system_NoUSBPortsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single core processors are not supported.
+        /// </summary>
+        public static string error_system_SingleCoreProcessor {
+            get {
+                return ResourceManager.GetString("error_system_SingleCoreProcessor", resourceCulture);
             }
         }
         
@@ -147,6 +201,33 @@ namespace EndlessLauncher.Resources {
         public static string error_system_UnsupportedFirmware {
             get {
                 return ResourceManager.GetString("error_system_UnsupportedFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your version of Windows is not supported (we only support Windows 10).
+        /// </summary>
+        public static string error_system_UnsupportedOS {
+            get {
+                return ResourceManager.GetString("error_system_UnsupportedOS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USB device not found.
+        /// </summary>
+        public static string error_system_UsbDeviceNotFound {
+            get {
+                return ResourceManager.GetString("error_system_UsbDeviceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USB port not found.
+        /// </summary>
+        public static string error_system_UsbPortNotFound {
+            get {
+                return ResourceManager.GetString("error_system_UsbPortNotFound", resourceCulture);
             }
         }
         
