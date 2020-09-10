@@ -129,8 +129,8 @@
   <data name="button_open_kolibri" xml:space="preserve">
     <value>Explore content</value>
   </data>
-  <data name="button_reboot_to_endless" xml:space="preserve">
-    <value>Reboot and try Endless OS</value>
+  <data name="button_restart_to_endless" xml:space="preserve">
+    <value>Restart and try Endless OS</value>
   </data>
   <data name="button_whats_the_right_port" xml:space="preserve">
     <value>What's the right port?</value>

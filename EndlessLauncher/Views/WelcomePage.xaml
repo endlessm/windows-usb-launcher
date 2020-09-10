@@ -80,7 +80,7 @@
             <Button Command="{Binding LaunchRelayCommand}"
                     Visibility="{Binding LaunchEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                     Style="{StaticResource ActionButton}"
-                    Content="{x:Static resources:Literals.button_reboot_to_endless}" />
+                    Content="{x:Static resources:Literals.button_restart_to_endless}" />
         </StackPanel>
 
         <TextBlock Grid.Row="3"

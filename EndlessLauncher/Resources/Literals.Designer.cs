@@ -97,11 +97,11 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reboot and try Endless OS.
+        ///   Looks up a localized string similar to Restart and try Endless OS.
         /// </summary>
-        public static string button_reboot_to_endless {
+        public static string button_restart_to_endless {
             get {
-                return ResourceManager.GetString("button_reboot_to_endless", resourceCulture);
+                return ResourceManager.GetString("button_restart_to_endless", resourceCulture);
             }
         }
         
