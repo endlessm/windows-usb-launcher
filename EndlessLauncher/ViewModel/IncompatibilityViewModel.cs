@@ -157,7 +157,8 @@ namespace EndlessLauncher.ViewModel
                 return string.Format(
                     "{0}: {1}",
                     Literals.error_details,
-                    Literals.ResourceManager.GetString(errorStringId, Literals.Culture) ?? errorStringId
+                    Literals.ResourceManager.GetString(errorStringId, Literals.Culture) ??
+                        string.Format("{0}. {1}", errorStringId, Literals.error_contact)
                 );
             }
         }
