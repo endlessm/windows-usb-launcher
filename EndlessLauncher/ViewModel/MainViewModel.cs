@@ -48,7 +48,6 @@ namespace EndlessLauncher.ViewModel
         private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
         private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Endless OS";
         private static readonly string FIREWALL_KOLIBRI_RULE_NAME = "Kolibri";
-        private static readonly int WIN32_SW_RESTORE = 9;
 
         public MainViewModel(SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
