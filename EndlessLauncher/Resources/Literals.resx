@@ -148,28 +148,28 @@
     <value>Unknown system verification error. Please contact us for additional support.</value>
   </data>
   <data name="error_system_InsufficientRAM" xml:space="preserve">
-    <value>Your computer does not have enough memory available (2GiB of RAM is required).</value>
+    <value>Your computer does not have enough memory available (2GiB of RAM is required). The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_NoAdminRights" xml:space="preserve">
     <value>The Endless Key does not have the security privileges necessary to function. Remove and re-insert the Endless Key, and accept the Windows UAC prompt when it appears.</value>
   </data>
   <data name="error_system_Not64BitSystem" xml:space="preserve">
-    <value>Your system does not have a 64-bit processor.</value>
+    <value>Your system does not have a 64-bit processor (CPU). The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_NotUSB30Port" xml:space="preserve">
-    <value>This USB stick is in the wrong port. Try a different port.</value>
+    <value>The Endless Key is in the wrong USB port - Try a different USB port</value>
   </data>
   <data name="error_system_NoUSBPortsFound" xml:space="preserve">
-    <value>Your computer doesn’t have any USB 3.0 port.</value>
+    <value>Your computer has no USB 3.0 ports. The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_SingleCoreProcessor" xml:space="preserve">
-    <value>Your computer's processor (CPU) is not powerful enough to use the Endless Key. The Endless Key cannot be used on this computer to reboot into Endless OS. You need a multi-core processor.</value>
+    <value>Your computer's processor (CPU) is not powerful enough - The Endless Key requires a multi-core processor. The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_UnsupportedFirmware" xml:space="preserve">
-    <value>Your system does not use a UEFI BIOS.</value>
+    <value>Your computer does not have a UEFI BIOS. The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_UnsupportedOS" xml:space="preserve">
-    <value>Your version of Windows is not supported (we only support Windows 10).</value>
+    <value>Your computer's version of Windows is not supported - The Endless Key only supports Windows 10. The Endless Key cannot be used on this computer to restart into Endless OS.</value>
   </data>
   <data name="error_system_UsbDeviceNotFound" xml:space="preserve">
     <value>Make sure that you are running the Endless Launcher from the Endless Key, and that you have not copied it to your hard drive. Additionally, there might be an issue with your Endless Key, please contact us for additional support.</value>
@@ -178,10 +178,10 @@
     <value>Unknown error. Please contact us for additional support.</value>
   </data>
   <data name="launch_failed" xml:space="preserve">
-    <value>Computer restart has failed</value>
+    <value>Failed to restart computer into Endless OS</value>
   </data>
   <data name="launch_not_supported" xml:space="preserve">
-    <value>Unable to restart computer to Endless OS.</value>
+    <value>Unable to restart computer into Endless OS.</value>
   </data>
   <data name="log_file_title" xml:space="preserve">
     <value>Debug log file</value>

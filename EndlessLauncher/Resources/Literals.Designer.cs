@@ -151,7 +151,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your computer does not have enough memory available (2GiB of RAM is required)..
+        ///   Looks up a localized string similar to Your computer does not have enough memory available (2GiB of RAM is required). The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_InsufficientRAM {
             get {
@@ -169,7 +169,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your system does not have a 64-bit processor..
+        ///   Looks up a localized string similar to Your system does not have a 64-bit processor (CPU). The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_Not64BitSystem {
             get {
@@ -178,7 +178,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This USB stick is in the wrong port. Try a different port..
+        ///   Looks up a localized string similar to The Endless Key is in the wrong USB port - Try a different USB port.
         /// </summary>
         public static string error_system_NotUSB30Port {
             get {
@@ -187,7 +187,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your computer doesn’t have any USB 3.0 port..
+        ///   Looks up a localized string similar to Your computer has no USB 3.0 ports. The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_NoUSBPortsFound {
             get {
@@ -196,7 +196,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your computer&apos;s processor (CPU) is not powerful enough to use the Endless Key. The Endless Key cannot be used on this computer to reboot into Endless OS. You need a multi-core processor..
+        ///   Looks up a localized string similar to Your computer&apos;s processor (CPU) is not powerful enough - The Endless Key requires a multi-core processor. The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_SingleCoreProcessor {
             get {
@@ -205,7 +205,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your system does not use a UEFI BIOS..
+        ///   Looks up a localized string similar to Your computer does not have a UEFI BIOS. The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_UnsupportedFirmware {
             get {
@@ -214,7 +214,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your version of Windows is not supported (we only support Windows 10)..
+        ///   Looks up a localized string similar to Your computer&apos;s version of Windows is not supported - The Endless Key only supports Windows 10. The Endless Key cannot be used on this computer to restart into Endless OS..
         /// </summary>
         public static string error_system_UnsupportedOS {
             get {
@@ -241,7 +241,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Computer restart has failed.
+        ///   Looks up a localized string similar to Failed to restart computer into Endless OS.
         /// </summary>
         public static string launch_failed {
             get {
@@ -250,7 +250,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to restart computer to Endless OS..
+        ///   Looks up a localized string similar to Unable to restart computer into Endless OS..
         /// </summary>
         public static string launch_not_supported {
             get {
