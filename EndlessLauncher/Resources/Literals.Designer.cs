@@ -79,7 +79,7 @@ namespace EndlessLauncher.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open encyclopedia.
+        ///   Looks up a localized string similar to Open Encyclopedia.
         /// </summary>
         public static string button_open_kiwix {
             get {
