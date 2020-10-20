@@ -236,7 +236,7 @@ namespace EndlessLauncher.ViewModel
                     {
                         var readmePath = System.IO.Path.Combine(
                             GetExecutableDirectory(),
-                            "README.pdf"
+                            "Endless Key Quick Start.pdf"
                         );
 
                         Utils.OpenUrl(readmePath, "");
