@@ -18,23 +18,38 @@ namespace EndlessLauncher
     /// </summary>
     public partial class App : Application
     {
+        private delegate System.Diagnostics.Process StartShortcut();
+
         private static Mutex mutex = null;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             string errorCode = null;
             bool fullLogging = false;
+            StartShortcut startShortcut = null;
 
-            if (e.Args != null && e.Args.Length > 0)
+            for (int i = 0; i < e.Args.Length; i += 1)
             {
-                for (int i = 0; i < e.Args.Length; i += 1)
+                switch (e.Args[i].ToLower())
                 {
-                    string arg = e.Args[i].ToLower();
-                    if ( i + 1 < e.Args.Length && (arg.Equals("-e") || arg.Equals("--errorcode")))
-                        errorCode = e.Args[i + 1];
-                    if (arg.Equals("--fulllog") || arg.Equals("-fl"))
-                    {
+                    case "-e":
+                    case "--errorcode":
+                        if (i + 1 < e.Args.Length)
+                            errorCode = e.Args[i + 1];
+                        break;
+                    case "-fl":
+                    case "--fulllog":
                         fullLogging = true;
-                    }
+                        break;
+                    case "--kiwix":
+                        startShortcut = LauncherShortcuts.OpenKiwix;
+                        break;
+                    case "--kolibri":
+                        startShortcut = LauncherShortcuts.OpenKolibri;
+                        break;
+                    case "--readme":
+                        startShortcut = LauncherShortcuts.OpenReadme;
+                        break;
                 }
             }
 
@@ -47,11 +62,20 @@ namespace EndlessLauncher
                 Debug.SetDebugSimulatedError(errorCode);
             }
 
-            mutex = new Mutex(true, "{5E80890D-A4E6-4B8C-B123-FFD89450547F}", out bool isNew);
-            if (!isNew)
+            if (startShortcut != null)
             {
-                Utils.ActivateWindow(null, "MainWindow");
+                startShortcut();
                 Shutdown();
+            }
+            else
+            {
+                mutex = new Mutex(true, "{5E80890D-A4E6-4B8C-B123-FFD89450547F}", out bool isNew);
+
+                if (!isNew)
+                {
+                    Utils.ActivateWindow(null, "MainWindow");
+                    Shutdown();
+                }
             }
         }
     }

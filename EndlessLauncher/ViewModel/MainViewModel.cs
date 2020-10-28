@@ -47,7 +47,6 @@ namespace EndlessLauncher.ViewModel
         private IFrameNavigationService navigationService;
         private static readonly string EFI_BOOTLOADER_PATH = "\\EFI\\BOOT\\BOOTX64.EFI";
         private static readonly string ENDLESS_ENTRY_DESCRIPTION = "Endless OS";
-        private static readonly string FIREWALL_KOLIBRI_RULE_NAME = "Kolibri";
 
         public MainViewModel(SystemVerificationService sysInfoService, IFrameNavigationService frameNavigationService)
         {
@@ -91,11 +90,6 @@ namespace EndlessLauncher.ViewModel
             firmwareService.Reboot();
         }
 
-        private string GetExecutableDirectory()
-        {
-            return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        }
-
         public RelayCommand LaunchRelayCommand
         {
             get
@@ -118,40 +112,7 @@ namespace EndlessLauncher.ViewModel
             {
                 if (openKiwixRelayCommand == null)
                 {
-                    openKiwixRelayCommand = new RelayCommand(() =>
-                    {
-                        var vcRuntimeInstalled = Registry.GetValue(
-                            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64",
-                            "Installed", null
-                        );
-
-                        if (vcRuntimeInstalled == null || (int) vcRuntimeInstalled == 0)
-                        {
-                            var vcRuntimeInstallerPath = System.IO.Path.Combine(
-                                GetExecutableDirectory(),
-                                ".kiwix-windows",
-                                "vc_redist.x64.exe"
-                            );
-
-                            // TODO: Wait asynchronously while disabling the Kiwix button
-                            Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet").WaitForExit();
-                        }
-
-                        var kiwixExePath = System.IO.Path.Combine(
-                            GetExecutableDirectory(),
-                            ".kiwix-windows",
-                            "kiwix-desktop.exe"
-                        );
-
-                        var encyclopediaZimPath =  System.IO.Path.Combine(new string[] {
-                            GetExecutableDirectory(),
-                            ".kiwix", "flatpak",
-                            "com.endlessm.encyclopedia.en-openzim-subscription",
-                            "1.zim"
-                        });
-
-                        Utils.OpenUrl(kiwixExePath, encyclopediaZimPath);
-                    });
+                    openKiwixRelayCommand = new RelayCommand(() => LauncherShortcuts.OpenKiwix());
                 }
 
                 return openKiwixRelayCommand;
@@ -164,46 +125,7 @@ namespace EndlessLauncher.ViewModel
             {
                 if (openKolibriRelayCommand == null)
                 {
-                    openKolibriRelayCommand = new RelayCommand(() =>
-                    {
-                        // Show Kolibri window if already exists.
-                        // Ideally, this should be done in the Kolibri app but for now we
-                        // stick with this approach.
-                        if (Utils.ActivateWindow("wxWindowNR", "Kolibri"))
-                        {
-                            return;
-                        }
-
-                        var kolibriExePath = System.IO.Path.Combine(
-                            GetExecutableDirectory(),
-                            ".kolibri-windows",
-                            "Kolibri.exe"
-                        );
-
-                        var existingFwRule = FirewallManager.Instance.Rules.SingleOrDefault(fwRule => {
-                            if (!(fwRule is StandardRuleWin8))
-                            {
-                                return false;
-                            }
-
-                            var win8Rule = (StandardRuleWin8)fwRule;
-                            return win8Rule.Name == FIREWALL_KOLIBRI_RULE_NAME && win8Rule.ApplicationName == kolibriExePath;
-                        });
-
-                        if (existingFwRule == null)
-                        {
-                            var fwRule = FirewallManager.Instance.CreateApplicationRule(
-                                FirewallManager.Instance.GetProfile().Type,
-                                FIREWALL_KOLIBRI_RULE_NAME,
-                                FirewallAction.Allow,
-                                kolibriExePath
-                            );
-                            fwRule.Direction = FirewallDirection.Inbound;
-                            FirewallManager.Instance.Rules.Add(fwRule);
-                        }
-
-                        Utils.OpenUrl(kolibriExePath, "");
-                    });
+                    openKolibriRelayCommand = new RelayCommand(() => LauncherShortcuts.OpenKolibri());
                 }
 
                 return openKolibriRelayCommand;
@@ -232,15 +154,7 @@ namespace EndlessLauncher.ViewModel
             {
                 if (openReadmeRelayCommand == null)
                 {
-                    openReadmeRelayCommand = new RelayCommand(() =>
-                    {
-                        var readmePath = System.IO.Path.Combine(
-                            GetExecutableDirectory(),
-                            "Endless Key Quick Start.pdf"
-                        );
-
-                        Utils.OpenUrl(readmePath, "");
-                    });
+                    openReadmeRelayCommand = new RelayCommand(() => LauncherShortcuts.OpenReadme());
                 }
 
                 return openReadmeRelayCommand;

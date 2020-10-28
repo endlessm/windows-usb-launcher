@@ -33,7 +33,7 @@ namespace EndlessLauncher.service
         private const int SUPPORTED_SCREEN_HEIGHT = 1080;
 
         private int currentPhysicalDiskIndex = -1;
-        private string currentDriveLetter = null;
+        private string currentDriveLetter;
 
         public event EventHandler<EndlessErrorEventArgs<SystemVerificationErrorCode>> VerificationFailed;
         public event EventHandler VerificationPassed;
