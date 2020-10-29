@@ -131,6 +131,7 @@
     <Compile Include="service\LegacyFirmwareService.cs" />
     <Compile Include="service\SystemVerificationService.cs" />
     <Compile Include="utility\Debug.cs" />
+    <Compile Include="utility\LauncherShortcuts.cs" />
     <Compile Include="utility\Utils.cs" />
     <Compile Include="ViewModel\IncompatibilityViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
