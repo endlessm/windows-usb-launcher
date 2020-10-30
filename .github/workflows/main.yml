@@ -33,5 +33,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.configuration }}
-          path: EndlessLauncher/bin/${{ matrix.configuration }}/Endless Launcher.exe
+          path: "*/bin/${{ matrix.configuration }}/*.exe"
 
