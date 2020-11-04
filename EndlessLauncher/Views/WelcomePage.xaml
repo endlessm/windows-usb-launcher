@@ -60,14 +60,14 @@
         <TextBlock Grid.Row="0"
                    Style="{StaticResource TitleTextBlockStyle}"
                    Text="{x:Static resources:Literals.welcome_partial_title}"
-                   FontSize="45"
-                   Margin="0,20,0,0"
+                   FontSize="30"
+                   Margin="0,35,0,0"
                    Foreground="#555" />
 
         <Image Grid.Row="1"
                Style="{StaticResource PagePrimaryImageLogoStyle}"
                Source="/Resources/Images/logo.png"
-               Margin="40,30,40,20" />
+               Margin="40,20,40,30" />
 
         <StackPanel Grid.Row="2"
                     Orientation="Vertical">
@@ -100,8 +100,7 @@
                    HorizontalAlignment="Center"
                    Style="{StaticResource HelpTextBlockStyle}">
             <Run Text="{x:Static resources:Literals.need_help}" />
-            <Hyperlink Command="{Binding OpenReadmeRelayCommand}"
-                       Foreground="{StaticResource DefaultForegroundColor}">
+            <Hyperlink Command="{Binding OpenReadmeRelayCommand}">
                 <Run Text="{x:Static resources:Literals.click_here}" />
             </Hyperlink>
         </TextBlock>
