@@ -5,17 +5,30 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EndlessLauncher", "EndlessLauncher\EndlessLauncher.csproj", "{A166D3B5-8053-4D2E-B326-F43AC098187F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shortcuts", "Shortcuts\Shortcuts.vcxproj", "{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Debug|x64.Build.0 = Debug|Any CPU
 		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Release|x64.ActiveCfg = Release|Any CPU
+		{A166D3B5-8053-4D2E-B326-F43AC098187F}.Release|x64.Build.0 = Release|Any CPU
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Debug|x64.ActiveCfg = Debug|x64
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Debug|x64.Build.0 = Debug|x64
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Release|Any CPU.ActiveCfg = Release|x64
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Release|x64.ActiveCfg = Release|x64
+		{84B5F7FA-7923-4DC8-9F52-85A6D3C4A6E8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
