@@ -19,7 +19,7 @@ namespace EndlessLauncher.utility
             );
 
             // TODO: Wait asynchronously while disabling the Kiwix button
-            Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet").WaitForExit();
+            Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet /norestart").WaitForExit();
 
             var kiwixExePath = System.IO.Path.Combine(
                 GetExecutableDirectory(),
