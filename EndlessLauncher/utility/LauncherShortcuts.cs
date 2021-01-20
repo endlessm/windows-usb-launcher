@@ -12,22 +12,14 @@ namespace EndlessLauncher.utility
 
         public static Process OpenKiwix()
         {
-            var vcRuntimeInstalled = Registry.GetValue(
-                "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64",
-                "Installed", null
+            var vcRuntimeInstallerPath = System.IO.Path.Combine(
+                GetExecutableDirectory(),
+                ".kiwix-windows",
+                "vc_redist.x64.exe"
             );
 
-            if (vcRuntimeInstalled == null || (int)vcRuntimeInstalled == 0)
-            {
-                var vcRuntimeInstallerPath = System.IO.Path.Combine(
-                    GetExecutableDirectory(),
-                    ".kiwix-windows",
-                    "vc_redist.x64.exe"
-                );
-
-                // TODO: Wait asynchronously while disabling the Kiwix button
-                Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet").WaitForExit();
-            }
+            // TODO: Wait asynchronously while disabling the Kiwix button
+            Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet /norestart").WaitForExit();
 
             var kiwixExePath = System.IO.Path.Combine(
                 GetExecutableDirectory(),
