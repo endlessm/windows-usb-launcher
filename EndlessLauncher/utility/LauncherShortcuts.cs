@@ -1,8 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
-using Microsoft.Win32;
-using WindowsFirewallHelper;
-using WindowsFirewallHelper.FirewallAPIv2.Rules;
 
 namespace EndlessLauncher.utility
 {
@@ -12,15 +8,6 @@ namespace EndlessLauncher.utility
 
         public static Process OpenKiwix()
         {
-            var vcRuntimeInstallerPath = System.IO.Path.Combine(
-                GetExecutableDirectory(),
-                ".kiwix-windows",
-                "vc_redist.x64.exe"
-            );
-
-            // TODO: Wait asynchronously while disabling the Kiwix button
-            Utils.OpenUrl(vcRuntimeInstallerPath, "/install /quiet /norestart").WaitForExit();
-
             var kiwixExePath = System.IO.Path.Combine(
                 GetExecutableDirectory(),
                 ".kiwix-windows",
@@ -49,28 +36,6 @@ namespace EndlessLauncher.utility
                 ".kolibri-windows",
                 "Kolibri.exe"
             );
-
-            var existingFwRule = FirewallManager.Instance.Rules.SingleOrDefault(fwRule => {
-                if (!(fwRule is StandardRuleWin8))
-                {
-                    return false;
-                }
-
-                var win8Rule = (StandardRuleWin8)fwRule;
-                return win8Rule.Name == FIREWALL_KOLIBRI_RULE_NAME && win8Rule.ApplicationName == kolibriExePath;
-            });
-
-            if (existingFwRule == null)
-            {
-                var fwRule = FirewallManager.Instance.CreateApplicationRule(
-                    FirewallManager.Instance.GetProfile().Type,
-                    FIREWALL_KOLIBRI_RULE_NAME,
-                    FirewallAction.Allow,
-                    kolibriExePath
-                );
-                fwRule.Direction = FirewallDirection.Inbound;
-                FirewallManager.Instance.Rules.Add(fwRule);
-            }
 
             return Utils.OpenUrl(kolibriExePath, "");
         }
