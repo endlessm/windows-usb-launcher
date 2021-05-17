@@ -80,20 +80,8 @@
                     Style="{StaticResource DefaultButtonStyle}"
                     Content="{x:Static resources:Literals.button_open_kolibri}" />
 
-            <Button Command="{Binding LaunchRelayCommand}"
-                    Visibility="{Binding LaunchSupported, Converter={StaticResource BoolToVisibilityConverter}}"
-                    Style="{StaticResource DefaultButtonStyle}"
-                    Content="{x:Static resources:Literals.button_restart_to_endless}" />
-
             <Border Style="{StaticResource LaunchNotSupportedBorderStyle}"
-                    Visibility="{Binding LaunchNotSupported, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Style="{StaticResource LaunchNotSupportedBlockStyle}">
-                    <Run Text="{x:Static resources:Literals.launch_not_supported}" />
-                    <Hyperlink Command="{Binding MoreInformationRelayCommand}">
-                        <Run Text="{x:Static resources:Literals.more_information}" />
-                    </Hyperlink>
-                </TextBlock>
-            </Border>
+                    Visibility="{Binding LaunchNotSupported, Converter={StaticResource BoolToVisibilityConverter}}"/>
         </StackPanel>
 
         <TextBlock Grid.Row="3"
