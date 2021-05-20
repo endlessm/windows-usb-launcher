@@ -155,10 +155,6 @@ namespace EndlessLauncher.service
             {
                 errorCode = SystemVerificationErrorCode.Not64BitSystem;
             }
-            else if (!RunningAsAdministrator())
-            {
-                errorCode = SystemVerificationErrorCode.NoAdminRights;
-            }
             else if (!VerifyWindowsVersion())
             {
                 errorCode = SystemVerificationErrorCode.UnsupportedOS;
