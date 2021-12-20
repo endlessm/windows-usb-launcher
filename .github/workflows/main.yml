@@ -27,8 +27,12 @@ jobs:
 
       - name: Build Project
         run: |
-          nuget.exe restore
+          nuget restore EndlessLauncher.sln
           MSBuild.exe EndlessLauncher.sln /p:Configuration=${{ matrix.configuration }}
+
+      - name: Build Endless Key Project
+        run: |
+          MSBuild.exe EndlessKeyLauncher.sln /p:Configuration=${{ matrix.configuration }}
 
       - uses: actions/upload-artifact@v2
         with:
