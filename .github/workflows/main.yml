@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+        - "v*"
   pull_request:
     branches:
       - master
@@ -33,6 +35,14 @@ jobs:
       - name: Build Endless Key Project
         run: |
           MSBuild.exe EndlessKeyLauncher.sln /p:Configuration=${{ matrix.configuration }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            KolibriShortcut/bin/Release/Endless Key Launcher.exe
+            EndlessLauncher/bin/Release/Endless Launcher.exe
 
       - uses: actions/upload-artifact@v2
         with:
